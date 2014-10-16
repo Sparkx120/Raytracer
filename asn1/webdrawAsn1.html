@@ -1,0 +1,161 @@
+<html>
+<head>
+<title>Assignment 1</title>
+</head>
+<body>
+	<!-- Page Text & Buttons -->
+	<h1>CS3388 Assignment 1</h1>
+	<h3>By: James Wake</h3>
+	<h3>Written in Javascript and HTML5/CSS3</h3>
+	<h4>Press 'q' to close this window/tab</h4>
+	Render Time:<span id="computeTime"></span>ms 
+	<input id="lineNum" type="text" style="width:100px" value="1000"></input>
+	<button type="button" id="rerender">Render Lines</button>
+	<button type="button" id="animate">Animate</button>
+	<input id="fractIter" type="text" style="width:50px" value="4"></input>
+	<button type="button" id="fractal">Fractal</button><br>
+	
+	<!-- Load and Run Scripts -->
+	<script src="webdraw.js.txt"></script>
+	<script src="controler.js.txt"></script>
+	<script src="fractal.js.txt"></script>
+	<script>
+		//Set up the WebDraw instance
+		window.webRenderer = new WebDrawRenderer();
+		window.webDraw = new WebDraw(0,0, 512, 512, "relative", webRenderer);
+		window.webDraw.border = "1px solid #AAA";
+		window.webDraw.show();
+		window.numOfLines = 1000;
+
+		/**
+		 * Test suite runs a generic line drawing test with WebDraw
+		 */
+		function testSuite(){
+			/**
+			 * An Array containing test lines for all 8 half quadrants and their reverses
+			 * @type {Array}
+			 */
+			window.testLines = [{x1:50,y1:50,x2:75,y2:60},
+					 	{x1:50,y1:50,x2:75,y2:90},
+					 	{x1:50,y1:50,x2:75,y2:40},
+					 	{x1:50,y1:50,x2:75,y2:10},
+					 	{x1:50,y1:50,x2:25,y2:60},
+					 	{x1:50,y1:50,x2:25,y2:90},
+					 	{x1:50,y1:50,x2:25,y2:40},
+					 	{x1:50,y1:50,x2:25,y2:10},
+					   ];
+			//Render the base TestLines
+			window.webRenderer.bresenhamPlot(window.testLines[0]);
+			window.webRenderer.bresenhamPlot(window.testLines[1]);
+			window.webRenderer.bresenhamPlot(window.testLines[2]);
+			window.webRenderer.bresenhamPlot(window.testLines[3]);
+			window.webRenderer.bresenhamPlot(window.testLines[4]);
+			window.webRenderer.bresenhamPlot(window.testLines[5]);
+			window.webRenderer.bresenhamPlot(window.testLines[6]);
+			window.webRenderer.bresenhamPlot(window.testLines[7]);
+
+			//Generate Random Test Lines
+			for(i = 0; i<window.numOfLines; i++){
+				var x1 = Math.ceil(Math.random()*511);
+				var y1 = Math.ceil(Math.random()*511);
+				var x2 = Math.ceil(Math.random()*511);
+				var y2 = Math.ceil(Math.random()*511);
+				window.webDraw.lineArray.push({x1:x1,y1:y1,x2:x2,y2:y2});
+			}
+
+			//Render The Random Test Lines and compute timing
+			var d1 = new Date().getTime();
+			window.webRenderer.clear();
+			window.webDraw.render();
+			var d2 = new Date().getTime();
+			document.getElementById("computeTime").innerHTML = "" + (d2-d1);
+		}
+	</script>
+	
+	<br>
+	Width:512px, Height:512px
+	
+	<script>
+		//Setup background animation loop with boolean on/off
+		window.run = false;
+		var animate = function(){
+			window.setInterval(function(){
+				if(window.run){
+					window.webDraw.lineArray = [];
+					testSuite();	
+				}
+			},50);
+		}
+		animate();
+
+		//Define local Animation Control Functions
+		var stop = function(){
+			window.run = false;
+			document.getElementById("animate").innerHTML = "Animate";
+		}
+		var start = function(){
+			var lineNum = document.getElementById("lineNum");
+			try{
+				window.numOfLines = parseInt(lineNum.value);
+				window.run = true;
+				document.getElementById("animate").innerHTML = "Stop";
+			}catch(e){alert("Not a number!");};
+		}
+
+		//Configure onclick listeners
+		document.getElementById("rerender").onclick = function(){
+			var lineNum = document.getElementById("lineNum");
+			try{
+				window.numOfLines = parseInt(lineNum.value);
+				window.webRenderer.clear();
+				window.webDraw.lineArray = [];
+				testSuite();
+			}catch(e){alert("Not a number!");};
+		}
+		document.getElementById("animate").onclick = function(){
+			if(window.run)
+				stop();
+			else
+				start();
+		}
+		document.getElementById("fractal").onclick = function(){
+			genFractal();
+		}
+
+		/**
+		 * Fractal Render Function
+		 */
+		function genFractal(){
+			stop();
+			var iter = document.getElementById("fractIter");
+			try{
+				var iterations = parseInt(iter.value);
+				window.webRenderer.clear();
+				window.webDraw.lineArray = [];
+				var line1 = [{x1: 10, y1:150, x2:502, y2:150}];
+				var line2 = [{x1: 502, y1:150, x2:256, y2:502}];
+				var line3 = [{x1: 256, y1:502, x2:10, y2:150}];
+				var d1 = new Date().getTime();
+				line1 = kochCurve(line1, iterations);
+				line2 = (kochCurve(line2, iterations));
+				line3 = (kochCurve(line3, iterations));
+				for(i = 0; i<line1.length;i++){
+					window.webDraw.lineArray.push(line1[i]);
+				}
+				for(i = 0; i<line2.length;i++){
+					window.webDraw.lineArray.push(line2[i]);
+				}
+				for(i = 0; i<line3.length;i++){
+					window.webDraw.lineArray.push(line3[i]);
+				}
+				window.webDraw.render();
+				var d2 = new Date().getTime();
+				document.getElementById("computeTime").innerHTML = "" + (d2-d1);
+			}catch(e){alert("Fractal Error check Iterations");};
+		}
+
+		//Default Render Action
+		genFractal();
+	</script>
+</body>
+</html>

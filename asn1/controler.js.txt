@@ -1,0 +1,21 @@
+/**
+ * @author James Wake
+ * @version 0.1
+ *
+ * @fileOverview 
+ * Controler.js sets up and handles all event listeners
+ */
+
+/**
+ * On a keyboard key up Handle event here
+ * @param  {Event} e The event
+ */
+window.onkeyup = function(e) {
+	var key = e.keyCode ? e.keyCode : e.which;
+
+	if(key == 81){
+		e.preventDefault();
+		console.log("quit");
+		window.close();
+	}
+}

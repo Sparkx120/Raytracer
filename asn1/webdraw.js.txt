@@ -1,0 +1,359 @@
+/**
+ * @author James R. Wake
+ * @version 1.0
+ *
+ * @fileOverview
+ * webdraw is a set of tools to do raytracing on a HTML5 Canvas
+ * made for CS3388
+ */
+
+/**
+ * WebDraw is the wrapper object for the main WebDraw Canvas
+ * @param {Number} x 					The X position to place the canvas
+ * @param {Number} y 					The Y position to place the canvas
+ * @param {Number} width 				The Width of the canvas
+ * @param {Number} height 				The Height of the canvas
+ * @param {String} position 			The Style Paramater Position for the canvas
+ * @param {WebDrawRenderer} renderer 	The WebDrawRenderer to use for the Canvas
+ */
+var WebDraw = function(x, y, width, height, position, renderer){
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.position = position;
+	this.renderer = renderer;
+	this.lineArray = [];
+	this.canvas = null;
+	this.border = "none";
+	this.drawStack = [];
+}
+
+WebDraw.prototype = {
+	/**
+	 * Create the Canvas HTML Object and render it wherever this function was called
+	 * @return {[type]} [description]
+	 */
+	show: function(){
+		this.canvas = document.createElement("canvas");
+		this.canvas.left = this.x;
+		this.canvas.top = this.y;
+		this.canvas.width = this.width;
+		this.canvas.height = this.height;
+		this.canvas.style.left = this.x + 'px';
+		this.canvas.style.top = this.y + 'px';
+		this.canvas.style.width = this.width + 'px';
+		this.canvas.style.height = this.height + 'px';
+		this.canvas.style.position = this.position;
+		console.log(this.border);
+		this.canvas.style.border = this.border;
+
+		document.body.appendChild(this.canvas);
+
+		this.renderer.canvas = this.canvas;
+		this.renderer.init();
+		this.exec();
+	},
+
+	/**
+	 * TOBE Implemented Executive Loop function for animations etc
+	 * @return {[type]} [description]
+	 */
+	exec: function(){
+
+	},
+
+	/**
+	 * Adds lines to this WebDraw's line array
+	 * @param {Array} lines The line array to add to this WebDraws Line Array
+	 */
+	addLines: function(lines){
+		this.lineArray = this.lineArray.concat(lines);
+	},
+
+	/**
+	 * Calls on this WebDraw's renderer to render the canvas
+	 * This includes sending all the lines from the Line Array into the renderer for
+	 * processing
+	 */
+	render: function(){
+		// console.log(this.lineArray.length);
+		for(j = 0; j<this.lineArray.length; j++){
+			this.renderer.drawLine(this.lineArray[j]);
+		}
+		this.renderer.render();
+	}
+
+
+}
+
+/**
+ * WebDraw Renderer is a renderer for WebDraw to handle drawing lines and other shapes and objects
+ * to the canvas.
+ */
+var WebDrawRenderer = function(){
+	this.canvas = null;
+	this.ctx = null;
+	this.imageData = null;
+	this.backgroundColor = "#FFFFFF";
+	this.drawColor = {r:0, g:0, b:0, a:255}; //Default Black
+}
+
+WebDrawRenderer.prototype = {
+	/**
+	 * To be called by a WebDraw before the drawstack
+	 */
+	init: function(){
+		this.ctx = this.canvas.getContext('2d');
+		this.ctx.fillStyle = this.backgroundColor;
+		this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height);
+		this.imageData=this.ctx.createImageData(this.canvas.width,this.canvas.height);
+	},
+
+	/**
+	 * Draw a line from LineObj (X1, Y1) to (X2, Y2)
+	 * @param {LineObject} lineObj An Object representing a line
+	 */
+	drawLine: function(lineObj){
+		this.bresenhamPlot(lineObj);
+	},
+
+	/**
+	 * Implementation of the Bresenham Line Algorithm
+	 * @param  {LineObject} lineObj A Line object with x1 x2 y1 y2 defined
+	 */
+	bresenhamPlot: function(lineObj){
+		//Get preliminary Data from LineObject
+		var deltaX = lineObj.x2 - lineObj.x1;
+		var deltaY = lineObj.y2 - lineObj.y1;
+		var x1 = lineObj.x1;
+		var y1 = lineObj.y1;
+		var x2 = lineObj.x2;
+		var y2 = lineObj.y2;
+
+		//Initialize Variables for Algorithm
+		var iInitial = 0;
+		var loopCondition = function(){};
+		var loopInc = 0;
+		var dX = deltaX;
+		var dY = deltaY;
+		var stepPixel = 0;
+		var stepPixelInc = 0;
+		var loopPixel = 0;
+		var loopPixelInc = 0;
+		var loopPixelValue = function(){};
+
+
+		//Compute Octant Dependant Variables for algorithm and setup said Variables
+		var octant = this.computeOctant(deltaX, deltaY);
+		switch(octant){
+			case 0: iInitial = x1;
+					loopCondition = function(i, x1, x2, y1, y2){return i<x2;};
+					loopInc = 1;
+					dX = deltaX;
+					dY = deltaY;
+					stepPixel = y1;
+					stepPixelInc = 1;
+					loopPixel = x1;
+					loopPixelInc = 1;
+					loopPixelValue = function(stepPixel, loopPixel){return {x: loopPixel, y:stepPixel};};
+					break;
+			case 1: iInitial = y1;
+					loopCondition = function(i, x1, x2, y1, y2){return i<y2;};
+					loopInc = 1;
+					dX = deltaY;
+					dY = deltaX;
+					stepPixel = x1;
+					stepPixelInc = 1;
+					loopPixel = y1;
+					loopPixelInc = 1;
+					loopPixelValue = function(stepPixel, loopPixel){return {x: stepPixel, y:loopPixel};};
+					break;
+			case 2: iInitial = y1;
+					loopCondition = function(i, x1, x2, y1, y2){return i<y2;};
+					loopInc = 1;
+					dX = deltaY;
+					dY = deltaX;
+					stepPixel = x1;
+					stepPixelInc = -1;
+					loopPixel = y1;
+					loopPixelInc = 1;
+					loopPixelValue = function(stepPixel, loopPixel){return {x: stepPixel, y:loopPixel};};
+					break;
+			case 3: iInitial = x1;
+					loopCondition = function(i, x1, x2, y1, y2){return i>x2;};
+					loopInc = -1;
+					dX = deltaX;
+					dY = deltaY;
+					stepPixel = y1;
+					stepPixelInc = 1;
+					loopPixel = x1;
+					loopPixelInc = -1;
+					loopPixelValue = function(stepPixel, loopPixel){return {x: loopPixel, y:stepPixel};};
+					break;
+			case 4: iInitial = x1;
+					loopCondition = function(i, x1, x2, y1, y2){return i>x2;};
+					loopInc = -1;
+					dX = deltaX;
+					dY = deltaY;
+					stepPixel = y1;
+					stepPixelInc = -1;
+					loopPixel = x1;
+					loopPixelInc = -1;
+					loopPixelValue = function(stepPixel, loopPixel){return {x: loopPixel, y:stepPixel};};
+					break;
+			case 5: iInitial = y1;
+					loopCondition = function(i, x1, x2, y1, y2){return i>y2;};
+					loopInc = -1;
+					dX = deltaY;
+					dY = deltaX;
+					stepPixel = x1;
+					stepPixelInc = -1;
+					loopPixel = y1;
+					loopPixelInc = -1;
+					loopPixelValue = function(stepPixel, loopPixel){return {x: stepPixel, y:loopPixel};};
+					break; 
+			case 6: iInitial = y1;
+					loopCondition = function(i, x1, x2, y1, y2){return i>y2;};
+					loopInc = -1;
+					dX = deltaY;
+					dY = deltaX;
+					stepPixel = x1;
+					stepPixelInc = 1;
+					loopPixel = y1;
+					loopPixelInc = -1;
+					loopPixelValue = function(stepPixel, loopPixel){return {x: stepPixel, y:loopPixel};};
+					break;
+			case 7: iInitial = x1;
+					loopCondition = function(i, x1, x2, y1, y2){return i<x2;};
+					loopInc = 1;
+					dX = deltaX;
+					dY = deltaY;
+					stepPixel = y1;
+					stepPixelInc = -1;
+					loopPixel = x1;
+					loopPixelInc = 1;
+					loopPixelValue = function(stepPixel, loopPixel){return {x: loopPixel, y:stepPixel};};
+					break;
+		}
+		
+		dX = Math.abs(dX);
+		dY = Math.abs(dY);
+
+		var d1 = new Date().getTime();
+		
+		//Bresenham Algorithm (Based on the algo provided)
+		this.setPixel(x1, y1, this.drawColor.r, this.drawColor.g, this.drawColor.b, this.drawColor.a);
+		var pi = 0;
+		var z = 0;
+		for(i=iInitial; loopCondition(i, x1, x2, y1, y2); i += loopInc){
+			if(z==0){
+				pi = 2*dY - dX;
+				z++;
+			}
+			else{
+				if(pi<0)
+					pi = pi + 2*dY;
+				else{
+					pi = pi + 2*dY - 2*dX;
+					stepPixel += stepPixelInc;
+				}
+			}
+			loopPixel += loopPixelInc;
+			var loopPix = loopPixelValue(stepPixel, loopPixel);
+			this.setPixel(loopPix.x, loopPix.y, this.drawColor.r, this.drawColor.g, this.drawColor.b, this.drawColor.a);
+		}
+	},
+
+	/**
+	 * Computes the octant of a line using the Deltas of the line
+	 * @param  {Number} deltaX The DeltaX of a line
+	 * @param  {Number} deltaY The DeltaY of a line
+	 * @return {Number}        The Octant the line is in
+	 */
+	computeOctant: function(deltaX, deltaY){
+		var absDeltaX = Math.abs(deltaX);
+		var absDeltaY = Math.abs(deltaY);
+
+		if(deltaX >= 0){
+			//Case for Octants 0 and 1
+			if(deltaY >= 0){
+				if(absDeltaX >= absDeltaY)
+					return 0;
+				else
+					return 1;
+			}
+			//Case for Octants 7 and 6
+			else{
+				if(absDeltaX >= absDeltaY)
+					return 7;
+				else
+					return 6;
+			}
+		}
+		else{
+			//Case for Ocatant 3 and 2
+			if(deltaY >= 0){
+				if(absDeltaX >= absDeltaY)
+					return 3;
+				else
+					return 2;
+			}
+			//Case for Octant 4 and 5
+			else{
+				if(absDeltaX >= absDeltaY)
+					return 4;
+				else
+					return 5;
+			}
+		}
+
+	},
+
+	/**
+	 * Sets the Pixel at a specified X Y coordinate to a specific RGBA Value
+	 * @param {Number} x X Coordinate
+	 * @param {Number} y Y Coordinate
+	 * @param {Number} r Red Value
+	 * @param {Number} g Green Value
+	 * @param {Number} b Blue Value
+	 * @param {Number} a Alpha Value
+	 */
+	setPixel: function(x, y, r,g,b,a){
+		var pixelIndex = 4 * (x + y*this.canvas.width);
+		this.imageData.data[pixelIndex+0]=r;
+		this.imageData.data[pixelIndex+1]=g;
+		this.imageData.data[pixelIndex+2]=b;
+		this.imageData.data[pixelIndex+3]=a;
+	},
+
+	/**
+	 * Clears this renderer's Image Object and then the canvas is rendered blank
+	 */
+	clear: function(){
+		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+		this.imageData=this.ctx.createImageData(this.canvas.width,this.canvas.height);
+		this.drawImageData();
+	},
+
+	/**
+	 * Renderes the ImageData object onto the canvas as well as any other objects that need to be in the future
+	 */
+	render: function(){
+		this.drawImageData();
+	},
+
+	/**
+	 * Puts the ImageData object for this renderer onto the canvas at (0,0)
+	 */
+	drawImageData: function(){
+		this.ctx.putImageData(this.imageData, 0,0);
+
+	}
+
+}
+
+/**
+ * A Line Object should contain x1, y1, x2, y2
+ */
+var LineObject = function(){}
