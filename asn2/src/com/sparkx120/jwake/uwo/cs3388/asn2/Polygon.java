@@ -14,12 +14,23 @@ public class Polygon {
 	
 	private Vector norm;
 	
+	/**
+	 * Constructor for a Polygon
+	 * Makes a polygon with a correct normal based on Vertex A to C in Counterclockwise order.
+	 * @param a - Vertex A
+	 * @param b - Vertex B
+	 * @param c - Vertex C
+	 */
 	public Polygon(Vertex a, Vertex b, Vertex c){
 		this.a = a;
 		this.b = b;
 		this.c = c;
 		
 		this.norm = calculatePolyNormal();
+		
+		a.addPoly(this);
+		b.addPoly(this);
+		c.addPoly(this);
 	}
 	
 	/**
@@ -48,6 +59,12 @@ public class Polygon {
 	
 	public Vector getNorm(){
 		return norm;
+	}
+	
+	public void Destroy(){
+		a.removePoly(this);
+		b.removePoly(this);
+		c.removePoly(this);
 	}
 	
 	/**

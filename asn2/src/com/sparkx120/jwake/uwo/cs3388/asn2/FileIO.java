@@ -21,7 +21,7 @@ public class FileIO {
 	 * @param fname - The Filename to read from
 	 * @return An Array list containing each line from the file
 	 */
-	public ArrayList<String> readFileAsString(String fname){
+	public static ArrayList<String> readFileAsStringList(String fname){
 		ArrayList<String> contents = new ArrayList<String>();
 		try{
 			BufferedReader br = new BufferedReader(new FileReader(fname));

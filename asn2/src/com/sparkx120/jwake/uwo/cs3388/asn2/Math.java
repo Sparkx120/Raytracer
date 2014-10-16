@@ -49,4 +49,46 @@ public class Math {
 		return new Vector(x, y, z);
 	}
 	
+	/**
+	 * Add two Vectors A + B
+	 * @param a - Vector A
+	 * @param b - Vector B
+	 * @return Result of Addition
+	 */
+	public static Vector vectorAdd(Vector a, Vector b){
+		Float x = a.getX() + b.getX();
+		Float y = a.getY() + b.getY();
+		Float z = a.getZ() + b.getZ();
+		
+		return new Vector(x, y, z);
+	}
+	
+	/**
+	 * Subtract two Vectors A - B
+	 * @param a - Vector A
+	 * @param b - Vector B
+	 * @return Result of Subtraction
+	 */
+	public static Vector vectorSub(Vector a, Vector b){
+		Float x = a.getX() - b.getX();
+		Float y = a.getY() - b.getY();
+		Float z = a.getZ() - b.getZ();
+		
+		return new Vector(x, y, z);
+	}
+	
+	/**
+	 * Scalar Multiply Vector V
+	 * @param v - Vector V
+	 * @param s - Scalar
+	 * @return Result of Multiplication
+	 */
+	public static Vector scalarMultiplyVector(Vector v, Float s){
+		Float x = v.getX()*s;
+		Float y = v.getY()*s;
+		Float z = v.getZ()*s;
+		
+		return new Vector(x, y, z);
+	}
+	
 }

@@ -1,14 +1,30 @@
 package com.sparkx120.jwake.uwo.cs3388.asn2;
 
+import java.util.ArrayList;
+
 public class Vertex {
+	
+	/**
+	 * Point that this Vertex is at
+	 */
 	private Point p;
+	
+	/**
+	 * Normal of this Vertex (Based on Polys) (Ignore Magnitude Direction only)
+	 */
 	private Vector norm;
+	
+	/**
+	 * List of pointers to Polygons using this Vertex
+	 */
+	private ArrayList<Polygon> polys;
+	
 	
 	/**
 	 * Empty Constructor
 	 */
 	public Vertex(){
-		
+		polys = new ArrayList<Polygon>();
 	}
 	
 	/**
@@ -17,6 +33,7 @@ public class Vertex {
 	 */
 	public Vertex(Point p){
 		this.p = p;
+		polys = new ArrayList<Polygon>();
 	}
 	
 	/**
@@ -31,7 +48,7 @@ public class Vertex {
 	 * Set the normal of this vertex
 	 * @param n - The vector of the normal of this vertex
 	 */
-	public void setNormal(Vector n){
+	protected void setNormal(Vector n){
 		this.norm = n;
 	}
 	
@@ -51,5 +68,40 @@ public class Vertex {
 	 */
 	public Vector getNormal(){
 		return norm;
+	}
+	
+	/**
+	 * Add a polygon reference to this vertex and update normal
+	 * @param p - The Polygon
+	 */
+	protected void addPoly(Polygon p){
+		polys.add(p);
+		
+		if(norm == null)
+			norm = new Vector(0.0F, 0.0F, 0.0F); 
+		
+		norm = Math.vectorAdd(norm, p.getNorm());
+	}
+	
+	/**
+	 * Remove a polygon reference to this vertex and update normal
+	 * @param p
+	 */
+	protected void removePoly(Polygon p){
+		polys.remove(p);
+		
+		norm = Math.vectorSub(norm, p.getNorm());
+	}
+	
+	
+	/**
+	 * Override Equals to check if Vertex is Equal to another
+	 * @param v - Vertex to Check
+	 * @return Result of check
+	 */
+	public boolean equals(Vertex v){
+		if(v.getPoint().equals(p))
+			return true;
+		return false;
 	}
 }

@@ -6,7 +6,14 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
  * @version 1.0
  */
 public class Vector extends Point{
-
+	
+	/**
+	 * Empty Constructor
+	 */
+	public Vector(){
+		super();
+	}
+	
 	/**
 	 * Make a Vector defined by points from origin
 	 * @param x - X Coordinate

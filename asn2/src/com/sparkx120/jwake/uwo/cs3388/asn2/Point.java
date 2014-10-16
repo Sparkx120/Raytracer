@@ -86,4 +86,10 @@ public class Point {
 		return z;
 	}
 	
+	public boolean equals(Point p){
+		if(p.getX() == x && p.getY() == y && p.getZ() == z)
+			return true;
+		return false;
+	}
+	
 }
