@@ -3,9 +3,13 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 
@@ -39,7 +43,7 @@ public class FileIO {
 	 * @param content - The content String to write to file
 	 * @param fname - The Filename
 	 */
-	public void writeStringToFile(String content, String fname){
+	public static void writeStringToFile(String content, String fname){
 		try{
 			File file = new File("jefferson_stats.txt");
 		    file.createNewFile();
@@ -51,5 +55,40 @@ public class FileIO {
 		    wr.close();
 		}catch(IOException e){System.out.println(e);};
 		
+	}
+	
+	/**
+	 * Writes a 3D Object to files using Serialization
+	 * @param obj - The Object to Write
+	 * @param fname - The Filename to save to.
+	 */
+	public static void writeObject3DToFile(Object3D obj, String fname){
+		try{
+			FileOutputStream fo = new FileOutputStream(fname);
+			ObjectOutputStream oo = new ObjectOutputStream(fo);
+			oo.writeObject(obj);
+			oo.flush();
+			fo.close();
+		}catch(IOException e){System.out.println(e);};
+	}
+	
+	/**
+	 * Read a 3D Object from file saved with Serialization
+	 * @param fname - The Filename to read from
+	 * @return The Object3D
+	 */
+	public static Object3D readObject3DFromFile(String fname){
+		try{
+			FileInputStream fi = new FileInputStream(fname);
+			ObjectInputStream oi = new ObjectInputStream(fi);
+			Object obj = oi.readObject();
+			fi.close();
+			if(obj instanceof Object3D)
+				return (Object3D) obj;
+			else
+				return null;
+		}catch(IOException e){System.out.println(e);}
+		 catch (ClassNotFoundException e) {System.out.println(e);};
+		return null;
 	}
 }

@@ -31,7 +31,7 @@ public class Vector extends Point{
 	 * @param b - Second Point
 	 */
 	public Vector(Point a, Point b){
-		super(Math.subPoints(b, a));
+		super(Math3D.subPoints(b, a));
 	}
 	//A Vector is much like a point except that it needs to be handled
 	//differently. This class is here to differentiate the two.

@@ -37,6 +37,17 @@ public class Vertex {
 	}
 	
 	/**
+	 * Create a Vertex from 3 coordinates X Y Z
+	 * @param x - X Coordinate
+	 * @param y - Y Coordinate
+	 * @param z - Z Coordinate
+	 */
+	public Vertex(Float x, Float y, Float z) {
+		//Use Default Constructor
+		this(new Point(x, y, z));
+	}
+
+	/**
 	 * Set the vertex point
 	 * @param p - The new point
 	 */
@@ -80,7 +91,7 @@ public class Vertex {
 		if(norm == null)
 			norm = new Vector(0.0F, 0.0F, 0.0F); 
 		
-		norm = Math.vectorAdd(norm, p.getNorm());
+		norm = Math3D.vectorAdd(norm, p.getNorm());
 	}
 	
 	/**
@@ -90,7 +101,7 @@ public class Vertex {
 	protected void removePoly(Polygon p){
 		polys.remove(p);
 		
-		norm = Math.vectorSub(norm, p.getNorm());
+		norm = Math3D.vectorSub(norm, p.getNorm());
 	}
 	
 	

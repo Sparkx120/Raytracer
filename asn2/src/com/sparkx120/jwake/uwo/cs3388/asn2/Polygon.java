@@ -76,6 +76,6 @@ public class Polygon {
 		Vector A = new Vector(a.getPoint(), b.getPoint());
 		Vector B = new Vector(b.getPoint(), c.getPoint());
 		
-		return Math.crossProdVectors(A, B);
+		return Math3D.crossProdVectors(A, B);
 	}
 }
