@@ -1,12 +1,19 @@
 package com.sparkx120.jwake.uwo.cs3388.asn2;
 
+import java.io.Serializable;
+
 /**
  * Vector Class to represent Vectors
  * @author James Wake
  * @version 1.0
  */
-public class Vector extends Point{
+public class Vector extends Point implements Serializable{
 	
+	/**
+	 * Generated Serial UID
+	 */
+	private static final long serialVersionUID = -3728382632473220303L;
+
 	/**
 	 * Empty Constructor
 	 */

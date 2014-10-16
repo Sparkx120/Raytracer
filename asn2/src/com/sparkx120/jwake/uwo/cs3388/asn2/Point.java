@@ -1,12 +1,18 @@
 package com.sparkx120.jwake.uwo.cs3388.asn2;
 
+import java.io.Serializable;
+
 /**
  * 3D Point/Vector Class
  * @author James Wake
  * @version 1.0
  *
  */
-public class Point {
+public class Point implements Serializable{
+	/**
+	 * Generated Serial UID
+	 */
+	private static final long serialVersionUID = 3085957537125847385L;
 	private Float x, y, z;
 	
 	/**

@@ -1,9 +1,15 @@
 package com.sparkx120.jwake.uwo.cs3388.asn2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Vertex {
-	
+public class Vertex implements Serializable{
+
+	/**
+	 * Generated Serial UID
+	 */
+	private static final long serialVersionUID = 5727695601010804607L;
+
 	/**
 	 * Point that this Vertex is at
 	 */

@@ -36,12 +36,14 @@ public class ObjectMaker {
 		axis = inputObjectData.get(0).charAt(0);
 		rotations = 0;
 		list = generateInitVertexList();
+		lists = new VertexList[(int) (360.0/degreeRotation)];
 		while(360 > degreeRotation*rotations){
 			rotateXDegrees();
 		}
 		obj = new Object3D();
 		makePolys();
-		saveObjectToFile(args[1]);
+		System.out.println(obj.getFaces().size());
+		//saveObjectToFile(args[1]);
 	}
 	
 	//Read Specified Data File for Asn2
@@ -84,6 +86,7 @@ public class ObjectMaker {
 			currList.add(new Vertex(rotatedPoint));
 		}
 		
+		System.out.println(rotations);
 		lists[rotations] = currList;
 		rotations ++;
 	}
@@ -110,6 +113,6 @@ public class ObjectMaker {
 	}
 	
 	private static void saveObjectToFile(String fname){
-		FileIO.writeObject3DToFile(obj, fname);
+		FileIO.writeObjectToFile(obj.getFaces().get(0), fname);
 	}
 }

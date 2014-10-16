@@ -1,5 +1,7 @@
 package com.sparkx120.jwake.uwo.cs3388.asn2;
 
+import java.io.Serializable;
+
 /**
  * Polygon Class. Represents 3 Vertex Polygons with vertices a,b,c in
  * counter clockwise order for simple normal calculations
@@ -7,7 +9,11 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
  * @version 1.0
  *
  */
-public class Polygon {
+public class Polygon implements Serializable{
+	/**
+	 * Generated Serial UID
+	 */
+	private static final long serialVersionUID = -8454392535063907419L;
 	private Vertex a;
 	private Vertex b;
 	private Vertex c;

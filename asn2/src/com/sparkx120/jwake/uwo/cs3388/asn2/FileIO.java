@@ -62,7 +62,7 @@ public class FileIO {
 	 * @param obj - The Object to Write
 	 * @param fname - The Filename to save to.
 	 */
-	public static void writeObject3DToFile(Object3D obj, String fname){
+	public static void writeObjectToFile(Object obj, String fname){
 		try{
 			FileOutputStream fo = new FileOutputStream(fname);
 			ObjectOutputStream oo = new ObjectOutputStream(fo);
