@@ -19,6 +19,7 @@ public class Vector extends Point implements Serializable{
 	 */
 	public Vector(){
 		super();
+		this.h = 0.0F; //Don't Translate Vector
 	}
 	
 	/**
@@ -29,6 +30,7 @@ public class Vector extends Point implements Serializable{
 	 */
 	public Vector(Float x, Float y, Float z) {
 		super(x, y, z);
+		this.h = 0.0F; //Don't Translate Vector
 	}
 	
 	/**
@@ -39,6 +41,7 @@ public class Vector extends Point implements Serializable{
 	 */
 	public Vector(Point a, Point b){
 		super(Math3D.subPoints(b, a));
+		this.h = 0.0F; //Don't Translate Vector
 	}
 	//A Vector is much like a point except that it needs to be handled
 	//differently. This class is here to differentiate the two.

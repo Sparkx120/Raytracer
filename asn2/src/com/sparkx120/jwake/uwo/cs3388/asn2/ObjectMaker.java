@@ -19,7 +19,7 @@ public class ObjectMaker {
 	private static VertexList list;
 	private static VertexList[] lists; 
 	private static char axis;
-	private static Object3D obj;
+	private static PolyObject3D obj;
 	
 	/**
 	 * The Main method for the Object Maker
@@ -32,17 +32,23 @@ public class ObjectMaker {
 		}
 		//TODO Write the main logic
 		readFile(args[0]);
-		degreeRotation = Float.parseFloat(inputObjectData.get(1));
+		degreeRotation = 60.0F;//Float.parseFloat(inputObjectData.get(1));
 		axis = inputObjectData.get(0).charAt(0);
 		rotations = 0;
 		list = generateInitVertexList();
-		lists = new VertexList[(int) (360.0/degreeRotation)];
-		while(360 > degreeRotation*rotations){
+		lists = new VertexList[(int) (360.0/degreeRotation) + 1];
+		while(360+degreeRotation > degreeRotation*rotations){
 			rotateXDegrees();
 		}
-		obj = new Object3D();
+		obj = new PolyObject3D();
 		makePolys();
-		System.out.println(obj.getFaces().size());
+		System.out.println("Vertices Generated: " + obj.getVertices().size());
+		System.out.println("Faces Generated: " + obj.getFaces().size());
+		for(int i=0; i<obj.getVertices().size(); i++){
+			Vertex v = obj.getVertices().get(i);
+			Point p = v.getPoint();
+			System.out.println("x: " + p.getX() + " y: " + p.getY() + " z: " + p.getZ());
+		}
 		//saveObjectToFile(args[1]);
 	}
 	

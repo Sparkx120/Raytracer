@@ -13,13 +13,13 @@ public class Point implements Serializable{
 	 * Generated Serial UID
 	 */
 	private static final long serialVersionUID = 3085957537125847385L;
-	private Float x, y, z;
+	protected Float x, y, z, h;
 	
 	/**
 	 * Empty Constructor
 	 */
 	public Point(){
-		
+		this.h = 1.0F; //Translate Points
 	}
 	
 	/**
@@ -30,6 +30,7 @@ public class Point implements Serializable{
 		this.x = p.getX();
 		this.y = p.getY();
 		this.z = p.getZ();
+		this.h = 1.0F; //Translate Points
 	}
 	
 	/**
@@ -42,6 +43,7 @@ public class Point implements Serializable{
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.h = 1.0F; //Translate Points
 	}
 	
 	/**

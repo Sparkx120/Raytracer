@@ -77,14 +77,14 @@ public class FileIO {
 	 * @param fname - The Filename to read from
 	 * @return The Object3D
 	 */
-	public static Object3D readObject3DFromFile(String fname){
+	public static PolyObject3D readObject3DFromFile(String fname){
 		try{
 			FileInputStream fi = new FileInputStream(fname);
 			ObjectInputStream oi = new ObjectInputStream(fi);
 			Object obj = oi.readObject();
 			fi.close();
-			if(obj instanceof Object3D)
-				return (Object3D) obj;
+			if(obj instanceof PolyObject3D)
+				return (PolyObject3D) obj;
 			else
 				return null;
 		}catch(IOException e){System.out.println(e);}
