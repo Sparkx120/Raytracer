@@ -91,4 +91,28 @@ public class Math3D{
 		return new Vector(x, y, z);
 	}
 	
+	/**
+	 * Computes the magnitude of a Vector
+	 * @param v - The Vector
+	 * @return It's Magnitude
+	 */
+	public static float magnitudeOfVector(Vector v){
+		float x = v.getX();
+		float y = v.getY();
+		float z = v.getZ();
+		float h = v.getH();
+		
+		float out = (float) Math.sqrt((x*x) + (y*y) + (z*z) + (h*h));
+		return out;
+	}
+	
+	/**
+	 * Computes the Dot Product of Vectors and Points
+	 * @param a - Point a
+	 * @param b - Point b
+	 * @return - The Result of the Dot Product
+	 */
+	public static float dotProduct(Point a, Point b){ 
+		return (a.getX()*b.getX()) + (a.getY()*b.getY()) + (a.getZ()*b.getZ()) + (a.getH()*b.getH());
+	}
 }

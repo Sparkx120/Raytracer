@@ -19,7 +19,7 @@ public class ObjectMaker {
 	private static VertexList list;
 	private static VertexList[] lists; 
 	private static char axis;
-	private static PolyObject3D obj;
+	protected static PolyObject3D obj;
 	
 	/**
 	 * The Main method for the Object Maker
@@ -47,7 +47,7 @@ public class ObjectMaker {
 		for(int i=0; i<obj.getVertices().size(); i++){
 			Vertex v = obj.getVertices().get(i);
 			Point p = v.getPoint();
-			System.out.println("x: " + p.getX() + " y: " + p.getY() + " z: " + p.getZ());
+			//System.out.println("x: " + p.getX() + " y: " + p.getY() + " z: " + p.getZ());
 		}
 		//saveObjectToFile(args[1]);
 	}

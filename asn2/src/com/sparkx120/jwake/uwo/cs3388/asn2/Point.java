@@ -116,4 +116,12 @@ public class Point implements Serializable{
 		return false;
 	}
 	
+	/**
+	 * toString Override
+	 */
+	@Override
+	public String toString(){
+		return "x: " + this.getX() + " y: " + this.getY() + " z: " + this.getZ() + " h: " + this.getH();
+	}
+	
 }

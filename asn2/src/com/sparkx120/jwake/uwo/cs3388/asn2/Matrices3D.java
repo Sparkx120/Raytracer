@@ -15,11 +15,14 @@ public class Matrices3D {
 	 * @return Output Point
 	 */
 	public static Point affineTransformRx(Point in, Float deg){
+		float cos = (float) Math.cos(deg);
+		float sin = (float) Math.sin(deg);
 		Float x = in.getX();
-		Float y = (float) ((float) in.getY()*Math.cos(deg) - in.getZ()*Math.sin(deg));
-		Float z = (float) ((float) in.getY()*Math.sin(deg) + in.getZ()*Math.cos(deg));
+		Float y = in.getY()*cos - in.getZ()*sin;
+		Float z = in.getY()*sin + in.getZ()*cos;
 		Float h = in.getH();
 		
+		//Do this to make sure Vectors are Handled Correctly
 		Point out = new Point(x,y,z);
 		out.setH(h);
 		
@@ -33,11 +36,14 @@ public class Matrices3D {
 	 * @return Output Point
 	 */
 	public static Point affineTransformRy(Point in, Float deg){
-		Float x = (float) ((float) in.getX()*Math.cos(deg) + in.getZ()*Math.sin(deg));
+		float cos = (float) Math.cos(deg);
+		float sin = (float) Math.sin(deg);
+		Float x = in.getX()*cos + in.getZ()*sin;
 		Float y = in.getY();
-		Float z = (float) ((float) in.getZ()*Math.cos(deg) - in.getX()*Math.sin(deg));
+		Float z = in.getZ()*cos - in.getX()*sin;
 		Float h = in.getH();
 		
+		//Do this to make sure Vectors are Handled Correctly
 		Point out = new Point(x,y,z);
 		out.setH(h);
 		
@@ -51,11 +57,14 @@ public class Matrices3D {
 	 * @return Output Point
 	 */
 	public static Point affineTransformRz(Point in, Float deg){
-		Float x = (float) ((float) in.getX()*Math.cos(deg) - in.getY()*Math.sin(deg));
-		Float y = (float) ((float) in.getX()*Math.sin(deg) + in.getY()*Math.cos(deg));;
+		float cos = (float) Math.cos(deg);
+		float sin = (float) Math.sin(deg);
+		Float x = in.getX()*cos - in.getY()*sin;
+		Float y = in.getX()*sin + in.getY()*cos;
 		Float z = in.getZ();
 		Float h = in.getH();
 		
+		//Do this to make sure Vectors are Handled Correctly
 		Point out = new Point(x,y,z);
 		out.setH(h);
 		

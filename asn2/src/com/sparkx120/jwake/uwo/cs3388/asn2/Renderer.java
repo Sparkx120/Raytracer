@@ -1,5 +1,8 @@
 package com.sparkx120.jwake.uwo.cs3388.asn2;
 
-public class Renderer {
+import java.util.ArrayList;
 
+public abstract class Renderer {
+	
+	public abstract void renderObjects(ArrayList<PolyObject3D> objs);
 }

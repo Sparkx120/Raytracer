@@ -35,7 +35,7 @@ public class Vector extends Point implements Serializable{
 	
 	/**
 	 * Make a vector defined by two points. Vector will point from
-	 * A to B
+	 * A to B aka B - A
 	 * @param a - First Point
 	 * @param b - Second Point
 	 */

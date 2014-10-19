@@ -32,6 +32,10 @@ public class World {
 		camObjs.add(cam);
 	}
 	
+	/**
+	 * Gets All Renderable Objects
+	 * @return All renderable Objects
+	 */
 	public ArrayList<PolyObject3D> getRenderableObjects(){
 		return polyObjs;
 	}

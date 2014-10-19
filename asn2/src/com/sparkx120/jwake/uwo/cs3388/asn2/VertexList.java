@@ -2,6 +2,7 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Vertex List that prevents adding multiple copies of the same vertex
@@ -32,5 +33,19 @@ public class VertexList extends ArrayList<Vertex> implements Serializable{
 			super.add(item);
 			return true;
 		}
+	}
+	
+	/**
+	 * String Override
+	 */
+	@Override
+	public String toString(){
+		Iterator<Vertex> it = this.iterator();
+		String out = "";
+		while(it.hasNext()){
+			Vertex v = it.next();
+			out += "x: " + v.getPoint().getX() + " y: " + v.getPoint().getY() + " z: " + v.getPoint().getZ() + " h: " + v.getPoint().getH() + "\n";
+		}
+		return out;
 	}
 }
