@@ -71,6 +71,14 @@ public class Point implements Serializable{
 	}
 	
 	/**
+	 * Sets Coordinate h
+	 * @param h - New H Value
+	 */
+	public void setH(Float h){
+		this.h = h;
+	}
+	
+	/**
 	 * Get Coordinate X
 	 * @return The X Coordinate
 	 */
@@ -94,8 +102,16 @@ public class Point implements Serializable{
 		return z;
 	}
 	
+	/**
+	 * Gets Coordinate H
+	 * @return The H Coordinate
+	 */
+	public Float getH(){
+		return h;
+	}
+	
 	public boolean equals(Point p){
-		if(p.getX() == x && p.getY() == y && p.getZ() == z)
+		if(p.getX() == x && p.getY() == y && p.getZ() == z && p.getH() == h)
 			return true;
 		return false;
 	}

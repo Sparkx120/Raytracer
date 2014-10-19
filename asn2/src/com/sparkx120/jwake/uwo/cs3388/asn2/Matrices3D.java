@@ -18,8 +18,12 @@ public class Matrices3D {
 		Float x = in.getX();
 		Float y = (float) ((float) in.getY()*Math.cos(deg) - in.getZ()*Math.sin(deg));
 		Float z = (float) ((float) in.getY()*Math.sin(deg) + in.getZ()*Math.cos(deg));
+		Float h = in.getH();
 		
-		return new Vector(x,y,z);
+		Point out = new Point(x,y,z);
+		out.setH(h);
+		
+		return out;
 	}
 	
 	/**
@@ -32,8 +36,12 @@ public class Matrices3D {
 		Float x = (float) ((float) in.getX()*Math.cos(deg) + in.getZ()*Math.sin(deg));
 		Float y = in.getY();
 		Float z = (float) ((float) in.getZ()*Math.cos(deg) - in.getX()*Math.sin(deg));
+		Float h = in.getH();
 		
-		return new Vector(x,y,z);
+		Point out = new Point(x,y,z);
+		out.setH(h);
+		
+		return out;
 	}
 	
 	/**
@@ -46,7 +54,11 @@ public class Matrices3D {
 		Float x = (float) ((float) in.getX()*Math.cos(deg) - in.getY()*Math.sin(deg));
 		Float y = (float) ((float) in.getX()*Math.sin(deg) + in.getY()*Math.cos(deg));;
 		Float z = in.getZ();
+		Float h = in.getH();
 		
-		return new Vector(x,y,z);
+		Point out = new Point(x,y,z);
+		out.setH(h);
+		
+		return out;
 	}
 }

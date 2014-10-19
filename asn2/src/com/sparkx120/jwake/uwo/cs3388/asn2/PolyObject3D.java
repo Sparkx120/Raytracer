@@ -76,4 +76,12 @@ public class PolyObject3D extends Object3D implements Serializable{
 		Polygon poly = new Polygon(a, b, c);
 		polygons.add(poly);	
 	}
+	
+	public int getNumberOfPolys(){
+		return this.polygons.size();
+	}
+	
+	public int getNumberOfVertices(){
+		return this.vertices.size();
+	}
 }
