@@ -36,8 +36,8 @@ public class ObjectMaker {
 		axis = inputObjectData.get(0).charAt(0);
 		rotations = 0;
 		list = generateInitVertexList();
-		lists = new VertexList[(int) (360.0/degreeRotation) + 1];
-		while(360+degreeRotation > degreeRotation*rotations){
+		lists = new VertexList[(int) (360.0/degreeRotation) + 0];
+		while(360 > degreeRotation*rotations){
 			rotateXDegrees();
 		}
 		obj = new PolyObject3D();

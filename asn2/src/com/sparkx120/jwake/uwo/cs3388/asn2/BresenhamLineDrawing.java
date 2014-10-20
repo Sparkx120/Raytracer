@@ -6,9 +6,9 @@ import java.awt.image.BufferedImage;
 
 public class BresenhamLineDrawing {
 	
-	public static void drawLine(int x1, int x2, int y1, int y2, BufferedImage image, Color color){
-		bresenhamPlot(x1, y1, x2, y2, image, color);
-	}
+//	public static void drawLine(int x1, int x2, int y1, int y2, BufferedImage image, Color color){
+//		bresenhamPlot(x1, y1, x2, y2, image, color);
+//	}
 	
 	public static void drawLine(float x1f, float x2f, float y1f, float y2f, BufferedImage image, Color color){
 		int x1 = (int) Math.abs(x1f);
@@ -16,12 +16,13 @@ public class BresenhamLineDrawing {
 		int y1 = (int) Math.abs(y1f);
 		int y2 = (int) Math.abs(y2f);
 		
-		System.out.println(x1f + " " + y1f + " " + x2f + " " + y2f);
+		//System.out.println(x1f + " " + y1f + " " + x2f + " " + y2f);
 		
 		Graphics2D g = (Graphics2D) image.getGraphics();
 		g.setColor(color);
 		g.drawLine(x1, y1, x2, y2);
-		//bresenhamPlot(x1, y1, x2, y2, image, color);
+//		System.out.println("Drawng Line");
+//		bresenhamPlot(x1, y1, x2, y2, image, color, g);
 	}
 	
 	/**
@@ -34,7 +35,7 @@ public class BresenhamLineDrawing {
 	 * @param image - An Image to draw on
 	 * @param color - The color of the line
 	 */
-	private static void bresenhamPlot(int x1, int y1, int x2, int y2, BufferedImage image, Color color){
+	private static void bresenhamPlot(int x1, int y1, int x2, int y2, BufferedImage image, Color color, Graphics2D g){
 		//Get preliminary Data from LineObject
 		int deltaX = x2 - x1;
 		int deltaY = y2 - y1;
@@ -130,7 +131,7 @@ public class BresenhamLineDrawing {
 		
 		//Only Draw if Visible
 		if(x1 > 0 && y1 > 0 && x1 < image.getWidth() && y1 < image.getHeight())
-			image.setRGB(x1, y1, color.getRGB());
+			g.drawLine(x1, y1, x1, y1); //Same as setting a pixel
 		
 		int pi = 0;
 		int z = 0;
@@ -153,7 +154,7 @@ public class BresenhamLineDrawing {
 			
 			//Only draw if visible
 			if(loopPix[0] > 0 && loopPix[1] > 0 && loopPix[0] < image.getWidth() && loopPix[1] < image.getHeight())
-				image.setRGB(loopPix[0], loopPix[1], color.getRGB());
+				g.drawLine(loopPix[0], loopPix[1], loopPix[0], loopPix[1]);
 		}
 	}
 	

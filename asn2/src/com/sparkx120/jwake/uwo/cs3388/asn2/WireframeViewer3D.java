@@ -21,6 +21,7 @@ public class WireframeViewer3D {
 		world.addCameraObject(camera);
 		
 		Window3D viewer3D = new Window3D();
+		viewer3D.setTitle("Wireframe Viewer 3D");
 		
 		Renderer renderer = new WireframeRenderer(viewer3D, Color.BLACK, Color.WHITE);
 		
@@ -36,6 +37,6 @@ public class WireframeViewer3D {
 	private static void configCam(){
 		Point cameraPoint = new Point(20F, 20F, 20F);
 		Point gazePoint = new Point(0F, 0F, 0F);
-		camera = new CamObject3D(cameraPoint, gazePoint, width, height, 60F, world);
+		camera = new CamObject3D(cameraPoint, gazePoint, width, height, 100F, world);
 	}
 }

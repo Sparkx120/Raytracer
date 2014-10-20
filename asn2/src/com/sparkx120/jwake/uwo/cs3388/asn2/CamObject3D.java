@@ -56,6 +56,11 @@ public class CamObject3D extends Object3D{
 	private World world;
 	
 	/**
+	 * Debugging Output
+	 */
+	private boolean debug = true;
+	
+	/**
 	 * Constructs a new Synthetic Camera at Point P with "Gaze" Vector n and "Up" Vector u
 	 * @param p - The Point where the camera should be
 	 * @param n - The Normal Vector
@@ -73,32 +78,31 @@ public class CamObject3D extends Object3D{
 		this.u = u;
 		this.v = Math3D.crossProdVectors(n, u);
 		
+		//Set Params
+		this.width = width;
+		this.height = height;
+		this.theta = viewingAngle;
+		this.world = w;
+		
 		//Set Near and Far Plane Distance
-		this.N = 1.0F;
-		this.F = 100F;
+		this.N = 2.0F;
+		this.F = 1000F;
 		
 		//Compute matrixPipe
-		this.WS2T2 = WS2T2(width, height);
-		System.out.println("WS2T2: \n" + WS2T2.toString());
-		this.S1T1Mp = S1T1Mp(viewingAngle);
-		System.out.println("S1T1Mp: \n" + S1T1Mp.toString());
-		this.Mv = Mv();
-		System.out.println("Mv: \n" + Mv.toString());
-		this.matrixPipe = WS2T2.multiplyMatrixWithMatrix(S1T1Mp).multiplyMatrixWithMatrix(Mv);
-		System.out.println("matrixPipe: \n" + matrixPipe.toString());
-		System.out.println("WS2T2S1T1Mp: \n" + WS2T2.multiplyMatrixWithMatrix(S1T1Mp).toString());
-		this.world = w;
+		computeAndSetMatrixPipe();
 	}
 	
 	public CamObject3D(Point p, Point g, int width, int height, float viewingAngle, World w){
+		//Set Params
 		this.e = p;
 		this.width = width;
 		this.height = height;
 		this.theta = viewingAngle;
+		this.world = w;
 		
 		//Set Near and Far Plane Distance
 		this.N = 0.2F;
-		this.F = 40F;
+		this.F = 1000F;
 		
 		//Compute Vector n
 		Vector nP = new Vector(g, e);
@@ -115,24 +119,47 @@ public class CamObject3D extends Object3D{
 		this.v = Math3D.crossProdVectors(n, u);
 		//System.out.println("\n" + v);
 		
-		//Compute matrixPipe
-		this.WS2T2 = WS2T2(width, height);
-		System.out.println("WS2T2: \n" + WS2T2.toString());
-		this.S1T1Mp = S1T1Mp(viewingAngle);
-		System.out.println("S1T1Mp: \n" + S1T1Mp.toString());
-		this.Mv = Mv();
-		System.out.println("Mv: \n" + Mv.toString());
-		this.matrixPipe = WS2T2.multiplyMatrixWithMatrix(S1T1Mp).multiplyMatrixWithMatrix(Mv);
-		System.out.println("matrixPipe: \n" + matrixPipe.toString());
-		System.out.println("WS2T2S1T1Mp: \n" + WS2T2.multiplyMatrixWithMatrix(S1T1Mp).toString());
+		computeAndSetMatrixPipe();
 		
-//		this.WS2T2 = WS2T2(width, height);
-//		this.S1T1Mp = S1T1Mp(viewingAngle);
-//		this.Mv = Mv();
-//		this.matrixPipe = WS2T2.multiplyMatrixWithMatrix(S1T1Mp).multiplyMatrixWithMatrix(Mv);
-		this.world = w;
+		
 	}
 	
+	/**
+	 * Sets the Matrix Pipe up for Computations using current Variables
+	 */
+	private void computeAndSetMatrixPipe(){
+		//Compute WS2T2 Matrix
+		this.WS2T2 = WS2T2(width, height);
+		if(debug)
+			System.out.println("WS2T2: \n" + WS2T2.toString());
+		
+		//Compute S1T1Mp Matrix
+		this.S1T1Mp = S1T1Mp();
+		if(debug)
+			System.out.println("S1T1Mp: \n" + S1T1Mp.toString());
+		
+		//Compute Mv Matrix
+		this.Mv = Mv();
+		if(debug)
+			System.out.println("Mv: \n" + Mv.toString());
+		
+		//Compute First Multiplication
+		Matrix3D mid = WS2T2.multiplyMatrixWithMatrix(S1T1Mp);
+		if(debug)
+			System.out.println("MidMatrix: " + mid.toString());
+		
+		//Compute Final Multiplication and Pipe
+		this.matrixPipe = mid.multiplyMatrixWithMatrix(Mv);
+		if(debug)
+			System.out.println("Matrix Pipe: " + matrixPipe.toString());
+		
+		//this.matrixPipe = WS2T2.multiplyMatrixWithMatrix(S1T1Mp).multiplyMatrixWithMatrix(Mv);
+	}
+	
+	/**
+	 * Passes the current scene to the Set Renderer for Rendering
+	 * @param renderer - The Renderer
+	 */
 	public void renderFrame(Renderer renderer){
 		//Do Matrix Stuff Here
 		ArrayList<PolyObject3D> objs = world.getRenderableObjects();
@@ -148,21 +175,41 @@ public class CamObject3D extends Object3D{
 			Iterator<Polygon> it2 = polys.iterator();
 			while(it2.hasNext()){
 				Polygon poly = it2.next();
-				Vertex a = new Vertex(poly.getVertexA().getPoint());
-				Vertex b = new Vertex(poly.getVertexB().getPoint());
-				Vertex c = new Vertex(poly.getVertexC().getPoint());
-				a.setPoint(matrixPipe.multiplyMatrixWithPointOrVector(a.getPoint()));
-				b.setPoint(matrixPipe.multiplyMatrixWithPointOrVector(b.getPoint()));
-				c.setPoint(matrixPipe.multiplyMatrixWithPointOrVector(c.getPoint()));
-				rendObj.addPolygonByVertices(a, b, c);
+				Point a = poly.getVertexA().getPoint();
+				Point b = poly.getVertexB().getPoint();
+				Point c = poly.getVertexC().getPoint();
+				Vertex A = new Vertex(pipeCalc(a));
+				Vertex B = new Vertex(pipeCalc(b));
+				Vertex C = new Vertex(pipeCalc(c));
+				rendObj.addPolygonByVertices(A, B, C);
 			}
 			toRender.add(rendObj);
 		}
 		
 		//Send to Renderer to Draw on Screen
-		System.out.println(toRender.get(0));
+		//System.out.println(toRender.get(0));
 		System.out.println("Sending Objects to Renderer");
 		renderer.renderObjects(toRender);
+	}
+	
+	/**
+	 * Convert Point through the Matrix Pipe.
+	 * @param in - The Point in
+	 * @return The Converted Point
+	 */
+	private Point pipeCalc(Point in){
+		Point out;
+		
+//		out = matrixPipe.multiplyMatrixWithPointOrVector(in);
+		
+		out = Mv.multiplyMatrixWithPointOrVector(in);
+		System.out.println(out);
+		out = S1T1Mp.multiplyMatrixWithPointOrVector(out);
+		System.out.println(out);
+		out = WS2T2.multiplyMatrixWithPointOrVector(out);
+		System.out.println(out);
+		
+		return out;
 	}
 	
 	/**
@@ -204,7 +251,7 @@ public class CamObject3D extends Object3D{
 	private Matrix3D Mv(){
 		float[][] data = new float[4][4];
 		
-		System.out.println("MvDATA: " + n.getX() + " " + n.getY() + " " + n.getZ() + " " + n.getH() + " " + e.getX() + " " + e.getY() + " " + e.getZ() + " " + e.getH() + " ");
+//		System.out.println("MvDATA: " + n.getX() + " " + n.getY() + " " + n.getZ() + " " + n.getH() + " " + e.getX() + " " + e.getY() + " " + e.getZ() + " " + e.getH() + " ");
 		
 		//Setup matrix array
 		data[0][0] = u.getX();	data[0][1] = u.getY();	data[0][2] = u.getZ();	data[0][3] = -Math3D.dotProduct(e, u);
@@ -224,11 +271,10 @@ public class CamObject3D extends Object3D{
 	 * @param aspect - The Aspect Ratio
 	 * @return The Matrix3D Representation of S1T1Mp
 	 */
-	private Matrix3D S1T1Mp(float theta){
+	private Matrix3D S1T1Mp(){
 		float[][] data = new float[4][4];
 		
 		//Set Camera Variables
-		this.theta = theta;
 		this.t = (float) (N*Math.tan((Math.PI/180)*(theta/2)));
 		this.b = -t;
 		this.r = aspect*t;

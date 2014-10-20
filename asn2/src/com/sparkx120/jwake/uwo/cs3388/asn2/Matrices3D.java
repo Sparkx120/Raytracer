@@ -1,7 +1,7 @@
 package com.sparkx120.jwake.uwo.cs3388.asn2;
 
 /**
- * Matrix Math for 3D Transforms Etc.
+ * Matrix Math for 3D Transforms Etc. //TO BE PHASED INTO Math3D as static
  * @author James Wake
  * @version 1.0
  *

@@ -89,6 +89,12 @@ public class Matrix3D {
 		return this.matrix;
 	}
 	
+	/**
+	 * Multiplies This Matrix to another of the same type NxN
+	 * This * Matrix b
+	 * @param b - The Matrix to Multiply this matrix by
+	 * @return The Resultant Matrix3D
+	 */
 	public Matrix3D multiplyMatrixWithMatrix(Matrix3D b){
 		float[][] result = new float[4][4];
 		float[][] matrixb = b.getMatrix();
@@ -111,16 +117,15 @@ public class Matrix3D {
 		float z = v.getZ();
 		float h = v.getH();
 		
-		x = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + h*matrix[0][3];
-		y = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + h*matrix[1][3];
-		z = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + h*matrix[2][3];
-		h = x*matrix[3][0] + y*matrix[3][1] + z*matrix[3][2] + h*matrix[3][3];
+		float newx, newy, newz, newh;
 		
-		x *= 1/100F;
-		y *= 1/100F;
+		newx = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + h*matrix[0][3];
+		newy = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + h*matrix[1][3];
+		newz = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + h*matrix[2][3];
+		newh = x*matrix[3][0] + y*matrix[3][1] + z*matrix[3][2] + h*matrix[3][3];
 		
-		Point out = new Point(x,y,z);
-		out.setH(h);
+		Point out = new Point(newx, newy, newz);
+		out.setH(newh);
 		
 		return out;
 	}
