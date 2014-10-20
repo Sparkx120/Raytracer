@@ -13,17 +13,20 @@ public class WireframeViewer3D {
 		configTestObj();
 		ObjectMaker.main(new String[]{"vase.txt", "dump.obj"});
 		world = new World();
-		world.addPolyObject(ObjectMaker.obj);
+		world.addPolyObject(testObj);
+//		world.addPolyObject(ObjectMaker.obj);
 		width = 512;
 		height = 512;
 		configCam();
 		
 		world.addCameraObject(camera);
 		
-		Window3D viewer3D = new Window3D();
+		Window3D viewer3D = new Window3D(camera);
 		viewer3D.setTitle("Wireframe Viewer 3D");
 		
 		Renderer renderer = new WireframeRenderer(viewer3D, Color.BLACK, Color.WHITE);
+		
+		viewer3D.setRenderer(renderer);
 		
 		camera.renderFrame(renderer);
 		
@@ -31,12 +34,14 @@ public class WireframeViewer3D {
 	
 	private static void configTestObj(){
 		testObj = new PolyObject3D();
-		testObj.addPolygonByVertices(new Vertex(1F, 1F, 1F), new Vertex(0F, 0F, 0F), new Vertex(1F, 1F, 0F));
+		testObj.addPolygonByVertices(new Vertex(1F, 0F, 1F), new Vertex(0F, 0F, 0F), new Vertex(1F, 1F, 0F));
+		testObj.addPolygonByVertices(new Vertex(1F, 0F, 1F), new Vertex(0F, 0F, 0F), new Vertex(0F, 1F, 1F));
+		testObj.addPolygonByVertices(new Vertex(0F, 1F, 0F), new Vertex(0F, 0F, 0F), new Vertex(0F, 1F, 1F));
 	}
 	
 	private static void configCam(){
 		Point cameraPoint = new Point(20F, 20F, 20F);
 		Point gazePoint = new Point(0F, 0F, 0F);
-		camera = new CamObject3D(cameraPoint, gazePoint, width, height, 100F, world);
+		camera = new CamObject3D(cameraPoint, gazePoint, width, height, 60F, world);
 	}
 }

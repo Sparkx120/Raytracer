@@ -20,6 +20,7 @@ public class ObjectMaker {
 	private static VertexList[] lists; 
 	private static char axis;
 	protected static PolyObject3D obj;
+	private static Matrix3D rotate;
 	
 	/**
 	 * The Main method for the Object Maker
@@ -36,8 +37,16 @@ public class ObjectMaker {
 		axis = inputObjectData.get(0).charAt(0);
 		rotations = 0;
 		list = generateInitVertexList();
-		lists = new VertexList[(int) (360.0/degreeRotation) + 0];
-		while(360 > degreeRotation*rotations){
+		lists = new VertexList[(int) (360.0/degreeRotation) + 1];
+		switch(axis){
+			case 'x': rotate = Matrices3D.affineTransformRx(degreeRotation*rotations);
+					  break;
+			case 'y': rotate = Matrices3D.affineTransformRy(degreeRotation*rotations);
+					  break;
+			case 'z': rotate = Matrices3D.affineTransformRz(degreeRotation*rotations);
+				  break;
+		}
+		while(360+degreeRotation > degreeRotation*rotations){
 			rotateXDegrees();
 		}
 		obj = new PolyObject3D();
@@ -81,14 +90,7 @@ public class ObjectMaker {
 		while(vertices.hasNext()){
 			Vertex curr = vertices.next();
 			Point rotatedPoint = new Point();
-			switch(axis){
-				case 'x': rotatedPoint = Matrices3D.affineTransformRx(curr.getPoint(), degreeRotation*rotations);
-						  break;
-				case 'y': rotatedPoint = Matrices3D.affineTransformRy(curr.getPoint(), degreeRotation*rotations);
-						  break;
-				case 'z': rotatedPoint = Matrices3D.affineTransformRz(curr.getPoint(), degreeRotation*rotations);
-						  break;
-			}
+			rotatedPoint = rotate.multiplyMatrixWithPoint(curr.getPoint());
 			currList.add(new Vertex(rotatedPoint));
 		}
 		

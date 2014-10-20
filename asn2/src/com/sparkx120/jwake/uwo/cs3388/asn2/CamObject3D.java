@@ -28,6 +28,7 @@ public class CamObject3D extends Object3D{
 	 * Camera Gaze Vector
 	 */
 	private Vector n;
+	private Point g;
 	/**
 	 * Edge variables of Camera
 	 */
@@ -45,6 +46,7 @@ public class CamObject3D extends Object3D{
 	/**
 	 * Camera Transform Matrices
 	 */
+	Matrix3D M;
 	Matrix3D Mv;
 	Matrix3D S1T1Mp;
 	Matrix3D WS2T2;
@@ -99,25 +101,26 @@ public class CamObject3D extends Object3D{
 		this.height = height;
 		this.theta = viewingAngle;
 		this.world = w;
+		this.g = g;
 		
 		//Set Near and Far Plane Distance
 		this.N = 0.2F;
 		this.F = 1000F;
 		
 		//Compute Vector n
-		Vector nP = new Vector(g, e);
-		float nPmag = 1/Math3D.magnitudeOfVector(nP);
-		this.n = Math3D.scalarMultiplyVector(nP, nPmag); //Maybe need to invert Direction
-		//System.out.println(n + "\n" + " nP " + nP + "\n" + nPmag + "\n");
-		
-		//Compute Vector u (+y axis = up for now) 
-		Vector pP = new Vector(0F,1F,0F);
-		this.u = Math3D.crossProdVectors(pP, n);
-		//System.out.println(u + "\n" + pP);
-		
-		//Compute Vector v
-		this.v = Math3D.crossProdVectors(n, u);
-		//System.out.println("\n" + v);
+				Vector nP = new Vector(g, e);
+				float nPmag = 1/Math3D.magnitudeOfVector(nP);
+				this.n = Math3D.scalarMultiplyVector(nP, nPmag); //Maybe need to invert Direction
+				//System.out.println(n + "\n" + " nP " + nP + "\n" + nPmag + "\n");
+				
+				//Compute Vector u (+y axis = up for now) 
+				Vector pP = new Vector(0F,1F,0F);
+				this.u = Math3D.crossProdVectors(pP, n);
+				//System.out.println(u + "\n" + pP);
+				
+				//Compute Vector v
+				this.v = Math3D.crossProdVectors(n, u);
+				//System.out.println("\n" + v);
 		
 		computeAndSetMatrixPipe();
 		
@@ -128,6 +131,7 @@ public class CamObject3D extends Object3D{
 	 * Sets the Matrix Pipe up for Computations using current Variables
 	 */
 	private void computeAndSetMatrixPipe(){
+		
 		//Compute WS2T2 Matrix
 		this.WS2T2 = WS2T2(width, height);
 		if(debug)
@@ -142,6 +146,9 @@ public class CamObject3D extends Object3D{
 		this.Mv = Mv();
 		if(debug)
 			System.out.println("Mv: \n" + Mv.toString());
+		
+		//Compute M Matrix (Not in Pipe)
+		this.M = M();
 		
 		//Compute First Multiplication
 		Matrix3D mid = WS2T2.multiplyMatrixWithMatrix(S1T1Mp);
@@ -202,11 +209,11 @@ public class CamObject3D extends Object3D{
 		
 //		out = matrixPipe.multiplyMatrixWithPointOrVector(in);
 		
-		out = Mv.multiplyMatrixWithPointOrVector(in);
-		System.out.println(out);
-		out = S1T1Mp.multiplyMatrixWithPointOrVector(out);
-		System.out.println(out);
-		out = WS2T2.multiplyMatrixWithPointOrVector(out);
+		out = Mv.multiplyMatrixWithPoint(in);
+//		System.out.println(out);
+		out = S1T1Mp.multiplyMatrixWithPoint(out);
+//		System.out.println(out);
+		out = WS2T2.multiplyMatrixWithPoint(out);
 		System.out.println(out);
 		
 		return out;
@@ -216,33 +223,76 @@ public class CamObject3D extends Object3D{
 	 * Camera Movement Methods
 	 */
 	
-	public void translateCameraX(){
+	//AD
+	public void translateCameraV(float mag){
+//		Vector motion = new Vector(mag, 0.0F, 0.0F);
+//		Vector worldMotion = M.multiplyMatrixWithVector(motion);
+		Vector worldMotion = Math3D.scalarMultiplyVector(v, mag);
+		Point newE = Math3D.addPoints(worldMotion, e);
+		e = newE;
 		
+		computeAndSetMatrixPipe();
 	}
 	
-	public void translateCameraY(){
+	//WS
+	public void translateCameraN(float mag){
+//		Vector motion = new Vector(0, 0.0F, mag);
+//		Vector worldMotion = M.multiplyMatrixWithVector(motion);
+		Vector worldMotion = Math3D.scalarMultiplyVector(n, mag);
+		Point newE = Math3D.addPoints(worldMotion, e);
+		e = newE;
 		
+		computeAndSetMatrixPipe();
 	}
 
-	public void translateCameraZ(){
+	public void translateCameraU(){
 		
 	}
 	
-	public void rotateCameraX(){
-		
+	//X Mouse
+	public void rotateCameraU(float mag){
+		Matrix3D rotate = Matrices3D.affineTransformRy(mag);
+		this.v = rotate.multiplyMatrixWithVector(v);
+		this.u = rotate.multiplyMatrixWithVector(u);
+		computeAndSetMatrixPipe();
 	}
 	
-	public void rotateCameraY(){
-		
+	//Y Mouse
+	public void rotateCameraV(float mag){
+		Matrix3D rotate = Matrices3D.affineTransformRx(mag);
+		this.u = rotate.multiplyMatrixWithVector(u);
+		this.n = rotate.multiplyMatrixWithVector(n);
+		computeAndSetMatrixPipe();
 	}
 
-	public void rotateCameraZ(){
+	public void rotateCameraN(){
 		
 	}
 	
 	/**
 	 * Camera Perspective from World Coords Conversion Matrices
 	 */
+	
+	/**
+	 * Generates the M Matrix from the Notes 
+	 * @return The Matrix3D Representation of Mv
+	 */
+	private Matrix3D M(){
+		float[][] data = new float[4][4];
+		
+//		System.out.println("MvDATA: " + n.getX() + " " + n.getY() + " " + n.getZ() + " " + n.getH() + " " + e.getX() + " " + e.getY() + " " + e.getZ() + " " + e.getH() + " ");
+		
+		//Setup matrix array
+		data[0][0] = u.getX();	data[0][1] = v.getX();	data[0][2] = n.getX();	data[0][3] = e.getX();
+		data[1][0] = u.getY();	data[1][1] = v.getY();	data[1][2] = n.getY();	data[1][3] = e.getY();
+		data[2][0] = u.getZ();	data[2][1] = v.getZ();	data[2][2] = n.getZ();	data[2][3] = e.getZ();
+		data[3][0] = 0;			data[3][1] = 0;			data[3][2] = 0;			data[3][3] = 1;
+		
+		//Output
+		Matrix3D Mv = new Matrix3D(data);
+		
+		return Mv;
+	}
 	
 	/**
 	 * Generates the Mv Matrix from the Notes 
@@ -310,6 +360,21 @@ public class CamObject3D extends Object3D{
 		data[0][0] = width/2;	data[0][1] = 0;			data[0][2] = 0;	data[0][3] = width/2;
 		data[1][0] = 0;			data[1][1] = -height/2;	data[1][2] = 0; data[1][3] = ((-height/2) + height);
 		data[2][0] = 0;			data[2][1] = 0;			data[2][2] = 1;	data[2][3] = 0;
+		data[3][0] = 0;			data[3][1] = 0;			data[3][2] = 0; data[3][3] = 1;
+		
+		//Output
+		Matrix3D out = new Matrix3D(data);
+		
+		return out;
+	}
+	
+	private Matrix3D affineTranslate(float u, float v, float n){
+		float[][] data = new float[4][4];
+		
+		//Setup matrix array
+		data[0][0] = 1;			data[0][1] = 0;			data[0][2] = 0;	data[0][3] = u;
+		data[1][0] = 0;			data[1][1] = 1;			data[1][2] = 0; data[1][3] = v;
+		data[2][0] = 0;			data[2][1] = 0;			data[2][2] = 1;	data[2][3] = n;
 		data[3][0] = 0;			data[3][1] = 0;			data[3][2] = 0; data[3][3] = 1;
 		
 		//Output
