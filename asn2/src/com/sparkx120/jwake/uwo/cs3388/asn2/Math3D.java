@@ -87,8 +87,31 @@ public class Math3D{
 		Float x = v.getX()*s;
 		Float y = v.getY()*s;
 		Float z = v.getZ()*s;
+		Float h = v.getH()*s;
 		
-		return new Vector(x, y, z);
+		Vector out = new Vector(x, y, z);
+		out.setH(h);
+		
+		return out;
+	}
+	
+	/**
+	 * Scalar Multiply Point P
+	 * @param v - Point P
+	 * @param s - Scalar
+	 * @return Result of Multiplication
+	 */
+	public static Point scalarMultiplyPoint(Point v, Float s){
+		Float x = v.getX()*s;
+		Float y = v.getY()*s;
+		Float z = v.getZ()*s;
+		Float h = v.getH()*s;
+		
+		Point out = new Point(x, y, z);
+		out.setH(h);
+		
+		return out;
+		
 	}
 	
 	/**

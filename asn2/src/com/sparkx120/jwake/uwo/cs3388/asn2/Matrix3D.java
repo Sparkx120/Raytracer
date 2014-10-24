@@ -117,14 +117,15 @@ public class Matrix3D {
 		float z = v.getZ();
 		float h = v.getH();
 		
-		float newx, newy, newz;
+		float newx, newy, newz, newh;
 		
 		newx = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + h*matrix[0][3];
 		newy = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + h*matrix[1][3];
 		newz = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + h*matrix[2][3];
+		newh = x*matrix[3][0] + y*matrix[3][1] + z*matrix[3][2] + h*matrix[3][3];
 		
 		Point out = new Point(newx, newy, newz);
-		//out.setH(h);
+		out.setH(newh);
 		
 		return out;
 	}
@@ -135,14 +136,15 @@ public class Matrix3D {
 		float z = v.getZ();
 		float h = v.getH();
 		
-		float newx, newy, newz;
+		float newx, newy, newz, newh;
 		
 		newx = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + h*matrix[0][3];
 		newy = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + h*matrix[1][3];
 		newz = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + h*matrix[2][3];
+		newh = x*matrix[3][0] + y*matrix[3][1] + z*matrix[3][2] + h*matrix[3][3];
 		
 		Vector out = new Vector(newx, newy, newz);
-		//out.setH(h);
+		out.setH(newh);
 		
 		return out;
 	}

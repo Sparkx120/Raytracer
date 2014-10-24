@@ -15,13 +15,13 @@ public class WireframeViewer3D {
 		world = new World();
 		world.addPolyObject(testObj);
 //		world.addPolyObject(ObjectMaker.obj);
-		width = 512;
-		height = 512;
+		width = 1024;
+		height = 1024;
 		configCam();
 		
 		world.addCameraObject(camera);
 		
-		Window3D viewer3D = new Window3D(camera);
+		Window3D viewer3D = new Window3D(camera, width, height);
 		viewer3D.setTitle("Wireframe Viewer 3D");
 		
 		Renderer renderer = new WireframeRenderer(viewer3D, Color.BLACK, Color.WHITE);
@@ -34,9 +34,17 @@ public class WireframeViewer3D {
 	
 	private static void configTestObj(){
 		testObj = new PolyObject3D();
-		testObj.addPolygonByVertices(new Vertex(1F, 0F, 1F), new Vertex(0F, 0F, 0F), new Vertex(1F, 1F, 0F));
-		testObj.addPolygonByVertices(new Vertex(1F, 0F, 1F), new Vertex(0F, 0F, 0F), new Vertex(0F, 1F, 1F));
-		testObj.addPolygonByVertices(new Vertex(0F, 1F, 0F), new Vertex(0F, 0F, 0F), new Vertex(0F, 1F, 1F));
+//		testObj.addPolygonByVertices(new Vertex(1F, 0F, 1F), new Vertex(0F, 0F, 0F), new Vertex(1F, 1F, 0F));
+//		testObj.addPolygonByVertices(new Vertex(1F, 0F, 1F), new Vertex(0F, 0F, 0F), new Vertex(0F, 1F, 1F));
+//		testObj.addPolygonByVertices(new Vertex(0F, 1F, 0F), new Vertex(0F, 0F, 0F), new Vertex(0F, 1F, 1F));
+		testObj.addPolygonByVertices(new Vertex(0F, 5F, 0F), new Vertex(0F, 0F, 5F), new Vertex(5F, 0F, 0F));
+		testObj.addPolygonByVertices(new Vertex(0F, 5F, 0F), new Vertex(5F, 0F, 0F), new Vertex(0F, 0F, -5F));
+		testObj.addPolygonByVertices(new Vertex(0F, 5F, 0F), new Vertex(0F, 0F, -5F), new Vertex(-5F, 0F, 0F));
+		testObj.addPolygonByVertices(new Vertex(0F, 5F, 0F), new Vertex(-5F, 0F, 0F), new Vertex(0F, 0F, 5F));
+		testObj.addPolygonByVertices(new Vertex(0F, -5F, 0F), new Vertex(5F, 0F, 0F), new Vertex(0F, 0F, 5F));
+		testObj.addPolygonByVertices(new Vertex(0F, -5F, 0F), new Vertex(0F, 0F, -5F), new Vertex(5F, 0F, 0F));
+		testObj.addPolygonByVertices(new Vertex(0F, -5F, 0F), new Vertex(-5F, 0F, 0F), new Vertex(0F, 0F, -5F));
+		testObj.addPolygonByVertices(new Vertex(0F, -5F, 0F), new Vertex(0F, 0F, 5F), new Vertex(-5F, 0F, 0F));
 	}
 	
 	private static void configCam(){

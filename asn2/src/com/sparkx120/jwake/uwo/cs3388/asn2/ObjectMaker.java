@@ -38,14 +38,6 @@ public class ObjectMaker {
 		rotations = 0;
 		list = generateInitVertexList();
 		lists = new VertexList[(int) (360.0/degreeRotation) + 1];
-		switch(axis){
-			case 'x': rotate = Matrices3D.affineTransformRx(degreeRotation*rotations);
-					  break;
-			case 'y': rotate = Matrices3D.affineTransformRy(degreeRotation*rotations);
-					  break;
-			case 'z': rotate = Matrices3D.affineTransformRz(degreeRotation*rotations);
-				  break;
-		}
 		while(360+degreeRotation > degreeRotation*rotations){
 			rotateXDegrees();
 		}
@@ -85,6 +77,15 @@ public class ObjectMaker {
 	
 	private static void rotateXDegrees(){
 		Iterator<Vertex> vertices = list.iterator();
+		
+		switch(axis){
+			case 'x': rotate = Matrices3D.affineTransformRx(degreeRotation*rotations);
+					  break;
+			case 'y': rotate = Matrices3D.affineTransformRy(degreeRotation*rotations);
+					  break;
+			case 'z': rotate = Matrices3D.affineTransformRz(degreeRotation*rotations);
+				  break;
+		}
 		
 		VertexList currList = new VertexList();
 		while(vertices.hasNext()){

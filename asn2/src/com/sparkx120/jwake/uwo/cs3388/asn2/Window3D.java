@@ -10,8 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 public class Window3D extends JFrame implements MouseListener, KeyListener{
-	private int width = 1024;
-	private int height = 1024;
+	private int width;
+	private int height;
 	private Pane3D drawPane;
 	private CamObject3D camera;
 	private Renderer renderer;
@@ -26,8 +26,11 @@ public class Window3D extends JFrame implements MouseListener, KeyListener{
 	 */
 	private static final long serialVersionUID = -550572534199899045L;
 	
-	public Window3D(CamObject3D camera){
+	public Window3D(CamObject3D camera, int width, int height){
 		super();
+		
+		this.width = width;
+		this.height = height;
 		
 		//Configure Window
 		this.setSize(width, height);
@@ -79,6 +82,8 @@ public class Window3D extends JFrame implements MouseListener, KeyListener{
 			case 'd': camera.translateCameraV(0.1F); break;
 			case 'w': camera.translateCameraN(-0.1F); break;
 			case 's': camera.translateCameraN(0.1F); break;
+			case 'r': camera.translateCameraU(0.1F); break;
+			case 'f': camera.translateCameraU(-0.1F); break;
 			case 'q': camera.rotateCameraU(-1); break;
 			case 'e': camera.rotateCameraU(1); break;
 			case 'z': camera.rotateCameraV(-1); break;

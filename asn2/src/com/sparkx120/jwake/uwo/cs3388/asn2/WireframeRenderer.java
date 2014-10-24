@@ -12,7 +12,7 @@ public class WireframeRenderer extends Renderer{
 	private Window3D window;
 	private Color backgroundC;
 	private Color lineC;
-	private boolean removeBackFaces = false;
+	private boolean removeBackFaces = true;
 	private BufferedImage buffer;
 	
 	/**

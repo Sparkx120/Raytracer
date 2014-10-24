@@ -11,10 +11,10 @@ public class BresenhamLineDrawing {
 //	}
 	
 	public static void drawLine(float x1f, float x2f, float y1f, float y2f, BufferedImage image, Color color){
-		int x1 = (int) Math.abs(x1f);
-		int x2 = (int) Math.abs(x2f);
-		int y1 = (int) Math.abs(y1f);
-		int y2 = (int) Math.abs(y2f);
+		int x1 = (int) Math.ceil(x1f);
+		int x2 = (int) Math.ceil(x2f);
+		int y1 = (int) Math.ceil(y1f);
+		int y2 = (int) Math.ceil(y2f);
 		
 		//System.out.println(x1f + " " + y1f + " " + x2f + " " + y2f);
 		
