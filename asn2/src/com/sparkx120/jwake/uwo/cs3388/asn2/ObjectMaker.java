@@ -33,7 +33,7 @@ public class ObjectMaker {
 		}
 		//TODO Write the main logic
 		readFile(args[0]);
-		degreeRotation = 60.0F;//Float.parseFloat(inputObjectData.get(1));
+		degreeRotation = Float.parseFloat(inputObjectData.get(1));
 		axis = inputObjectData.get(0).charAt(0);
 		rotations = 0;
 		list = generateInitVertexList();

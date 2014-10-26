@@ -63,37 +63,37 @@ public class CamObject3D extends Object3D{
 	private boolean debug = false;
 	private boolean debugPoints = false;
 	
-	/**
-	 * Constructs a new Synthetic Camera at Point P with "Gaze" Vector n and "Up" Vector u
-	 * @param p - The Point where the camera should be
-	 * @param n - The Normal Vector
-	 * @param u - The Up Gaze Vector
-	 * @param width - The Pixel Width of the Camera
-	 * @param height - The Pixel Height of the Camera
-	 * @param viewingAngle - The Viewing angle of the Camera in Degrees
-	 *  
-	 * @param w - The World this camera is in
-	 */
-	public CamObject3D(Point p, Vector n, Vector u,int width, int height, float viewingAngle, World w){
-		//Set Vectors
-		this.e = p;
-		this.n = n;
-		this.u = u;
-		this.v = Math3D.crossProdVectors(n, u);
-		
-		//Set Params
-		this.width = width;
-		this.height = height;
-		this.theta = viewingAngle;
-		this.world = w;
-		
-		//Set Near and Far Plane Distance
-		this.N = 1.0F;
-		this.F = 100F;
-		
-		//Compute matrixPipe
-		computeAndSetMatrixPipe();
-	}
+//	/**
+//	 * Constructs a new Synthetic Camera at Point P with "Gaze" Vector n and "Up" Vector u
+//	 * @param p - The Point where the camera should be
+//	 * @param n - The Normal Vector
+//	 * @param u - The Up Gaze Vector
+//	 * @param width - The Pixel Width of the Camera
+//	 * @param height - The Pixel Height of the Camera
+//	 * @param viewingAngle - The Viewing angle of the Camera in Degrees
+//	 *  
+//	 * @param w - The World this camera is in
+//	 */
+//	public CamObject3D(Point p, Vector n, Vector u,int width, int height, float viewingAngle, World w){
+//		//Set Vectors
+//		this.e = p;
+//		this.n = n;
+//		this.u = u;
+//		this.v = Math3D.crossProdVectors(n, u);
+//		
+//		//Set Params
+//		this.width = width;
+//		this.height = height;
+//		this.theta = viewingAngle;
+//		this.world = w;
+//		
+//		//Set Near and Far Plane Distance
+//		this.N = 1.0F;
+//		this.F = 100F;
+//		
+//		//Compute matrixPipe
+//		computeAndSetMatrixPipe();
+//	}
 	
 	public CamObject3D(Point p, Point g, int width, int height, float viewingAngle, World w){
 		//Set Params
@@ -112,16 +112,14 @@ public class CamObject3D extends Object3D{
 		Vector nP = new Vector(g, e);
 		float nPmag = 1/Math3D.magnitudeOfVector(nP);
 		this.n = Math3D.scalarMultiplyVector(nP, nPmag); //Maybe need to invert Direction
-		//System.out.println(n + "\n" + " nP " + nP + "\n" + nPmag + "\n");
 		
 		//Compute Vector u (+y axis = up for now) 
 		Vector pP = new Vector(0F,1F,0F);
 		this.u = Math3D.crossProdVectors(pP, n);
-		//System.out.println(u + "\n" + pP);
+		this.u = Math3D.scalarMultiplyVector(u, -1F);
 		
 		//Compute Vector v
 		this.v = Math3D.crossProdVectors(n, u);
-		//System.out.println("\n" + v);
 		
 		computeAndSetMatrixPipe();
 		
@@ -176,7 +174,6 @@ public class CamObject3D extends Object3D{
 	public void renderFrame(Renderer renderer){
 		//Do Matrix Stuff Here
 		ArrayList<PolyObject3D> objs = world.getRenderableObjects();
-		System.out.println(objs.get(0));
 		
 		//Create Objects with Camera Coordinates and put them in an ArrayList
 		ArrayList<PolyObject3D> toRender = new ArrayList<PolyObject3D>();
@@ -200,8 +197,8 @@ public class CamObject3D extends Object3D{
 		}
 		
 		//Send to Renderer to Draw on Screen
-		//System.out.println(toRender.get(0));
-		System.out.println("Sending Objects to Renderer");
+		if(debug)
+			System.out.println("Sending Objects to Renderer");
 		renderer.renderObjects(toRender);
 	}
 	
@@ -272,8 +269,8 @@ public class CamObject3D extends Object3D{
 	
 	//X Mouse
 	public void rotateCameraU(float mag){
-		Matrix3D rotate = Matrices3D.affineTransformRy(mag);
-		this.u = rotate.multiplyMatrixWithVector(u);
+		Matrix3D rotate = Matrices3D.rotateOnArbitrary(mag, u);
+		this.v = rotate.multiplyMatrixWithVector(v);
 		this.n = rotate.multiplyMatrixWithVector(n);
 		
 //		computeAndSetMatrixPipe();
@@ -282,8 +279,8 @@ public class CamObject3D extends Object3D{
 	
 	//Y Mouse
 	public void rotateCameraV(float mag){
-		Matrix3D rotate = Matrices3D.affineTransformRx(mag);
-		this.v = rotate.multiplyMatrixWithVector(v);
+		Matrix3D rotate = Matrices3D.rotateOnArbitrary(mag, v);
+		this.u = rotate.multiplyMatrixWithVector(u);
 		this.n = rotate.multiplyMatrixWithVector(n);
 		
 //		computeAndSetMatrixPipe();
@@ -305,8 +302,6 @@ public class CamObject3D extends Object3D{
 	private Matrix3D M(){
 		float[][] data = new float[4][4];
 		
-//		System.out.println("MvDATA: " + n.getX() + " " + n.getY() + " " + n.getZ() + " " + n.getH() + " " + e.getX() + " " + e.getY() + " " + e.getZ() + " " + e.getH() + " ");
-		
 		//Setup matrix array
 		data[0][0] = u.getX();	data[0][1] = v.getX();	data[0][2] = n.getX();	data[0][3] = e.getX();
 		data[1][0] = u.getY();	data[1][1] = v.getY();	data[1][2] = n.getY();	data[1][3] = e.getY();
@@ -325,8 +320,6 @@ public class CamObject3D extends Object3D{
 	 */
 	private Matrix3D Mv(){
 		float[][] data = new float[4][4];
-		
-//		System.out.println("MvDATA: " + n.getX() + " " + n.getY() + " " + n.getZ() + " " + n.getH() + " " + e.getX() + " " + e.getY() + " " + e.getZ() + " " + e.getH() + " ");
 		
 		//Setup matrix array
 		data[0][0] = u.getX();	data[0][1] = u.getY();	data[0][2] = u.getZ();	data[0][3] = -Math3D.dotProduct(e, u);

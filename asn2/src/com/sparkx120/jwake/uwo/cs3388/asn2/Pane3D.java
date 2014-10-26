@@ -33,7 +33,6 @@ public class Pane3D extends JPanel{
 		super.paint(graphics);
         Graphics2D g = (Graphics2D) graphics;
         
-        System.out.println("Painting Images onto Pane");
         g.drawImage(buffer, 0, 0, width, height, null);
     }
 	

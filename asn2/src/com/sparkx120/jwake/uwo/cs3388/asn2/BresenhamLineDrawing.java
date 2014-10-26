@@ -11,18 +11,11 @@ public class BresenhamLineDrawing {
 //	}
 	
 	public static void drawLine(float x1f, float x2f, float y1f, float y2f, BufferedImage image, Color color){
-		int x1 = (int) Math.ceil(x1f);
-		int x2 = (int) Math.ceil(x2f);
-		int y1 = (int) Math.ceil(y1f);
-		int y2 = (int) Math.ceil(y2f);
-		
 		//System.out.println(x1f + " " + y1f + " " + x2f + " " + y2f);
 		
 		Graphics2D g = (Graphics2D) image.getGraphics();
 		g.setColor(color);
-		g.drawLine(x1, y1, x2, y2);
-//		System.out.println("Drawng Line");
-//		bresenhamPlot(x1, y1, x2, y2, image, color, g);
+		bresenhamPlot(x1f, y1f, x2f, y2f, image, color, g);
 	}
 	
 	/**
@@ -35,28 +28,35 @@ public class BresenhamLineDrawing {
 	 * @param image - An Image to draw on
 	 * @param color - The color of the line
 	 */
-	private static void bresenhamPlot(int x1, int y1, int x2, int y2, BufferedImage image, Color color, Graphics2D g){
-		//Get preliminary Data from LineObject
-		int deltaX = x2 - x1;
-		int deltaY = y2 - y1;
+	private static int bresenhamPlot(float x1f, float y1f, float x2f, float y2f, BufferedImage image, Color color, Graphics2D g){
+		//Get preliminary Data
+		int x1 = Math.round(x1f);
+		int y1 = Math.round(y1f);
+		int x2 = Math.round(x2f);
+		int y2 = Math.round(y2f);
+		float deltaX = x2 - x1;
+		float deltaY = y2 - y1;
+		g.drawLine(x1, y1, x2, y2);
+		if(true)
+			return 0;
 
 		//Initialize Variables for Algorithm
 		int iInitial = 0;
 		int loopInc = 0;
-		int dX = deltaX;
-		int dY = deltaY;
+		int dX = Math.round(deltaX);
+		int dY = Math.round(deltaY);
 		int stepPixel = 0;
 		int stepPixelInc = 0;
 		int loopPixel = 0;
 		int loopPixelInc = 0;
 		
 		//Compute Octant Dependant Variables for algorithm and setup said Variables
-		int octant = computeOctant(deltaX, deltaY);
+		int octant = computeOctant(dX, dY);
 		switch(octant){
 		case 0: iInitial = x1;
 				loopInc = 1;
-				dX = deltaX;
-				dY = deltaY;
+				dX = Math.round(deltaX);
+				dY = Math.round(deltaY);
 				stepPixel = y1;
 				stepPixelInc = 1;
 				loopPixel = x1;
@@ -64,8 +64,8 @@ public class BresenhamLineDrawing {
 				break;
 		case 1: iInitial = y1;
 				loopInc = 1;
-				dX = deltaY;
-				dY = deltaX;
+				dX = Math.round(deltaY);
+				dY = Math.round(deltaX);
 				stepPixel = x1;
 				stepPixelInc = 1;
 				loopPixel = y1;
@@ -73,8 +73,8 @@ public class BresenhamLineDrawing {
 				break;
 		case 2: iInitial = y1;
 				loopInc = 1;
-				dX = deltaY;
-				dY = deltaX;
+				dX = Math.round(deltaY);
+				dY = Math.round(deltaX);
 				stepPixel = x1;
 				stepPixelInc = -1;
 				loopPixel = y1;
@@ -82,8 +82,8 @@ public class BresenhamLineDrawing {
 				break;
 		case 3: iInitial = x1;
 				loopInc = -1;
-				dX = deltaX;
-				dY = deltaY;
+				dX = Math.round(deltaX);
+				dY = Math.round(deltaY);
 				stepPixel = y1;
 				stepPixelInc = 1;
 				loopPixel = x1;
@@ -91,8 +91,8 @@ public class BresenhamLineDrawing {
 				break;
 		case 4: iInitial = x1;
 				loopInc = -1;
-				dX = deltaX;
-				dY = deltaY;
+				dX = Math.round(deltaX);
+				dY = Math.round(deltaY);
 				stepPixel = y1;
 				stepPixelInc = -1;
 				loopPixel = x1;
@@ -100,8 +100,8 @@ public class BresenhamLineDrawing {
 				break;
 		case 5: iInitial = y1;
 				loopInc = -1;
-				dX = deltaY;
-				dY = deltaX;
+				dX = Math.round(deltaY);
+				dY = Math.round(deltaX);
 				stepPixel = x1;
 				stepPixelInc = -1;
 				loopPixel = y1;
@@ -109,8 +109,8 @@ public class BresenhamLineDrawing {
 				break; 
 		case 6: iInitial = y1;
 				loopInc = -1;
-				dX = deltaY;
-				dY = deltaX;
+				dX = Math.round(deltaY);
+				dY = Math.round(deltaX);
 				stepPixel = x1;
 				stepPixelInc = 1;
 				loopPixel = y1;
@@ -118,8 +118,8 @@ public class BresenhamLineDrawing {
 				break;
 		case 7: iInitial = x1;
 				loopInc = 1;
-				dX = deltaX;
-				dY = deltaY;
+				dX = Math.round(deltaX);
+				dY = Math.round(deltaY);
 				stepPixel = y1;
 				stepPixelInc = -1;
 				loopPixel = x1;
@@ -156,6 +156,7 @@ public class BresenhamLineDrawing {
 			if(loopPix[0] > 0 && loopPix[1] > 0 && loopPix[0] < image.getWidth() && loopPix[1] < image.getHeight())
 				g.drawLine(loopPix[0], loopPix[1], loopPix[0], loopPix[1]);
 		}
+		return 0;
 	}
 	
 	private static boolean loopCondition(int i, int x1, int x2, int y1, int y2, int octant){

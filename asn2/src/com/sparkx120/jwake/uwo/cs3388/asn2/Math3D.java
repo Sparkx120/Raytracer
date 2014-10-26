@@ -138,4 +138,17 @@ public class Math3D{
 	public static float dotProduct(Point a, Point b){ 
 		return (a.getX()*b.getX()) + (a.getY()*b.getY()) + (a.getZ()*b.getZ()) + (a.getH()*b.getH());
 	}
+	
+	/**
+	 * Normalizes a Vector to unit length
+	 * @param v - The vector to normalize
+	 * @return - The Normalized vector
+	 */
+	public static Vector normalizeVector(Vector v) {
+		Vector out;
+		float mag = Math3D.magnitudeOfVector(v);
+		out = Math3D.scalarMultiplyVector(v, (1/mag));
+		
+		return out;
+	}
 }

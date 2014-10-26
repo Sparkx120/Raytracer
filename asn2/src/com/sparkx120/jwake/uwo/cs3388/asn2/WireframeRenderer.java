@@ -41,7 +41,7 @@ public class WireframeRenderer extends Renderer{
 //			for(int j=0; j<buffer.getHeight(); j++)
 //				buffer.setRGB(i, j, backgroundC.getRGB());
 		
-		System.out.println("Drew Background Now Drawing Lines");
+		//Iterate through all polygons and draw them
 		while(it.hasNext()){
 			Iterator<Polygon> polys = it.next().getFaces().iterator();
 			
@@ -58,8 +58,19 @@ public class WireframeRenderer extends Renderer{
 				}
 			}
 		}
-		System.out.println("Finished Drawing Line");
+		
+		//Rerender Frame to the the Pane
 		window.updateRender(buffer);
+	}
+	
+	/**
+	 * Switches whether backfaces are to be drawn
+	 */
+	public void switchBackfaceMode(){
+		if(removeBackFaces)
+			removeBackFaces = false;
+		else
+			removeBackFaces = true;
 	}
 	
 	private void drawPoly(Polygon poly){

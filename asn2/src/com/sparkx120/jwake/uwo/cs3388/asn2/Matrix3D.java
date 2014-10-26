@@ -30,10 +30,6 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
 public class Matrix3D {
 	private float[][] matrix;
 	
-	public final static Matrix3D identity = new Matrix3D(new float[][]{
-			{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}
-	});
-	
 	/**
 	 * Create a new 3D Matrix and set it to the 0 Matrix
 	 */
@@ -90,6 +86,41 @@ public class Matrix3D {
 	}
 	
 	/**
+	 * Add a matrix to this matrix and return a new Matrix3D
+	 * @param b - The Matrix to add
+	 * @return - The Result
+	 */
+	public Matrix3D addMatrix(Matrix3D b){
+		float[][] in = b.getMatrix();
+		float[][] result = new float[4][4];
+		
+		for(int i=0;i<4;i++){
+			for(int j=0;j<4;j++){
+				result[i][j] = in[i][j] + matrix[i][j];
+			}
+		}
+		
+		return new Matrix3D(result);
+	}
+	
+	/**
+	 * Scalar Multiply a matrix to this matrix and return a new Matrix3D
+	 * @param val - The value to multiply by
+	 * @return - The Result
+	 */
+	public Matrix3D scalarMultiplyMatrix(float val){
+		float[][] result = new float[4][4];
+		
+		for(int i=0;i<4;i++){
+			for(int j=0;j<4;j++){
+				result[i][j] = matrix[i][j]*val;
+			}
+		}
+		
+		return new Matrix3D(result);
+	}
+	
+	/**
 	 * Multiplies This Matrix to another of the same type NxN
 	 * This * Matrix b
 	 * @param b - The Matrix to Multiply this matrix by
@@ -106,9 +137,8 @@ public class Matrix3D {
 				result[i][j] = value;
 			}
 		}
-		Matrix3D out = new Matrix3D(result);
-		
-		return out;
+
+		return new Matrix3D(result);
 	}
 	
 	public Point multiplyMatrixWithPoint(Point v){
