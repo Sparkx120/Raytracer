@@ -19,17 +19,24 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+/**
+ * An extension of JFrame that implements Mouse Listeners and a Key Listener to display 3D Graphics
+ * @author James Wake
+ * @version 1.0
+ *
+ */
 public class Window3D extends JFrame implements MouseListener, MouseMotionListener, KeyListener{
+	/**
+	 * The Width and Height
+	 */
 	private int width;
 	private int height;
+	/**
+	 * The Pane3D and Camera and Renderer
+	 */
 	private Pane3D drawPane;
 	private CamObject3D camera;
 	private Renderer renderer;
-	
-	private boolean keyIsPressed;
-	private boolean mouseLeftIsPressed;
-	private int sampleRate;
-	private int currentSample;
 	
 	private boolean mouseControl;
 	
@@ -38,6 +45,12 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	 */
 	private static final long serialVersionUID = -550572534199899045L;
 	
+	/**
+	 * Default Constructor for a Window3D JFrame
+	 * @param camera - The Camera for this window
+	 * @param width - The height of the Window
+	 * @param height - The Width of the Window
+	 */
 	public Window3D(CamObject3D camera, int width, int height){
 		super();
 		
@@ -56,10 +69,6 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		
 		//Set Up listeners
 		this.mouseControl = false;
-		this.keyIsPressed = false;
-		this.mouseLeftIsPressed = false;
-		this.sampleRate = 50;
-		this.currentSample = 0;
 		this.addMouseListener(this);
 		this.addKeyListener(this);
 		this.addMouseMotionListener(this);
@@ -69,19 +78,35 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		this.setResizable(false);
 	}
 	
+	/**
+	 * Updates the Pane3D's Image Buffer
+	 * @param buffer
+	 */
 	public void updateRender(Image buffer){
 		this.drawPane.updateBuffer(buffer);
 		this.drawPane.repaint();
 	}
 	
+	/**
+	 * Sets the renderer that this Window3D will use
+	 * @param renderer
+	 */
 	public void setRenderer(Renderer renderer){
 		this.renderer = renderer;
 	}
 	
+	/**
+	 * Gets the width of this Window3D
+	 * @return - The width
+	 */
 	public int getPaneWidth(){
 		return this.width;
 	}
 	
+	/**
+	 * Gets the height of this Window3D
+	 * @return - The height
+	 */
 	public int getPaneHeight(){
 		return this.height;
 	}
@@ -151,24 +176,32 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	    return;
 	}
 
+	/**
+	 * Listener Overrides
+	 */
 	@Override
 	public void keyTyped(KeyEvent e) {
 		//Do Nothing
 	}
 
+	/**
+	 * Handles Keyboard Events
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyChar()){
-			case 'd': camera.translateCameraV(-0.1F); break;
-			case 'a': camera.translateCameraV(0.1F); break;
-			case 'w': camera.translateCameraN(-0.1F); break;
-			case 's': camera.translateCameraN(0.1F); break;
+			case 'd': camera.translateCameraV(-0.5F); break;
+			case 'a': camera.translateCameraV(0.5F); break;
+			case 'w': camera.translateCameraN(-0.2F); break;
+			case 's': camera.translateCameraN(0.2F); break;
 			case 'r': camera.translateCameraU(0.1F); break;
 			case 'f': camera.translateCameraU(-0.1F); break;
 			case 'q': camera.rotateCameraU(-1); break;
 			case 'e': camera.rotateCameraU(1); break;
 			case 'z': camera.rotateCameraV(-1); break;
 			case 'c': camera.rotateCameraV(1); break;
+			case '1': camera.rotateCameraN(-1); break;
+			case '2': camera.rotateCameraN(1); break;
 		}
 		camera.renderFrame(renderer);
 	}
@@ -178,6 +211,10 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		//End KeyPressed
 	}
 
+	/**
+	 * Handles Left Mouse Button
+	 * Locks the mouse into 3D rotation X/Y
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1){
@@ -192,7 +229,11 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 			}
 		}
 	}
-
+	
+	/**
+	 * Handles all mouse buttons
+	 * Right Click switches Wireframe rendering mode
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		switch(e.getButton()){
@@ -221,7 +262,10 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		//Do Nothing
 		
 	}
-
+	
+	/**
+	 * Handles Mouse movement when locked in window by clicking
+	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if(mouseControl){

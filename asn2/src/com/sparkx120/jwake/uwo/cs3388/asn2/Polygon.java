@@ -63,10 +63,17 @@ public class Polygon implements Serializable{
 		return c;
 	}
 	
+	/**
+	 * Returns the Normal of this polygon
+	 * @return - The Normal Vector
+	 */
 	public Vector getNorm(){
 		return norm;
 	}
 	
+	/**
+	 * Removes this Polygon from references in vertices
+	 */
 	public void Destroy(){
 		a.removePoly(this);
 		b.removePoly(this);

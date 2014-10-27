@@ -46,11 +46,11 @@ public class CamObject3D extends Object3D{
 	/**
 	 * Camera Transform Matrices
 	 */
-	Matrix3D M;
-	Matrix3D Mv;
-	Matrix3D S1T1Mp;
-	Matrix3D WS2T2;
-	Matrix3D matrixPipe;
+	Matrix3D M; //M Matrix
+	Matrix3D Mv; //Mv Matrix
+	Matrix3D S1T1Mp; //S1T1Mp Matrix
+	Matrix3D WS2T2; //WS2T2 Matrix
+	Matrix3D matrixPipe; //Matrix Pipe (Now unused)
 	
 	/**
 	 * The World this Camera is in
@@ -58,11 +58,14 @@ public class CamObject3D extends Object3D{
 	private World world;
 	
 	/**
-	 * Debugging Output
+	 * Output Debugging
 	 */
 	private boolean debug = false;
 	private boolean debugPoints = false;
 	
+	/**
+	 * Discontinued Constructor
+	 */
 //	/**
 //	 * Constructs a new Synthetic Camera at Point P with "Gaze" Vector n and "Up" Vector u
 //	 * @param p - The Point where the camera should be
@@ -95,16 +98,27 @@ public class CamObject3D extends Object3D{
 //		computeAndSetMatrixPipe();
 //	}
 	
+	/**
+	 * Default Camera Contructor
+	 * @param p - The Point in world coordinates where the camera should be
+	 * @param g - The Point where the gaze vector should go through
+	 * @param width - The width of the output window
+	 * @param height - The height of the output window
+	 * @param viewingAngle - The vieweing angle of this camera
+	 * @param w - The World this camera is in
+	 */
 	public CamObject3D(Point p, Point g, int width, int height, float viewingAngle, World w){
 		//Set Params
 		this.e = p;
+		this.g = g;
 		this.width = width;
 		this.height = height;
 		this.theta = viewingAngle;
 		this.world = w;
 		this.g = g;
 		
-		//Set Near and Far Plane Distance
+		//Set Near and Far Plane Distance 
+		//Add ability to set these in the next assignment
 		this.N = 0.5F;
 		this.F = 100F;
 		
@@ -121,6 +135,7 @@ public class CamObject3D extends Object3D{
 		//Compute Vector v
 		this.v = Math3D.crossProdVectors(n, u);
 		
+		//Compute all Matrices
 		computeAndSetMatrixPipe();
 		
 		
@@ -150,18 +165,21 @@ public class CamObject3D extends Object3D{
 		this.M = M();
 		
 		//Compute First Multiplication
-		Matrix3D mid = WS2T2.multiplyMatrixWithMatrix(S1T1Mp);
-		if(debug)
-			System.out.println("MidMatrix: " + mid.toString());
+//		Matrix3D mid = WS2T2.multiplyMatrixWithMatrix(S1T1Mp);
+//		if(debug)
+//			System.out.println("MidMatrix: " + mid.toString());
 		
 		//Compute Final Multiplication and Pipe
-		this.matrixPipe = mid.multiplyMatrixWithMatrix(Mv);
-		if(debug)
-			System.out.println("Matrix Pipe: " + matrixPipe.toString());
+//		this.matrixPipe = mid.multiplyMatrixWithMatrix(Mv);
+//		if(debug)
+//			System.out.println("Matrix Pipe: " + matrixPipe.toString());
 		
 		//this.matrixPipe = WS2T2.multiplyMatrixWithMatrix(S1T1Mp).multiplyMatrixWithMatrix(Mv);
 	}
 	
+	/**
+	 * Updates the matrix pipe (Mv Is the only component that needs updating
+	 */
 	private void updateMatrixPipe(){
 		//Compute Mv Matrix
 		this.Mv = Mv();
@@ -179,11 +197,13 @@ public class CamObject3D extends Object3D{
 		ArrayList<PolyObject3D> toRender = new ArrayList<PolyObject3D>();
 		Iterator<PolyObject3D> it = objs.iterator();
 		while(it.hasNext()){
+			//Iterate Polygons
 			PolyObject3D obj = it.next();
 			PolyObject3D rendObj = new PolyObject3D();
 			ArrayList<Polygon> polys = obj.getFaces();
 			Iterator<Polygon> it2 = polys.iterator();
 			while(it2.hasNext()){
+				//Convert Vertices
 				Polygon poly = it2.next();
 				Point a = poly.getVertexA().getPoint();
 				Point b = poly.getVertexB().getPoint();
@@ -193,6 +213,7 @@ public class CamObject3D extends Object3D{
 				Vertex C = new Vertex(pipeCalc(c));
 				rendObj.addPolygonByVertices(A, B, C);
 			}
+			//Send add to render object
 			toRender.add(rendObj);
 		}
 		
@@ -210,8 +231,10 @@ public class CamObject3D extends Object3D{
 	private Point pipeCalc(Point in){
 		Point out;
 		
+		//Pipe computation is no longer used
 //		out = matrixPipe.multiplyMatrixWithPointOrVector(in);
 		
+		//Pass World Point through pipe
 		out = Mv.multiplyMatrixWithPoint(in);
 		float Z = out.getZ();
 		if(debugPoints)
@@ -231,64 +254,77 @@ public class CamObject3D extends Object3D{
 	 * Camera Movement Methods
 	 */
 	
-	//AD
+	/**
+	 * Movement Left and Right (Assigned to A and D)
+	 * @param mag - The Magnitude in which to move +/-
+	 */
 	public void translateCameraV(float mag){
-//		Vector motion = new Vector(mag, 0.0F, 0.0F);
-//		Vector worldMotion = M.multiplyMatrixWithVector(motion);
 		Vector worldMotion = Math3D.scalarMultiplyVector(u, mag);
 		Point newE = Math3D.addPoints(worldMotion, e);
 		e = newE;
 		
-//		computeAndSetMatrixPipe();
 		updateMatrixPipe();
 	}
 	
-	//WS
+	/**
+	 * Movement Forwards and Backward (Assigned to W and S)
+	 * @param mag - The Magnitude in which to move +/-
+	 */
 	public void translateCameraN(float mag){
-//		Vector motion = new Vector(0, 0.0F, mag);
-//		Vector worldMotion = M.multiplyMatrixWithVector(motion);
 		Vector worldMotion = Math3D.scalarMultiplyVector(n, mag);
 		Point newE = Math3D.addPoints(worldMotion, e);
 		e = newE;
 		
-//		computeAndSetMatrixPipe();
 		updateMatrixPipe();
 	}
 	
-	//FG
+	/**
+	 * Movement Up and Down (Assigned to R and F)
+	 * @param mag - The Magnitude in which to move +/-
+	 */
 	public void translateCameraU(float mag){
-//		Vector motion = new Vector(0, 0.0F, mag);
-//		Vector worldMotion = M.multiplyMatrixWithVector(motion);
 		Vector worldMotion = Math3D.scalarMultiplyVector(v, mag);
 		Point newE = Math3D.addPoints(worldMotion, e);
 		e = newE;
 		
-//		computeAndSetMatrixPipe();
 		updateMatrixPipe();
 	}
 	
-	//X Mouse
+	/**
+	 * Rotate camera around it's u axis (Assigned to Mouse X)
+	 * @param mag - The Magnitude in which to rotate +/-
+	 */
 	public void rotateCameraU(float mag){
 		Matrix3D rotate = Matrices3D.rotateOnArbitrary(mag, u);
 		this.v = rotate.multiplyMatrixWithVector(v);
 		this.n = rotate.multiplyMatrixWithVector(n);
 		
-//		computeAndSetMatrixPipe();
 		updateMatrixPipe();
 	}
 	
 	//Y Mouse
+	/**
+	 * Rotate camera around it's v axis (Assigned to Mouse Y)
+	 * @param mag - The Magnitude in which to rotate +/-
+	 */
 	public void rotateCameraV(float mag){
 		Matrix3D rotate = Matrices3D.rotateOnArbitrary(mag, v);
 		this.u = rotate.multiplyMatrixWithVector(u);
 		this.n = rotate.multiplyMatrixWithVector(n);
 		
-//		computeAndSetMatrixPipe();
 		updateMatrixPipe();
 	}
 
-	public void rotateCameraN(){
+	/**
+	 * Rotate camera around it's n axis (Assigned to 1 and 3
+	 * @param mag - The Magnitude in which to rotate +/-
+	 */
+	public void rotateCameraN(float mag){
+		Matrix3D rotate = Matrices3D.rotateOnArbitrary(mag, n);
+		this.u = rotate.multiplyMatrixWithVector(u);
+		this.v = rotate.multiplyMatrixWithVector(v);
 		
+		updateMatrixPipe();
 	}
 	
 	/**
@@ -378,21 +414,6 @@ public class CamObject3D extends Object3D{
 		data[0][0] = width/2;	data[0][1] = 0;			data[0][2] = 0;	data[0][3] = width/2;
 		data[1][0] = 0;			data[1][1] = -height/2;	data[1][2] = 0; data[1][3] = ((-height/2) + height);
 		data[2][0] = 0;			data[2][1] = 0;			data[2][2] = 1;	data[2][3] = 0;
-		data[3][0] = 0;			data[3][1] = 0;			data[3][2] = 0; data[3][3] = 1;
-		
-		//Output
-		Matrix3D out = new Matrix3D(data);
-		
-		return out;
-	}
-	
-	private Matrix3D affineTranslate(float u, float v, float n){
-		float[][] data = new float[4][4];
-		
-		//Setup matrix array
-		data[0][0] = 1;			data[0][1] = 0;			data[0][2] = 0;	data[0][3] = u;
-		data[1][0] = 0;			data[1][1] = 1;			data[1][2] = 0; data[1][3] = v;
-		data[2][0] = 0;			data[2][1] = 0;			data[2][2] = 1;	data[2][3] = n;
 		data[3][0] = 0;			data[3][1] = 0;			data[3][2] = 0; data[3][3] = 1;
 		
 		//Output

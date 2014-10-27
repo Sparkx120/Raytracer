@@ -3,6 +3,12 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * A class to define a Vertex. 
+ * @author James Wake
+ * @version 1.0
+ *
+ */
 public class Vertex implements Serializable{
 
 	/**

@@ -36,6 +36,8 @@ public class BresenhamLineDrawing {
 		int y2 = Math.round(y2f);
 		float deltaX = x2 - x1;
 		float deltaY = y2 - y1;
+		
+		//This is the built in Line Drawing for testing (Bresenham was not fixed sadly so I am using this
 		g.drawLine(x1, y1, x2, y2);
 		if(true)
 			return 0;
@@ -159,6 +161,16 @@ public class BresenhamLineDrawing {
 		return 0;
 	}
 	
+	/**
+	 * Computes the loop conditional value for bresenhams algo
+	 * @param i - The iteration the loop is at
+	 * @param x1 - The value of x1
+	 * @param x2 - The value of x2
+	 * @param y1 - The value of y1
+	 * @param y2 - The value of y2
+	 * @param octant - The Octant drawing in
+	 * @return - The condition if the loop should continue
+	 */
 	private static boolean loopCondition(int i, int x1, int x2, int y1, int y2, int octant){
 		switch(octant){
 			case 0: case 7: return i<x2;
@@ -169,6 +181,13 @@ public class BresenhamLineDrawing {
 		return false;
 	}
 	
+	/**
+	 * Decides which values x and y should take from in the bresenham loop
+	 * @param stepPixel - The pixel that is being steped up
+	 * @param loopPixel - The pixel that is incremented each loop
+	 * @param octant - The octant that is being drawn in
+	 * @return - An array with the x and y values {x, y}
+	 */
 	private static int[] loopPixelValue(int stepPixel, int loopPixel, int octant){
 		int[] coord = new int[2]; //0 is x 1 is y
 		switch(octant){

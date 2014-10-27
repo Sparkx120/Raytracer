@@ -110,6 +110,11 @@ public class Point implements Serializable{
 		return h;
 	}
 	
+	/**
+	 * Equals used to see if this Point is equivalent to another
+	 * @param p - Point to check
+	 * @return - True or False
+	 */
 	public boolean equals(Point p){
 		if(p.getX() == x && p.getY() == y && p.getZ() == z && p.getH() == h)
 			return true;
