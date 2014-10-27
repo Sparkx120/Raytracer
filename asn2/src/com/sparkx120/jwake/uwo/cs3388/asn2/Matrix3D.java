@@ -141,6 +141,11 @@ public class Matrix3D {
 		return new Matrix3D(result);
 	}
 	
+	/**
+	 * Multiply this matrix with a Point
+	 * @param v - The Point
+	 * @return - The Point returned from the Multiplication
+	 */
 	public Point multiplyMatrixWithPoint(Point v){
 		float x = v.getX();
 		float y = v.getY();
@@ -160,6 +165,11 @@ public class Matrix3D {
 		return out;
 	}
 	
+	/**
+	 * Multiply this matrix with a Vector
+	 * @param v - The Vector
+	 * @return - The Vector having been multiplied with this Matrix
+	 */
 	public Vector multiplyMatrixWithVector(Vector v){
 		float x = v.getX();
 		float y = v.getY();

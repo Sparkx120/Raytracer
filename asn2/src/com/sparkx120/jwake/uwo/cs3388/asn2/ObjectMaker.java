@@ -121,6 +121,10 @@ public class ObjectMaker {
 		}
 	}
 	
+	/**
+	 * Save the object to file
+	 * @param fname - The file name to save it as
+	 */
 	private static void saveObjectToFile(String fname){
 		FileIO.writeObjectToFile(obj.getFaces().get(0), fname);
 	}

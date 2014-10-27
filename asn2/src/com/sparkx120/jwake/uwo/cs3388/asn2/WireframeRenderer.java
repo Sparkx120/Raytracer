@@ -8,11 +8,29 @@ import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Wireframe Renderer that extends Renderer
+ * @author James Wake
+ * @version 1.0
+ *
+ */
 public class WireframeRenderer extends Renderer{
+	/**
+	 * The Window3D this Renderer is attached to
+	 */
 	private Window3D window;
+	/**
+	 * The colors to use
+	 */
 	private Color backgroundC;
 	private Color lineC;
+	/**
+	 * Weather to remove backfaces
+	 */
 	private boolean removeBackFaces = true;
+	/**
+	 * The local Image Buffer
+	 */
 	private BufferedImage buffer;
 	
 	/**
@@ -28,6 +46,9 @@ public class WireframeRenderer extends Renderer{
 		this.buffer = new BufferedImage(window.getPaneWidth(), window.getPaneHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 	}
 	
+	/**
+	 * Renders Objects
+	 */
 	@Override
 	public void renderObjects(ArrayList<PolyObject3D> objs) {
 		Iterator<PolyObject3D> it = objs.iterator();
@@ -73,6 +94,10 @@ public class WireframeRenderer extends Renderer{
 			removeBackFaces = true;
 	}
 	
+	/**
+	 * Draws a single Polygon to the buffer
+	 * @param poly - The polygon to draw
+	 */
 	private void drawPoly(Polygon poly){
 		//Draw Line A B
 		float x1 = poly.getVertexA().getPoint().getX();

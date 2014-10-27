@@ -2,6 +2,7 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * 3D Object Class. Notice that I do not use a Normal List as Normals are integrated
@@ -34,6 +35,14 @@ public class PolyObject3D extends Object3D implements Serializable{
 	 * Default Constructor
 	 */
 	public PolyObject3D(){
+		vertices = new VertexList();
+		polygons = new ArrayList<Polygon>();
+	}
+	
+	/**
+	 * Construct from a dataFile String
+	 */
+	public PolyObject3D(String data){
 		vertices = new VertexList();
 		polygons = new ArrayList<Polygon>();
 	}
@@ -102,5 +111,14 @@ public class PolyObject3D extends Object3D implements Serializable{
 		out += "Faces: " + this.getNumberOfPolys() + "\n";
 		out += vertices.toString();
 		return out;
+	}
+	
+	public String toStorageFile(){
+		String data = "PolyObject3D v1.0\n";
+		data += "vertex: \n";
+		Iterator<Vertex> vertices = this.vertices.iterator();
+		
+		data += "polys: \n";
+		return null;
 	}
 }
