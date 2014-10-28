@@ -45,7 +45,7 @@ public class WireframeRenderer extends Renderer{
 	}
 	
 	/**
-	 * Renders Objects
+	 * Renders Objects (Will change to render Polygons and take a ploly list instead for futrue version)
 	 */
 	@Override
 	public void renderObjects(ArrayList<PolyObject3D> objs) {

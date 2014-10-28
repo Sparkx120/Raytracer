@@ -46,7 +46,7 @@ public class WireframeViewer3D {
 //		world.addPolyObject(ObjectMaker.obj);
 		
 		//Configure the Camera
-		width = 1024;
+		width = 1280;
 		height = 1024;
 		configCam();
 		

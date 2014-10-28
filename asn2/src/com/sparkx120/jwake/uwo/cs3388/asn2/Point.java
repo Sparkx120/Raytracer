@@ -122,6 +122,23 @@ public class Point implements Serializable{
 	}
 	
 	/**
+	 * Rough Equals used to see if this Point is equivalent to another or very close
+	 * <0.01
+	 * @param p - Point to check
+	 * @param gF - The accuracy to check with
+	 * @return - True or False
+	 */
+	public boolean roughEquals(Point p, float gF){
+		//System.out.println(Math.abs(p.getX() - x) + " " + (p.getX() == x || (Math.abs(p.getX() - x) < 0.1)));
+		if((p.getX() == x || (Math.abs(p.getX() - x) < gF)) &&
+		   (p.getY() == y || (Math.abs(p.getY() - y) < gF)) &&
+		   (p.getZ() == z || (Math.abs(p.getZ() - z) < gF))){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * toString Override
 	 */
 	@Override

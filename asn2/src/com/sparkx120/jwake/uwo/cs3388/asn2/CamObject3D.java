@@ -114,6 +114,7 @@ public class CamObject3D extends Object3D{
 		this.g = g;
 		this.width = width;
 		this.height = height;
+		this.aspect = width/height;
 		this.theta = viewingAngle;
 		this.world = w;
 		this.g = g;
@@ -148,7 +149,7 @@ public class CamObject3D extends Object3D{
 	private void computeAndSetMatrixPipe(){
 		
 		//Compute WS2T2 Matrix
-		this.WS2T2 = WS2T2(width, height);
+		this.WS2T2 = WS2T2();
 		if(debug)
 			System.out.println("WS2T2: \n" + WS2T2.toString());
 		
@@ -372,8 +373,6 @@ public class CamObject3D extends Object3D{
 	
 	/**
 	 * Generates the S1T1Mp Matrix from the Notes and Sets t,b,r,l,
-	 * @param theta - The Viewing Angle
-	 * @param aspect - The Aspect Ratio
 	 * @return The Matrix3D Representation of S1T1Mp
 	 */
 	private Matrix3D S1T1Mp(){
@@ -399,17 +398,10 @@ public class CamObject3D extends Object3D{
 	
 	/**
 	 * Generates the WS2T2 Matrix from the Notes and sets width and height and aspect
-	 * @param width - The width
-	 * @param height - The height
 	 * @return The Matrix3D Representation of WS2T2
 	 */
-	private Matrix3D WS2T2(int width, int height){
+	private Matrix3D WS2T2(){
 		float[][] data = new float[4][4];
-		
-		//Set Camera Variables
-		this.width = width;
-		this.height = height;
-		this.aspect = width/height;
 		
 		//Setup matrix array
 		data[0][0] = width/2;	data[0][1] = 0;			data[0][2] = 0;	data[0][3] = width/2;

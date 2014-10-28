@@ -116,14 +116,29 @@ public class Vertex implements Serializable{
 		norm = Math3D.vectorSub(norm, p.getNorm());
 	}
 	
-	
 	/**
-	 * Override Equals to check if Vertex is Equal to another
+	 * Equals to check if Vertex is Equal to another
 	 * @param v - Vertex to Check
 	 * @return Result of check
 	 */
 	public boolean equals(Vertex v){
-		if(v.getPoint().equals(p))
+		if(v == null)
+			return false;
+		if(v.getPoint().equals(p)) //Using Rough equals for Vertex so that minor drift is compensated for.
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Rough Equals to check if Vertex is Equal to another by a certain amount of accuracy
+	 * @param v - Vertex to Check
+	 * @param granularityFactor - How accurately to check
+	 * @return Result of check
+	 */
+	public boolean equalsRough(Vertex v, float granularityFactor){
+		if(v == null)
+			return false;
+		if(v.getPoint().roughEquals(p, granularityFactor)) //Using Rough equals for Vertex so that minor drift is compensated for.
 			return true;
 		return false;
 	}

@@ -43,7 +43,7 @@ public class ObjectMaker {
 		}
 		obj = new PolyObject3D();
 		makePolys();
-		//System.out.println("Vertices Generated: " + obj.getVertices().size());
+		System.out.println("Vertices Generated: " + obj.getVertices().size());
 		System.out.println("Faces Generated: " + obj.getFaces().size());
 //		for(int i=0; i<obj.getVertices().size(); i++){
 //			Vertex v = obj.getVertices().get(i);
