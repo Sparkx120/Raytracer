@@ -28,6 +28,7 @@ public class BresenhamLineDrawing {
 	 * @param image - An Image to draw on
 	 * @param color - The color of the line
 	 */
+	@SuppressWarnings("unused")
 	private static int bresenhamPlot(float x1f, float y1f, float x2f, float y2f, BufferedImage image, Color color, Graphics2D g){
 		//Get preliminary Data
 		int x1 = Math.round(x1f);

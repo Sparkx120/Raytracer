@@ -43,14 +43,14 @@ public class ObjectMaker {
 		}
 		obj = new PolyObject3D();
 		makePolys();
-		System.out.println("Vertices Generated: " + obj.getVertices().size());
+		//System.out.println("Vertices Generated: " + obj.getVertices().size());
 		System.out.println("Faces Generated: " + obj.getFaces().size());
-		for(int i=0; i<obj.getVertices().size(); i++){
-			Vertex v = obj.getVertices().get(i);
-			Point p = v.getPoint();
-			//System.out.println("x: " + p.getX() + " y: " + p.getY() + " z: " + p.getZ());
-		}
-		//saveObjectToFile(args[1]);
+//		for(int i=0; i<obj.getVertices().size(); i++){
+//			Vertex v = obj.getVertices().get(i);
+//			Point p = v.getPoint();
+//			System.out.println("x: " + p.getX() + " y: " + p.getY() + " z: " + p.getZ());
+//		}
+		saveObjectToFile(args[1]);
 	}
 	
 	//Read Specified Data File for Asn2
@@ -95,7 +95,7 @@ public class ObjectMaker {
 			currList.add(new Vertex(rotatedPoint));
 		}
 		
-		System.out.println(rotations);
+		//System.out.println(rotations);
 		lists[rotations] = currList;
 		rotations ++;
 	}
@@ -126,6 +126,10 @@ public class ObjectMaker {
 	 * @param fname - The file name to save it as
 	 */
 	private static void saveObjectToFile(String fname){
-		FileIO.writeObjectToFile(obj.getFaces().get(0), fname);
+		//FileIO.writeObjectToFile(obj.getFaces().get(0), fname);
+		FileIO.writeStringToFile(obj.encodeStorageFileString(), fname);
+//		String data = obj.encodeStorageFileString();
+//		PolyObject3D newObj = new PolyObject3D(data);
+		System.out.println("Saved Object to File: " + fname);
 	}
 }

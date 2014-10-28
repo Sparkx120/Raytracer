@@ -39,6 +39,24 @@ public class FileIO {
 	}
 	
 	/**
+	 * Reads a String from file.
+	 * @param fname - The Filename
+	 */
+	public static String readStringFromFile(String fname){
+		String content = "";
+		try{
+		    BufferedReader re = new BufferedReader(new FileReader(fname));
+		    String line = "";
+		    while((line = re.readLine()) != null){
+		    	content += line + "\n";
+		    }
+		    
+		    re.close();
+		}catch(IOException e){System.out.println(e);};
+		return content;
+	}
+	
+	/**
 	 * Writes a String to file.
 	 * @param content - The content String to write to file
 	 * @param fname - The Filename
@@ -50,7 +68,12 @@ public class FileIO {
 
 		    BufferedWriter wr = new BufferedWriter(new FileWriter(fname));
 		    
-		    wr.write(content);
+		    String[] lines = content.split("[\\r\\n]+");
+		    for(String line: lines){
+		    	wr.write(line);
+		    	wr.newLine();
+		    }
+		    
 		    wr.flush();
 		    wr.close();
 		}catch(IOException e){System.out.println(e);};

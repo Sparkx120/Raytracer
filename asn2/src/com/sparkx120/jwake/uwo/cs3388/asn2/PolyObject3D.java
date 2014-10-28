@@ -3,6 +3,7 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * 3D Object Class. Notice that I do not use a Normal List as Normals are integrated
@@ -45,6 +46,7 @@ public class PolyObject3D extends Object3D implements Serializable{
 	public PolyObject3D(String data){
 		vertices = new VertexList();
 		polygons = new ArrayList<Polygon>();
+		decodeStorageFileString(data);
 	}
 	
 	/**
@@ -113,12 +115,67 @@ public class PolyObject3D extends Object3D implements Serializable{
 		return out;
 	}
 	
-	public String toStorageFile(){
+	public String encodeStorageFileString(){
 		String data = "PolyObject3D v1.0\n";
-		data += "vertex: \n";
-		Iterator<Vertex> vertices = this.vertices.iterator();
 		
+		//Encode Vertices
+		data += "vertices: \n";
+		Iterator<Vertex> vertices = this.vertices.iterator();
+		while(vertices.hasNext()){
+			Vertex v = vertices.next();
+			Point p = v.getPoint();
+			data += p.getX() + " " + p.getY() + " " + p.getZ() + "\n";
+		}
+		data += "END VERTEX\n";
+		
+		//Encode Polygons
 		data += "polys: \n";
-		return null;
+		Iterator<Polygon> polys = this.polygons.iterator();
+		while(polys.hasNext()){
+			Polygon poly = polys.next();
+			Vertex a = poly.getVertexA();
+			Vertex b = poly.getVertexB();
+			Vertex c = poly.getVertexC();
+			int aIndex = this.vertices.indexOf(a);
+			int bIndex = this.vertices.indexOf(b);
+			int cIndex = this.vertices.indexOf(c);
+			data += aIndex + " " + bIndex + " " + cIndex + "\n";
+		}
+		data += "END POLYS\n";
+		
+		return data;
+	}
+	
+	private void decodeStorageFileString(String data){
+		String vertexList = data.substring(data.indexOf("vertices: ")+11, data.indexOf("END VERTEX"));
+//		vertexList = vertexList.substring(1, vertexList.length());
+		String polyList = data.substring(data.indexOf("polys: ")+8, data.indexOf("END POLYS"));
+		
+		//Init the Vertex List
+		String[] verticesToAdd = vertexList.split("[\\r\\n]+");
+		for(String v: verticesToAdd){
+			Scanner scan = new Scanner(v);
+			Float x = scan.nextFloat();
+			Float y = scan.nextFloat();
+			Float z = scan.nextFloat();
+			scan.close();
+			
+			vertices.add(new Vertex(x, y, z));
+		}
+		
+		//System.out.println(vertices.size());
+		
+		String[] polysToAdd = polyList.split("[\\r\\n]+");
+		for(String p: polysToAdd){
+			Scanner scan = new Scanner(p);
+			int aIndex = scan.nextInt();
+			int bIndex = scan.nextInt();
+			int cIndex = scan.nextInt();
+			scan.close();
+			
+			addPolygonByVertices(vertices.get(aIndex), vertices.get(bIndex), vertices.get(cIndex));
+		}
+		
+		System.out.println("Decoded " + polygons.size() + " polygons.");
 	}
 }

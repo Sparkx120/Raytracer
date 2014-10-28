@@ -201,7 +201,7 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 			case 'z': camera.rotateCameraV(-1); break;
 			case 'c': camera.rotateCameraV(1); break;
 			case '1': camera.rotateCameraN(-1); break;
-			case '2': camera.rotateCameraN(1); break;
+			case '3': camera.rotateCameraN(1); break;
 		}
 		camera.renderFrame(renderer);
 	}
@@ -272,7 +272,6 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 
 			double xDelta = (this.getLocationOnScreen().getX()+(width/2) - e.getXOnScreen());
 			double yDelta = (this.getLocationOnScreen().getY()+(height/2) - e.getYOnScreen());
-			System.out.println(xDelta + " " + yDelta);
 			camera.rotateCameraU((int)-yDelta);
 			camera.rotateCameraV((int)xDelta);
 			setMousePosition(new java.awt.Point((int)this.getLocationOnScreen().getX() + width/2, (int)this.getLocationOnScreen().getY() + height/2));

@@ -2,9 +2,7 @@ package com.sparkx120.jwake.uwo.cs3388.asn2;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -99,25 +97,31 @@ public class WireframeRenderer extends Renderer{
 	 * @param poly - The polygon to draw
 	 */
 	private void drawPoly(Polygon poly){
-		//Draw Line A B
-		float x1 = poly.getVertexA().getPoint().getX();
-		float x2 = poly.getVertexB().getPoint().getX();
-		float y1 = poly.getVertexA().getPoint().getY();
-		float y2 = poly.getVertexB().getPoint().getY();
-		BresenhamLineDrawing.drawLine(x1, x2, y1, y2, buffer, lineC);
-		
-		//Draw Line B C
-		x1 = poly.getVertexB().getPoint().getX();
-		x2 = poly.getVertexC().getPoint().getX();
-		y1 = poly.getVertexB().getPoint().getY();
-		y2 = poly.getVertexC().getPoint().getY();
-		BresenhamLineDrawing.drawLine(x1, x2, y1, y2, buffer, lineC);
-		
-		//Draw Line C A
-		x1 = poly.getVertexC().getPoint().getX();
-		x2 = poly.getVertexA().getPoint().getX();
-		y1 = poly.getVertexC().getPoint().getY();
-		y2 = poly.getVertexA().getPoint().getY();
-		BresenhamLineDrawing.drawLine(x1, x2, y1, y2, buffer, lineC);
+		//If Polygon is in front of the camera
+		if((poly.getVertexA().getPoint().getZ() < 1 && poly.getVertexA().getPoint().getZ() > 0) &&
+		   (poly.getVertexB().getPoint().getZ() < 1 && poly.getVertexB().getPoint().getZ() > 0) &&
+		   (poly.getVertexC().getPoint().getZ() < 1 && poly.getVertexC().getPoint().getZ() > 0)){
+			
+			//Draw Line A B
+			float x1 = poly.getVertexA().getPoint().getX();
+			float x2 = poly.getVertexB().getPoint().getX();
+			float y1 = poly.getVertexA().getPoint().getY();
+			float y2 = poly.getVertexB().getPoint().getY();
+			BresenhamLineDrawing.drawLine(x1, x2, y1, y2, buffer, lineC);
+			
+			//Draw Line B C
+			x1 = poly.getVertexB().getPoint().getX();
+			x2 = poly.getVertexC().getPoint().getX();
+			y1 = poly.getVertexB().getPoint().getY();
+			y2 = poly.getVertexC().getPoint().getY();
+			BresenhamLineDrawing.drawLine(x1, x2, y1, y2, buffer, lineC);
+			
+			//Draw Line C A
+			x1 = poly.getVertexC().getPoint().getX();
+			x2 = poly.getVertexA().getPoint().getX();
+			y1 = poly.getVertexC().getPoint().getY();
+			y2 = poly.getVertexA().getPoint().getY();
+			BresenhamLineDrawing.drawLine(x1, x2, y1, y2, buffer, lineC);
+		}
 	}
 }

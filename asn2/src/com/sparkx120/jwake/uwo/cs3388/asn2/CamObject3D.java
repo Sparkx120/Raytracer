@@ -28,6 +28,7 @@ public class CamObject3D extends Object3D{
 	 * Camera Gaze Vector
 	 */
 	private Vector n;
+	@SuppressWarnings("unused")
 	private Point g;
 	/**
 	 * Edge variables of Camera

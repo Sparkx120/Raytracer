@@ -32,12 +32,18 @@ public class WireframeViewer3D {
 	 * @param args - Command Line Arguments
 	 */
 	public static void main(String[] args){
+		if(args.length != 1){
+			System.out.println("Must suppy an Object File, Usage: object.obj");
+			System.exit(1);
+		}
 		//Configure an Object and World for Viewing
-		configTestObj();
-		ObjectMaker.main(new String[]{"vase.txt", "dump.obj"});
+//		configTestObj();
+//		ObjectMaker.main(new String[]{"vase.txt", "dump.obj"});
+		String objData = FileIO.readStringFromFile(args[0]);
+		testObj = new PolyObject3D(objData);
 		world = new World();
-//		world.addPolyObject(testObj);
-		world.addPolyObject(ObjectMaker.obj);
+		world.addPolyObject(testObj);
+//		world.addPolyObject(ObjectMaker.obj);
 		
 		//Configure the Camera
 		width = 1024;
@@ -46,7 +52,6 @@ public class WireframeViewer3D {
 		
 		//Add Camera to the World
 		world.addCameraObject(camera);
-		
 		
 		//Set up a Window3D Viewer
 		Window3D viewer3D = new Window3D(camera, width, height);
@@ -63,6 +68,7 @@ public class WireframeViewer3D {
 	/**
 	 * Configures the TestObject with a simple Octahedron
 	 */
+	@SuppressWarnings("unused")
 	private static void configTestObj(){
 		testObj = new PolyObject3D();
 		testObj.addPolygonByVertices(new Vertex(0F, 5F, 0F), new Vertex(0F, 0F, 5F), new Vertex(5F, 0F, 0F));

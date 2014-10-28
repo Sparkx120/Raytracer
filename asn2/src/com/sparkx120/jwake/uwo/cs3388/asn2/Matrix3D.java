@@ -36,8 +36,8 @@ public class Matrix3D {
 	public Matrix3D(){
 		matrix = new float[4][4];
 		for(float[] i:matrix)
-			for(float j:i)
-				j = 0;
+			for(int j=0;j<4;j++)
+				i[j] = 0;
 	}
 	
 	/**
