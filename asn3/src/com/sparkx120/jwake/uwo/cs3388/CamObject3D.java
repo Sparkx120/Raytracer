@@ -1,4 +1,4 @@
-package com.sparkx120.jwake.uwo.cs3388.asn2;
+package com.sparkx120.jwake.uwo.cs3388;
 
 import java.util.ArrayList;
 import java.util.Iterator;
