@@ -38,6 +38,7 @@ public class WireframeRenderer extends Renderer{
 	 * @param lineC - The Line Color to use
 	 */
 	public WireframeRenderer(Window3D window, Color backgroundC, Color lineC){
+		super(RendererType.OBJECT_DATA);
 		this.window = window;
 		this.backgroundC = backgroundC;
 		this.lineC = lineC;
@@ -123,5 +124,10 @@ public class WireframeRenderer extends Renderer{
 			y2 = poly.getVertexA().getPoint().getY();
 			BresenhamLineDrawing.drawLine(x1, x2, y1, y2, buffer, lineC);
 		}
+	}
+
+	@Override
+	public void renderRayPixel(int x, int y, RayData data) {
+		//Unimplemented as this is not a Ray Tracer Type	
 	}
 }

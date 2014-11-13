@@ -204,6 +204,17 @@ public class CamObject3D extends Object3D{
 	 * @param renderer - The Renderer
 	 */
 	public void renderFrame(Renderer renderer){
+		switch(renderer.getRendererType()){
+			case OBJECT_DATA: renderObjects(renderer); break;
+			case CAMERA_PIPE: rayTracePixels(renderer); break;
+		}
+		
+	}
+	
+	/**
+	 * Renders objects to an OBJECT_DATA renderer
+	 */
+	private void renderObjects(Renderer renderer){
 		//Do Matrix Stuff Here
 		ArrayList<PolyObject3D> objs = world.getRenderableObjects();
 		
@@ -240,6 +251,10 @@ public class CamObject3D extends Object3D{
 		if(debug)
 			System.out.println("Sending Objects to Renderer");
 		renderer.renderObjects(toRender);
+	}
+	
+	private void rayTracePixels(Renderer renderer){
+		
 	}
 	
 	/**

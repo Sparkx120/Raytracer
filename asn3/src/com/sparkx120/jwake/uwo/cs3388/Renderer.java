@@ -10,9 +10,31 @@ import java.util.ArrayList;
  */
 public abstract class Renderer {
 	
+	private RendererType type;
+	
+	public Renderer(RendererType type){
+		this.type = type;
+	}
+	
 	/**
-	 * A Renderer must be able to render Object Lists
+	 * A Renderer must be able to render Object Lists if it is an Object Type renderer
 	 * @param objs - An ArrayList of PolyObject3D's
 	 */
 	public abstract void renderObjects(ArrayList<PolyObject3D> objs);
+	
+	/**
+	 * Renders a pixel in a rayTrace
+	 * @param x - The X coordinate of the trace
+	 * @param y - The Y coordinate of the trace
+	 * @param data - The ray data from reflections etc.
+	 */
+	public abstract void renderRayPixel(int x, int y, RayData data);
+	
+	/**
+	 * Returns the Renderer's Type
+	 * @return
+	 */
+	public RendererType getRendererType(){
+		return type;
+	}
 }
