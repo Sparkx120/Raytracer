@@ -127,7 +127,7 @@ public class WireframeRenderer extends Renderer{
 	}
 
 	@Override
-	public void renderRayPixel(int x, int y, RayData data) {
+	public void renderRayPixel(int x, int y) {
 		//Unimplemented as this is not a Ray Tracer Type	
 	}
 }

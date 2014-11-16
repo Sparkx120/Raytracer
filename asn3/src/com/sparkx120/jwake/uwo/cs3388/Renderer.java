@@ -28,7 +28,7 @@ public abstract class Renderer {
 	 * @param y - The Y coordinate of the trace
 	 * @param data - The ray data from reflections etc.
 	 */
-	public abstract void renderRayPixel(int x, int y, RayData data);
+	public abstract void renderRayPixel(int x, int y);
 	
 	/**
 	 * Returns the Renderer's Type

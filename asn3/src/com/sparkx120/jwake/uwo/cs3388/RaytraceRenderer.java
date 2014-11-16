@@ -1,5 +1,6 @@
 package com.sparkx120.jwake.uwo.cs3388;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class RaytraceRenderer extends Renderer{
@@ -10,6 +11,10 @@ public class RaytraceRenderer extends Renderer{
 	private Window3D window;
 	private World world;
 	private CamObject3D camera;
+	/**
+	 * The local Image Buffer
+	 */
+	private BufferedImage buffer;
 	
 	public RaytraceRenderer(Window3D window, World w, CamObject3D camera){
 		super(RendererType.CAMERA_PIPE);
@@ -26,7 +31,7 @@ public class RaytraceRenderer extends Renderer{
 	}
 
 	@Override
-	public void renderRayPixel(int x, int y, RayData data) {
+	public void renderRayPixel(int x, int y) {
 		// TODO Auto-generated method stub
 		
 	}

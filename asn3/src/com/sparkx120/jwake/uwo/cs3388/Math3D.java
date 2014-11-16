@@ -7,6 +7,8 @@ package com.sparkx120.jwake.uwo.cs3388;
  */
 public class Math3D{
 	
+	public static final Point origin = new Point(0F,0F,0F);
+	
 	/**
 	 * Adds two points A + B
 	 * @param a - Point A

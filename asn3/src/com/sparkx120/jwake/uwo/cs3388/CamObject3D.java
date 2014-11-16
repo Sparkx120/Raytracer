@@ -43,7 +43,7 @@ public class CamObject3D extends Object3D{
 	private float aspect; //The Cameras Aspect
 	private int width; // The Cameras Pixel Width
 	private int height; // The Cameras Pixel Height
-	
+
 	/**
 	 * Camera Transform Matrices
 	 */
@@ -449,5 +449,106 @@ public class CamObject3D extends Object3D{
 		
 		return out;
 	}
+	
+	/**
+	 * Generated Getter and Setter Methods
+	 */
+	
+	protected Point gete() {
+		return e;
+	}
+
+	protected void sete(Point e) {
+		this.e = e;
+	}
+
+	protected Vector getu() {
+		return u;
+	}
+
+	protected void setu(Vector u) {
+		this.u = u;
+	}
+
+	protected Vector getv() {
+		return v;
+	}
+
+	protected void setv(Vector v) {
+		this.v = v;
+	}
+
+	protected Vector getn() {
+		return n;
+	}
+
+	protected void setn(Vector n) {
+		this.n = n;
+	}
+
+	protected float getN() {
+		return N;
+	}
+
+	protected void setN(float n) {
+		N = n;
+	}
+
+	protected float getF() {
+		return F;
+	}
+
+	protected void setF(float f) {
+		F = f;
+	}
+
+	protected int getWidth() {
+		return width;
+	}
+
+	protected void setWidth(int width) {
+		this.width = width;
+	}
+
+	protected int getHeight() {
+		return height;
+	}
+
+	protected void setHeight(int height) {
+		this.height = height;
+	}
+
+	protected Matrix3D getMatrixPipe() {
+		return matrixPipe;
+	}
+
+	protected void setMatrixPipe(Matrix3D matrixPipe) {
+		this.matrixPipe = matrixPipe;
+	}
+
+	protected World getWorld() {
+		return world;
+	}
+
+	protected void setWorld(World world) {
+		this.world = world;
+	}
+
+	protected float getl() {
+		return l;
+	}
+
+	protected float getr() {
+		return r;
+	}
+
+	protected float gett() {
+		return t;
+	}
+
+	protected float getb() {
+		return b;
+	}
+	
 }
 
