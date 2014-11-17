@@ -32,21 +32,21 @@ public class WireframeViewer3D {
 	 * @param args - Command Line Arguments
 	 */
 	public static void main(String[] args){
-		if(args.length != 1){
-			System.out.println("Must suppy an Object File, Usage: object.obj");
-			System.exit(1);
-		}
+//		if(args.length != 1){
+//			System.out.println("Must suppy an Object File, Usage: object.obj");
+//			System.exit(1);
+//		}
 		//Configure an Object and World for Viewing
-//		configTestObj();
+		configTestObj();
 //		ObjectMaker.main(new String[]{"vase.txt", "dump.obj"});
-		String objData = FileIO.readStringFromFile(args[0]);
-		testObj = new PolyObject3D(objData);
+//		String objData = FileIO.readStringFromFile(args[0]);
+//		testObj = new PolyObject3D(objData);
 		world = new World();
 		world.addPolyObject(testObj);
 //		world.addPolyObject(ObjectMaker.obj);
 		
 		//Configure the Camera
-		width = 1280;
+		width = 1024;
 		height = 1024;
 		configCam();
 		

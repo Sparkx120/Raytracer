@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class Ray {
 	private ArrayList<ObjectIntersection<GenericObject>> intersectedObjects;
-	public static final float NO_INTERSECTION = -1;
+	boolean NO_INTERSECT;
 	private float lowestTVal;
 	private GenericObject lowestTValObject;
 	private Point lowestTValIntersect;
@@ -26,7 +26,7 @@ public class Ray {
 		float N = camera.getN();
 		float W = camera.getr();
 		float H = camera.gett();
-		lowestTVal = NO_INTERSECTION;
+		lowestTVal = 0;
 		lowestTValObject = null;
 		lowestTValIntersect = null;
 		intersectedObjects = new ArrayList<ObjectIntersection<GenericObject>>(); 
@@ -36,18 +36,37 @@ public class Ray {
 		Vector b = Math3D.scalarMultiplyVector(u, bcoeff);
 		float ccoeff = (float) H*(((2F*y)/camera.getHeight())-1);
 		Vector c = Math3D.scalarMultiplyVector(v, ccoeff);
+		this.NO_INTERSECT = true;
 		
 		this.d = Math3D.vectorAdd(Math3D.vectorAdd(a, b), c);
+//		System.out.println(d);
+	}
+	
+	public Ray(Point objectPoint, Point targetPoint){
+		
+		lowestTVal = 0;
+		lowestTValObject = null;
+		lowestTValIntersect = null;
+		intersectedObjects = new ArrayList<ObjectIntersection<GenericObject>>();
+		this.NO_INTERSECT = true;
+		
+		this.e = objectPoint;
+		this.d = new Vector(objectPoint, targetPoint);
+		this.d = Math3D.scalarMultiplyVector(this.d, 1/Math3D.magnitudeOfVector(this.d));
 	}
 	
 	public void addIntersectAt(float t, GenericObject obj){
-		Vector mag = Math3D.scalarMultiplyVector(d, t);
-		Point intersect = Math3D.addPoints(e, mag);
+		//t = Math.abs(t); //Temporary thing
 		
-		if(lowestTVal == NO_INTERSECTION){
+		Vector dt = Math3D.scalarMultiplyVector(d, t);
+		Point intersect = Math3D.addPoints(e, dt);
+		
+		//System.out.println(t + " " + dt + " " + intersect);
+		if(NO_INTERSECT){
 			lowestTVal = t;
 			lowestTValObject = obj;
 			lowestTValIntersect = intersect;
+			NO_INTERSECT = false;
 		}
 		else
 			if(t<lowestTVal){
@@ -60,16 +79,14 @@ public class Ray {
 	}
 	
 	/**
-	 * Generated Getter Setter Methods
+	 * @return - If the ray has intersected an Object
 	 */
-	
-	
-	
-
-	
+	public boolean didIntersect(){
+		return !NO_INTERSECT;
+	}
 	
 	/**
-	 * Generated Getters
+	 * Generated Getter Setter Methods
 	 */
 	
 	/**

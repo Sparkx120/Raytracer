@@ -76,7 +76,7 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		//Set Up listeners
-		this.mouseControl = false;
+		this.mouseControl = true;
 		this.addMouseListener(this);
 		this.addKeyListener(this);
 		this.addMouseMotionListener(this);
@@ -94,6 +94,19 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	public void updateRender(Image buffer){
 		this.drawPane.updateBuffer(buffer);
 		this.drawPane.repaint();
+	}
+	
+	public void setMouseEnabled(boolean mouseEnabled){
+		if(mouseEnabled != mouseControl){
+			if(mouseEnabled){
+				mouseControl = true;
+				this.addMouseListener(this);
+			}
+			else{
+				mouseControl = false;
+				this.removeMouseListener(this);
+			}
+		}
 	}
 	
 	/**
