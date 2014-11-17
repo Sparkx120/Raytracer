@@ -1,5 +1,6 @@
 package com.sparkx120.jwake.uwo.cs3388;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -10,8 +11,12 @@ import java.util.Iterator;
  *
  */
 public class World {
-	ArrayList<PolyObject3D> polyObjs;
-	ArrayList<CamObject3D> camObjs;
+	private ArrayList<PolyObject3D> polyObjs;
+	private ArrayList<GenericObject> genObjs;
+	private ArrayList<LightObject> lightObjs;
+	private ArrayList<CamObject3D> camObjs;
+	private float ambiantLight;
+	private Color ambiantLightColor;
 	
 	//Future Variables
 	//private float ambientLightFactor;
@@ -22,6 +27,10 @@ public class World {
 	public World(){
 		polyObjs = new ArrayList<PolyObject3D>();
 		camObjs = new ArrayList<CamObject3D>();
+		genObjs = new ArrayList<GenericObject>();
+		lightObjs = new ArrayList<LightObject>();
+		ambiantLight = 1.0F;
+		ambiantLightColor = Color.WHITE;
 	}
 	
 	/**
@@ -41,11 +50,43 @@ public class World {
 	}
 	
 	/**
+	 * Add a Generic Object to this world
+	 * @param genObj - The GenericObject
+	 */
+	public void addGenericObject(GenericObject genObj){
+		genObjs.add(genObj);
+	}
+	
+	/**
+	 * Add a Light Object to this world
+	 * @param lightObj - The LightObject
+	 */
+	public void addLightObject(LightObject lightObj){
+		lightObjs.add(lightObj);
+	}
+	
+	/**
 	 * Gets All Renderable Objects
 	 * @return All renderable Objects
 	 */
 	public ArrayList<PolyObject3D> getRenderableObjects(){
 		return polyObjs;
+	}
+	
+	/**
+	 * Gets All Ray Renderable Objects (AKA GenericObjects)
+	 * @return - All Ray Renderable Objects
+	 */
+	public ArrayList<GenericObject> getRayRenderableObjects(){
+		return genObjs;
+	}
+	
+	/**
+	 * Gets All Light Objects
+	 * @return - All Light Objects
+	 */
+	public ArrayList<LightObject> getLightObjects(){
+		return lightObjs;
 	}
 	
 	/**
@@ -75,5 +116,33 @@ public class World {
 	 */
 	public int sizeOfWorldObjects(){
 		return polyObjs.size() + camObjs.size();
+	}
+
+	/**
+	 * @return the ambiantLight
+	 */
+	public float getAmbiantLight() {
+		return ambiantLight;
+	}
+
+	/**
+	 * @param ambiantLight the ambiantLight to set
+	 */
+	public void setAmbiantLight(float ambiantLight) {
+		this.ambiantLight = ambiantLight;
+	}
+
+	/**
+	 * @return the ambiantLightColor
+	 */
+	public Color getAmbiantLightColor() {
+		return ambiantLightColor;
+	}
+
+	/**
+	 * @param ambiantLightColor the ambiantLightColor to set
+	 */
+	public void setAmbiantLightColor(Color ambiantLightColor) {
+		this.ambiantLightColor = ambiantLightColor;
 	}
 }

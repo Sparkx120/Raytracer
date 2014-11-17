@@ -2,10 +2,13 @@ package com.sparkx120.jwake.uwo.cs3388;
 
 import java.awt.AWTException;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
@@ -54,18 +57,23 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	public Window3D(CamObject3D camera, int width, int height){
 		super();
 		
-		//Configure Hieght and Width
+		//Configure Height and Width
 		this.width = width;
 		this.height = height;
 		
-		//Configure Window
-		this.setSize(width, height);
-		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		//Set Camera
 		this.camera = camera;
 		
 		//Configure the Draw Pane3D
 		this.drawPane = new Pane3D(width, height);
 		this.add(drawPane);
+		Insets insets = this.getInsets();
+		this.setSize(new Dimension(insets.left + insets.right + width,
+											insets.top + insets.bottom + height));
+		
+		//Configure Window
+//		this.setSize(width, height);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		//Set Up listeners
 		this.mouseControl = false;
@@ -74,6 +82,7 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		this.addMouseMotionListener(this);
 		
 		//Initialize the Window
+		//this.pack();
 		this.setVisible(true);
 		this.setResizable(false);
 	}

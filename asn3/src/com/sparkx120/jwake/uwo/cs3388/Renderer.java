@@ -30,11 +30,13 @@ public abstract class Renderer {
 	 */
 	public abstract void renderRayPixel(int x, int y);
 	
+	public abstract void renderToScreen();
+	
 	/**
 	 * Returns the Renderer's Type
 	 * @return
 	 */
-	public RendererType getRendererType(){
+	public RendererType getType(){
 		return type;
 	}
 }

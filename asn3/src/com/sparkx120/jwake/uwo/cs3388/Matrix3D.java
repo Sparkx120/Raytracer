@@ -190,6 +190,106 @@ public class Matrix3D {
 	}
 	
 	/**
+	 * Generate a cofactorMatrix for determinate computations
+	 * @param matrix - The Matrix to sub
+	 * @param row - The row to remove
+	 * @param col - The col to remove
+	 * @return - The cofactorMatrix
+	 */
+	private float[][] cofactor(float[][] matrix, int row, int col){
+		float[][] result = new float[matrix.length-1][matrix.length-1];
+		int rowPointer = 0;
+		int colPointer = 0;
+		for(int r=0; r<result.length && rowPointer < matrix.length; r++){
+			if(r == row)
+				rowPointer = r + 1;
+			for(int c=0; c<result.length && colPointer < matrix.length; c++){
+				if(c == col)
+					colPointer = c + 1;
+				result[r][c] = matrix[rowPointer][colPointer];
+//				System.out.print(result[r][c]);
+				colPointer ++;
+			}
+//			System.out.print("   " + r + " " + rowPointer);
+			colPointer = 0;
+			rowPointer ++;
+//			System.out.println();
+		}
+		return result;
+	}
+	
+	/**
+	 * Compute the Matrix Determinate using a Laplace Cofactor Expansion
+	 * @param matrix - The Matrix to find the Determinate of
+	 * @return - The Determiante
+	 */
+	private float determinate(float[][] matrix){
+		if(matrix.length == 2){
+			return (matrix[0][0]*matrix[1][1]) - (matrix[0][1]*matrix[1][0]);
+		}
+		//Use first row
+		float determinate = 0;
+		for(int c=0; c<matrix.length; c++){
+			int coeffPM = (int) Math.pow(-1D, c);
+			determinate += coeffPM * matrix[0][c] * determinate(cofactor(matrix, 0, c));
+		}
+		
+		return determinate;
+	}
+	
+	/**
+	 * Compute the transpose of a matrix
+	 * @param matrix - the Matrix
+	 * @return - its Transpose
+	 */
+	private float[][] pTranspose(float[][] matrix){
+		float[][] result = new float[matrix[0].length][matrix.length];
+		for(int i=0; i<matrix.length; i++){
+			for(int j=0; j<matrix[0].length; j++){
+				result[j][i] = matrix[i][j];
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Compute the Adjugate Matrix of a Matrix
+	 * @param matrix - The Matrix
+	 * @return - The Adjugate Matrix
+	 */
+	private float[][] adjugateMatrix(float[][] matrix){
+		if(matrix.length < 3){
+			return null;
+		}
+		
+		float[][] result = new float[matrix.length][matrix.length];
+		
+		for(int r=0; r<matrix.length; r++){
+			for(int c=0; c<matrix.length; c++){
+				int coeffPM = (int) Math.pow(-1D, r+c);
+				result[r][c] = coeffPM * determinate(cofactor(matrix, r, c));
+			}
+		}
+		
+		return pTranspose(result);
+	}
+	
+	/**
+	 * Compute the inverse of this Matrix using Crammer's Rule and the Determinate 
+	 * calculated by a Laplace Cofactor Expansion
+	 * @return - The inverse
+	 */
+	public Matrix3D inverseMatrix(){		
+		float det = determinate(this.matrix);
+//		System.out.println("det: " + det);
+		Matrix3D adj = new Matrix3D(adjugateMatrix(this.matrix));
+//		System.out.println("adj: \n" + adj);
+		Matrix3D result = adj.scalarMultiplyMatrix(1/det);
+		
+		return result;
+	}
+	
+	/**
 	 * toString Override
 	 */
 	@Override
@@ -203,5 +303,18 @@ public class Matrix3D {
 			out += "\n";
 		}
 		return out;
+	}
+	
+	/**
+	 * Tests for Matrix Inversion
+	 * @param args - NONE
+	 */
+	public static void main(String[] args){
+		Matrix3D I = Matrices3D.I;
+		Matrix3D test = Matrices3D.testMatrixA;
+//		I.cofactor(I.getMatrix(), 1,1);
+		System.out.println(test);
+		test = test.inverseMatrix();
+		System.out.println(test);
 	}
 }

@@ -19,6 +19,16 @@ public class Matrices3D {
 	});
 	
 	/**
+	 * Invertable Matrix
+	 */
+	public final static Matrix3D testMatrixA = new Matrix3D(new float[][]{
+			{2, 3, 1, 5},
+			{1, 0, 3, 1},
+			{0, 2, -3, 2},
+			{0, 2, 3, 1}
+	});
+	
+	/**
 	 * Perform a Rotation on X Axis
 	 * @param deg - Input Rotation in Degrees
 	 * @return Output Matrix

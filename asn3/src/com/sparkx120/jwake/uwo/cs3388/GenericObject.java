@@ -10,8 +10,11 @@ public abstract class GenericObject {
 	private float ambiantFactor;
 	private float diffuseFactor;
 	private float specularFactor;
+	private float specularFalloff;
+	private Matrix3D transform;
+	private Matrix3D transformInverse;
 
-	public GenericObject(Color base_color, Color ambiant_c, float ambiantFactor, Color diffuse_c, float diffuseFactor, Color specular_c, float specularFactor){
+	public GenericObject(Color base_color, Color ambiant_c, float ambiantFactor, Color diffuse_c, float diffuseFactor, Color specular_c, float specularFactor, float specularFalloff, Matrix3D transform){
 		this.base_color = base_color;
 		this.ambiant_c = ambiant_c;
 		this.diffuse_c = diffuse_c;
@@ -19,9 +22,27 @@ public abstract class GenericObject {
 		this.ambiantFactor = ambiantFactor;
 		this.diffuseFactor = diffuseFactor;
 		this.specularFactor = specularFactor;
+		this.specularFalloff = specularFalloff;
+		
+		setTransform(transform);
+	}
+	
+	public void setTransform(Matrix3D transform){
+		this.transform = transform;
+		this.transformInverse = transform.inverseMatrix();
+	}
+	
+	public Matrix3D getTransform(){
+		return this.transform;
+	}
+	
+	public Matrix3D getTransformInverse(){
+		return this.transformInverse;
 	}
 	
 	public abstract void rayIntersect(Ray ray);
+	
+	public abstract Vector getNormalAt(Point p);
 	
 	/**
 	 * Generated Getters and Setters
@@ -80,5 +101,19 @@ public abstract class GenericObject {
 
 	public void setSpecularFactor(float specularFactor) {
 		this.specularFactor = specularFactor;
+	}
+
+	/**
+	 * @return the specularFalloff
+	 */
+	public float getSpecularFalloff() {
+		return specularFalloff;
+	}
+
+	/**
+	 * @param specularFalloff the specularFalloff to set
+	 */
+	public void setSpecularFalloff(float specularFalloff) {
+		this.specularFalloff = specularFalloff;
 	}
 }

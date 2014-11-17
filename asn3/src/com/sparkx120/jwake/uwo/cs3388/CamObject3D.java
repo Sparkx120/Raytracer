@@ -114,7 +114,7 @@ public class CamObject3D extends Object3D{
 		this.g = g;
 		this.width = width;
 		this.height = height;
-		this.aspect = width/height;
+		this.aspect = (float) width/height;
 		this.theta = viewingAngle;
 		this.world = w;
 		this.g = g;
@@ -204,7 +204,7 @@ public class CamObject3D extends Object3D{
 	 * @param renderer - The Renderer
 	 */
 	public void renderFrame(Renderer renderer){
-		switch(renderer.getRendererType()){
+		switch(renderer.getType()){
 			case OBJECT_DATA: renderObjects(renderer); break;
 			case CAMERA_PIPE: rayTracePixels(renderer); break;
 		}
@@ -251,10 +251,16 @@ public class CamObject3D extends Object3D{
 		if(debug)
 			System.out.println("Sending Objects to Renderer");
 		renderer.renderObjects(toRender);
+		renderer.renderToScreen();
 	}
 	
 	private void rayTracePixels(Renderer renderer){
-		
+		for(int r=0; r<this.height; r++){
+			for(int c=0; c<this.width; c++){
+				renderer.renderRayPixel(c, r);
+			}
+		}
+		renderer.renderToScreen();
 	}
 	
 	/**

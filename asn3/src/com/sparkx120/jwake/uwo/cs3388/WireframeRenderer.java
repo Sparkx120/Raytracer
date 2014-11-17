@@ -78,9 +78,6 @@ public class WireframeRenderer extends Renderer{
 				}
 			}
 		}
-		
-		//Rerender Frame to the the Pane
-		window.updateRender(buffer);
 	}
 	
 	/**
@@ -129,5 +126,10 @@ public class WireframeRenderer extends Renderer{
 	@Override
 	public void renderRayPixel(int x, int y) {
 		//Unimplemented as this is not a Ray Tracer Type	
+	}
+	
+	public void renderToScreen(){
+		//Rerender Frame to the the Pane
+		window.updateRender(buffer);
 	}
 }
