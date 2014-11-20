@@ -1,0 +1,78 @@
+sphere{
+baseColor:
+	r: 0.0;
+	g: 0.0;
+	b: 255.0;
+ambiantColor:
+	r: 0.0;
+	g: 0.0;
+	b: 255.0;
+ambiantFactor:
+	0.2;
+diffuseColor:
+	r: 0.0;
+	g: 0.0;
+	b: 255.0;
+diffuseFactor:
+	0.6;
+specularColor:
+	r: 255.0;
+	g: 255.0;
+	b: 255.0;
+specularFactor:
+	0.2;
+specularFalloff:
+	2.5;
+matrix{
+1.0 | 0.0 | 0.0 | 0.0
+0.0 | 1.0 | 0.0 | 0.0
+0.0 | 0.0 | 1.0 | 1.0
+0.0 | 0.0 | 0.0 | 1.0
+}
+}
+
+plane{
+baseColor:
+	r: 0.0;
+	g: 0.0;
+	b: 0.0;
+ambiantColor:
+	r: 0.0;
+	g: 0.0;
+	b: 0.0;
+ambiantFactor:
+	0.6;
+diffuseColor:
+	r: 150.0;
+	g: 150.0;
+	b: 150.0;
+diffuseFactor:
+	0.4;
+specularColor:
+	r: 255.0;
+	g: 255.0;
+	b: 255.0;
+specularFactor:
+	0.0;
+specularFalloff:
+	1.0;
+matrix{
+1.0 | 0.0 | 0.0 | 0.0
+0.0 | 1.0 | 0.0 | 0.0
+0.0 | 0.0 | 1.0 | 0.0
+0.0 | 0.0 | 0.0 | 1.0
+}
+}
+
+olight{
+point:
+	x: 0.0;
+	y: 0.0;
+	z: 5.0;
+intensity:
+	1.0;
+color:
+	r: 255.0;
+	g: 255.0;
+	b: 255.0;
+}

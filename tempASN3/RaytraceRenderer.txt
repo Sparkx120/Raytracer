@@ -52,10 +52,10 @@ public class RaytraceRenderer extends Renderer{
 			GenericObject obj = ray.getLowestTValObject();
 			Point intersect = ray.getLowestTValIntersect();
 			Vector normal = obj.getNormalAt(intersect);
-			
-			float reflectionFactor = obj.getReflectionFactor();
-			float refractionFactor = obj.getRefractionFactor();
-			float refractionIndex = obj.getRefractionIndex();
+//			System.out.println(intersect + "\n" + normal + "\n");
+//			if(x == y && x%10 == 0){
+//				System.out.println(obj.getBase_color() + " x:" + x + " y:" + y);
+//			}
 			
 			//Color Channels
 			float ambiantColorR = obj.getAmbiant_c().getRed()/256F;
@@ -132,15 +132,11 @@ public class RaytraceRenderer extends Renderer{
 				}
 			}
 			
-			//Compute Reflected Light
-				
-			
-			//Compute Refracted Light
-			
 			
 			float lightIntensityR = (ambiantIntensityR + diffuseSpecularIntensityR);
 			float lightIntensityG = (ambiantIntensityG + diffuseSpecularIntensityG);
 			float lightIntensityB = (ambiantIntensityB + diffuseSpecularIntensityB);
+//			System.out.println(lightIntensityR + " " + lightIntensityG + " " + lightIntensityB + " " + ambiantIntensityB + " " +diffuseSpecularIntensityB + "\n\n");
 			Color output = new Color(lightIntensityR, lightIntensityG, lightIntensityB);
 			
 			this.buffer.setRGB(x, y, output.getRGB());

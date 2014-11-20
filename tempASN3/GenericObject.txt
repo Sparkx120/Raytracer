@@ -17,9 +17,6 @@ public abstract class GenericObject {
 	private float diffuseFactor;
 	private float specularFactor;
 	private float specularFalloff;
-	private float reflectionFactor;
-	private float refractionFactor;
-	private float refractionIndex;
 	private Matrix3D transform;
 	private Matrix3D transformInverse;
 
@@ -35,7 +32,7 @@ public abstract class GenericObject {
 	 * @param specularFalloff - The Specular Falloff Factor
 	 * @param transform - The Transformation Matrix for this Object
 	 */
-	public GenericObject(Color base_color, Color ambiant_c, float ambiantFactor, Color diffuse_c, float diffuseFactor, Color specular_c, float specularFactor, float specularFalloff, float reflectionFactor, float refractionFactor, float refractionIndex, Matrix3D transform){
+	public GenericObject(Color base_color, Color ambiant_c, float ambiantFactor, Color diffuse_c, float diffuseFactor, Color specular_c, float specularFactor, float specularFalloff, Matrix3D transform){
 		this.base_color = base_color;
 		this.ambiant_c = ambiant_c;
 		this.diffuse_c = diffuse_c;
@@ -44,9 +41,6 @@ public abstract class GenericObject {
 		this.diffuseFactor = diffuseFactor;
 		this.specularFactor = specularFactor;
 		this.specularFalloff = specularFalloff;
-		this.reflectionFactor = reflectionFactor;
-		this.refractionFactor = refractionFactor;
-		this.refractionIndex = refractionIndex;
 		
 		setTransform(transform);
 	}
@@ -197,47 +191,5 @@ public abstract class GenericObject {
 	 */
 	public void setSpecularFalloff(float specularFalloff) {
 		this.specularFalloff = specularFalloff;
-	}
-
-	/**
-	 * @return the reflectionFactor
-	 */
-	public float getReflectionFactor() {
-		return reflectionFactor;
-	}
-
-	/**
-	 * @param reflectionFactor the reflectionFactor to set
-	 */
-	public void setReflectionFactor(float reflectionFactor) {
-		this.reflectionFactor = reflectionFactor;
-	}
-
-	/**
-	 * @return the refractionFactor
-	 */
-	public float getRefractionFactor() {
-		return refractionFactor;
-	}
-
-	/**
-	 * @param refractionFactor the refractionFactor to set
-	 */
-	public void setRefractionFactor(float refractionFactor) {
-		this.refractionFactor = refractionFactor;
-	}
-
-	/**
-	 * @return the refractionIndex
-	 */
-	public float getRefractionIndex() {
-		return refractionIndex;
-	}
-
-	/**
-	 * @param refractionIndex the refractionIndex to set
-	 */
-	public void setRefractionIndex(float refractionIndex) {
-		this.refractionIndex = refractionIndex;
 	}
 }

@@ -61,47 +61,47 @@ public class RaytracerOne{
 				{0,0,0,1}
 		});
 		Matrix3D sphereTransform2 = new Matrix3D(new float[][] {
-				{1,0,0,-2},
-				{0,1,0,2},
-				{0,0,1,1},
-				{0,0,0,1}
-				});
-		Matrix3D sphereTransform3 = new Matrix3D(new float[][] {
-				{1,0,0,-2},
-				{0,1,0,-2},
-				{0,0,1,1},
-				{0,0,0,1}
-				});
-		Matrix3D sphereTransform4 = new Matrix3D(new float[][] {
-				{1,0,0,2},
-				{0,1,0,2},
-				{0,0,1,1},
-				{0,0,0,1}
-				});
-		Matrix3D sphereTransform5 = new Matrix3D(new float[][] {
-				{1,0,0,2},
-				{0,1,0,-2},
-				{0,0,1,1},
-				{0,0,0,1}
-				});
-		Matrix3D planeTransform = new Matrix3D(new float[][] {
-				{1,0,0,0},
-				{0,1,0,0},
-				{0,0,1,0},
-				{0,0,0,1}
+		{1,0,0,-2},
+		{0,1,0,2},
+		{0,0,1,1},
+		{0,0,0,1}
 		});
-		GenericSphere sphere1 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.3F,
-		Color.WHITE, 0.3F, 2.0F, 0.3F, 0.0F, 0.0F,  sphereTransform1);
-		GenericSphere sphere2 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.3F,
-		Color.WHITE, 0.3F, 2.0F, 0.3F, 0.0F, 0.0F,  sphereTransform2);
-		GenericSphere sphere3 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.3F,
-		Color.WHITE, 0.3F, 2.0F, 0.3F, 0.0F, 0.0F,  sphereTransform3);
-		GenericSphere sphere4 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.3F,
-		Color.WHITE, 0.3F, 2.0F, 0.3F, 0.0F, 0.0F,  sphereTransform4);
-		GenericSphere sphere5 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.3F,
-		Color.WHITE, 0.3F, 2.0F, 0.3F, 0.0F, 0.0F,  sphereTransform5);
+		Matrix3D sphereTransform3 = new Matrix3D(new float[][] {
+		{1,0,0,-2},
+		{0,1,0,-2},
+		{0,0,1,1},
+		{0,0,0,1}
+		});
+		Matrix3D sphereTransform4 = new Matrix3D(new float[][] {
+		{1,0,0,2},
+		{0,1,0,2},
+		{0,0,1,1},
+		{0,0,0,1}
+		});
+		Matrix3D sphereTransform5 = new Matrix3D(new float[][] {
+		{1,0,0,2},
+		{0,1,0,-2},
+		{0,0,1,1},
+		{0,0,0,1}
+		});
+		Matrix3D planeTransform = new Matrix3D(new float[][] {
+						{1,0,0,0},
+						{0,1,0,0},
+						{0,0,1,0},
+						{0,0,0,1}
+		});
+		GenericSphere sphere1 = new GenericSphere(Color.BLUE, Color.BLUE, 0.2F, Color.BLUE, 0.5F,
+									 Color.WHITE, 0.3F, 2.0F, sphereTransform1);
+		GenericSphere sphere2 = new GenericSphere(Color.BLUE, Color.BLUE, 0.2F, Color.BLUE, 0.5F,
+		Color.WHITE, 0.3F, 2.0F, sphereTransform2);
+		GenericSphere sphere3 = new GenericSphere(Color.BLUE, Color.BLUE, 0.2F, Color.BLUE, 0.5F,
+		Color.WHITE, 0.3F, 2.0F, sphereTransform3);
+		GenericSphere sphere4 = new GenericSphere(Color.BLUE, Color.BLUE, 0.2F, Color.BLUE, 0.5F,
+		Color.WHITE, 0.3F, 2.0F, sphereTransform4);
+		GenericSphere sphere5 = new GenericSphere(Color.BLUE, Color.BLUE, 0.2F, Color.BLUE, 0.5F,
+		Color.WHITE, 0.3F, 2.0F, sphereTransform5);
 		GenericPlane plane = new GenericPlane(Color.BLACK, Color.BLACK, 0.6F, Color.GRAY, 0.4F,
-									 Color.WHITE, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,  planeTransform);
+									 Color.WHITE, 0.0F, 1.0F, planeTransform);
 		
 		OmniDirectionalLight light1 = new OmniDirectionalLight(new Point(5F, 5F, 2F), 1.0F, Color.WHITE);
 		OmniDirectionalLight light2 = new OmniDirectionalLight(new Point(-5F, -5F, 2F), 1.0F, Color.WHITE);
