@@ -54,19 +54,17 @@ public class GenericSphere extends GenericObject{
 		
 		// Intersection Calculations and Intersection Additions
 		if(det == 0){
-			float t = (float) ((b/a) + (Math.sqrt(det)/a));
+			float t = (float) ((b/(a)));
 			if(t<=0)
-				ray.addIntersectAt(Math.abs(t), this);
+				ray.addIntersectAt(t, this);
 			
 		}
 		
 		if(det > 0){
-			float t1 = (float) ((b/a) + (Math.sqrt(det)/a));
-			float t2 = (float) ((b/a) - (Math.sqrt(det)/a));
-			if(t1 <= 0)
-				ray.addIntersectAt(Math.abs(t1), this);
-			if(t2 <= 0)
-				ray.addIntersectAt(Math.abs(t2), this);
+			float t1 = (float) ((-b/(a)) + (Math.sqrt(det)/(a)));
+			float t2 = (float) ((-b/(a)) - (Math.sqrt(det)/(a)));
+			ray.addIntersectAt(t1, this);
+			ray.addIntersectAt(t2, this);
 		}
 	}
 

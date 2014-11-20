@@ -37,8 +37,9 @@ public class GenericPlane extends GenericObject{
 		
 		//Intersection Commputation and Additions
 		if(d.getZ() != 0){
-			float t = -e.getZ()/d.getZ();
-			ray.addIntersectAt(t, this);
+			float t = -(e.getZ()/d.getZ());
+			if(t>0)
+				ray.addIntersectAt(t, this);
 		}
 	}
 

@@ -37,10 +37,10 @@ public class WireframeViewer3D {
 //			System.exit(1);
 //		}
 		//Configure an Object and World for Viewing
-		configTestObj();
+//		configTestObj();
 //		ObjectMaker.main(new String[]{"vase.txt", "dump.obj"});
-//		String objData = FileIO.readStringFromFile(args[0]);
-//		testObj = new PolyObject3D(objData);
+		String objData = FileIO.readStringFromFile(args[0]);
+		testObj = new PolyObject3D(objData);
 		world = new World();
 		world.addPolyObject(testObj);
 //		world.addPolyObject(ObjectMaker.obj);
@@ -87,6 +87,6 @@ public class WireframeViewer3D {
 	private static void configCam(){
 		Point cameraPoint = new Point(0F, 35F, 35F);
 		Point gazePoint = new Point(0F, 0F, 20F);
-		camera = new CamObject3D(cameraPoint, gazePoint, width, height, 60F, world);
+		camera = new CamObject3D(cameraPoint, gazePoint, width, height, 45F, world);
 	}
 }

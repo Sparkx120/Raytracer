@@ -53,6 +53,9 @@ public class RaytraceRenderer extends Renderer{
 			Point intersect = ray.getLowestTValIntersect();
 			Vector normal = obj.getNormalAt(intersect);
 //			System.out.println(intersect + "\n" + normal + "\n");
+//			if(x == y && x%10 == 0){
+//				System.out.println(obj.getBase_color() + " x:" + x + " y:" + y);
+//			}
 			
 			//Color Channels
 			float ambiantColorR = obj.getAmbiant_c().getRed()/256F;
@@ -78,7 +81,7 @@ public class RaytraceRenderer extends Renderer{
 			float diffuseSpecularIntensityB = 0F;
 			
 			Iterator<LightObject> lights = world.getLightObjects().iterator();
-			//float numberOfLights = world.getLightObjects().size();
+			float numberOfLights = world.getLightObjects().size();
 			
 			while(lights.hasNext()){
 				//Get Light Object and Define Factors
@@ -91,10 +94,10 @@ public class RaytraceRenderer extends Renderer{
 					if(sobj != obj)
 						sobj.rayIntersect(shadow);
 				}
-				if(!shadow.didIntersect() || obj instanceof GenericSphere){
+				if(!shadow.didIntersect()){
 					//TODO This needs revision
-					float diffuseFactor = obj.getDiffuseFactor();
-					float specularFactor  = obj.getSpecularFactor();
+					float diffuseFactor = obj.getDiffuseFactor()/numberOfLights;
+					float specularFactor  = obj.getSpecularFactor()/numberOfLights;
 					
 					//Compute Vectors and Shadow Ray
 					Vector s = new Vector(intersect, light.getSource());
@@ -126,12 +129,17 @@ public class RaytraceRenderer extends Renderer{
 					
 					//Combine Diffuse and Specular Light Intensities
 //					System.out.println(diffuseIntensity + " " + specularIntensity + " " + Ip + " " + d + " " + light.getIntensity());
-					diffuseSpecularIntensityR = Ip*(diffuseIntensity*diffuseColorR + specularIntensity*specularColorR);
-					diffuseSpecularIntensityG = Ip*(diffuseIntensity*diffuseColorG + specularIntensity*specularColorG);
-					diffuseSpecularIntensityB = Ip*(diffuseIntensity*diffuseColorB + specularIntensity*specularColorB);
+					diffuseSpecularIntensityR += Ip*(diffuseIntensity*diffuseColorR + specularIntensity*specularColorR);
+					diffuseSpecularIntensityG += Ip*(diffuseIntensity*diffuseColorG + specularIntensity*specularColorG);
+					diffuseSpecularIntensityB += Ip*(diffuseIntensity*diffuseColorB + specularIntensity*specularColorB);
 //					System.out.println(diffuseSpecularIntensityR + " " + diffuseSpecularIntensityG + " " + diffuseSpecularIntensityB + " " + diffuseIntensity);
 				}
+				else{
+					numberOfLights --;
+				}
 			}
+			
+			
 			float lightIntensityR = (ambiantIntensityR + diffuseSpecularIntensityR);
 			float lightIntensityG = (ambiantIntensityG + diffuseSpecularIntensityG);
 			float lightIntensityB = (ambiantIntensityB + diffuseSpecularIntensityB);
