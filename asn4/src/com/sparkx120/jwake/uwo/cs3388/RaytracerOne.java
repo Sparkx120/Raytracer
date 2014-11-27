@@ -14,7 +14,7 @@ public class RaytracerOne{
 		world = new World();
 		
 		if(args.length == 0){
-			configureWorldTest();
+			configureWorld();
 		}
 		else{
 			readWorldFile(args[0]);
@@ -22,8 +22,8 @@ public class RaytracerOne{
 		
 		
 		//Configure the Camera
-		width = 1024;
-		height = 1024;
+		width = 256;
+		height = 256;
 		configCam();
 		
 		//Add Camera to the World
@@ -45,8 +45,8 @@ public class RaytracerOne{
 	 * Configure the camera using the global height and width and a hard coded position
 	 */
 	private static void configCam(){
-		Point cameraPoint = new Point(10F, 0F, 3F);
-		Point gazePoint = new Point(-20F, 0F, 0F);
+		Point cameraPoint = new Point(20F, 0F, 26F);
+		Point gazePoint = new Point(-30F, 0F, 0F);
 		camera = new CamObject3D(cameraPoint, gazePoint, width, height, 45F, world);
 	}
 	
@@ -90,6 +90,20 @@ public class RaytracerOne{
 				{0,0,1,0},
 				{0,0,0,1}
 		});
+		
+		Matrix3D cylindarTransform = new Matrix3D(new float[][] {
+				{10,0,0,0},
+				{0,10,0,0},
+				{0,0,10,0},
+				{0,0,0,1}
+		});
+		Matrix3D coneTransform = new Matrix3D(new float[][] {
+				{1F,0,0,0},
+				{0,1F,0,0},
+				{0,0,1F,1},
+				{0,0,0,1}
+		});
+		
 		GenericSphere sphere1 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
 		Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F, 0.0F,  sphereTransform1);
 		GenericSphere sphere2 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
@@ -102,24 +116,121 @@ public class RaytracerOne{
 		Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F, 0.0F,  sphereTransform5);
 		GenericPlane plane = new GenericPlane(Color.BLACK, Color.BLACK, 0.6F, Color.GRAY, 0.4F,
 									 Color.WHITE, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,  planeTransform);
+		GenericCylinder cyl = new GenericCylinder(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
+				Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F, 0.0F,  cylindarTransform);
+		GenericCone cone = new GenericCone(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
+				Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F, 0.0F,  coneTransform);
 		
 		OmniDirectionalLight light1 = new OmniDirectionalLight(new Point(5F, 5F, 2F), 1.0F, Color.WHITE);
 		OmniDirectionalLight light2 = new OmniDirectionalLight(new Point(-5F, -5F, 2F), 1.0F, Color.WHITE);
 		OmniDirectionalLight light3 = new OmniDirectionalLight(new Point(5F, -5F, 2F), 1.0F, Color.WHITE);
-		OmniDirectionalLight light4 = new OmniDirectionalLight(new Point(0F, 0F, 4F), 1.0F, Color.WHITE);
-		OmniDirectionalLight light5 = new OmniDirectionalLight(new Point(0F, 0F, 0.5F), 1.0F, Color.WHITE);
+		OmniDirectionalLight light4 = new OmniDirectionalLight(new Point(0F, 0F, 6F), 1.0F, Color.WHITE);
+		OmniDirectionalLight light5 = new OmniDirectionalLight(new Point(0F, 0F, 2.9F), 1.0F, Color.WHITE);
 		
 		world.addGenericObject(sphere1);
 		world.addGenericObject(sphere2);
 //		world.addGenericObject(sphere3);
 		world.addGenericObject(sphere4);
 		world.addGenericObject(sphere5);
+		world.addGenericObject(cyl);
+		world.addGenericObject(cone);
 		world.addGenericObject(plane);
 		//world.addLightObject(light1);
 		//world.addLightObject(light2);
 		//world.addLightObject(light3);
 		world.addLightObject(light4);
 		world.addLightObject(light5);
+	}
+	
+	/**
+	 * Configure the Default Test World
+	 */
+	private static void configureWorld(){
+		Matrix3D cylinderTransform1 = new Matrix3D(new float[][] {
+				{1F,0,0,0},
+				{0,1F,0,0},
+				{0,0,8F,10F},
+				{0,0,0,1}
+		});
+		Matrix3D coneTransform1 = new Matrix3D(new float[][] {
+				{1,0,0,0},
+				{0,1,0,0},
+				{0,0,1,2},
+				{0,0,0,1}
+				});
+		Matrix3D coneTransform2 = new Matrix3D(new float[][] {
+				{1,0,0,0},
+				{0,1,0,0},
+				{0,0,1,19F},
+				{0,0,0,1}
+				});
+		Matrix3D planeTransform1 = new Matrix3D(new float[][] {
+				{1,0,0,0},
+				{0,1,0,0},
+				{0,0,1,1},
+				{0,0,0,1}
+				});
+		Matrix3D planeTransform2 = new Matrix3D(new float[][] {
+				{1,0,0,2},
+				{0,1,0,2},
+				{0,0,1,1},
+				{0,0,0,1}
+				});
+		Matrix3D planeTransform3 = new Matrix3D(new float[][] {
+				{1,0,0,2},
+				{0,1,0,-2},
+				{0,0,1,1},
+				{0,0,0,1}
+				});
+		Matrix3D planeTransform4 = new Matrix3D(new float[][] {
+				{1,0,0,0},
+				{0,1,0,0},
+				{0,0,1,0},
+				{0,0,0,1}
+		});
+		
+		Matrix3D rocketTransform = new Matrix3D(new float[][] {
+				{1,0,0,-10},
+				{0,1,0,0},
+				{0,0,1,0},
+				{0,0,0,1}
+		});
+		Matrix3D planetTransform = new Matrix3D(new float[][] {
+				{1F,0,0,0},
+				{0,1F,0,0},
+				{0,0,1F,0},
+				{0,0,0,1}
+		});
+		
+		Matrix3D planeTransform = new Matrix3D(new float[][] {
+				{1,0,0,0},
+				{0,1,0,0},
+				{0,0,1,-20F},
+				{0,0,0,1}
+		});
+		
+		cylinderTransform1 = rocketTransform.multiplyMatrixWithMatrix(cylinderTransform1);
+		coneTransform1 = rocketTransform.multiplyMatrixWithMatrix(coneTransform1);
+		coneTransform2 = rocketTransform.multiplyMatrixWithMatrix(coneTransform2);
+		System.out.println(coneTransform2 + "\n" + coneTransform1);
+		
+		GenericPlane plane = new GenericPlane(Color.BLACK, Color.GRAY, 0.6F, Color.GRAY, 0.4F,
+				 Color.WHITE, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,  planeTransform);
+		
+		GenericCylinder rocketBody = new GenericCylinder(Color.WHITE, Color.WHITE, 0.05F, Color.WHITE, 0.6F,
+				Color.WHITE, 0.35F, 10.0F, 0.1F, 0.0F, 0.0F,  cylinderTransform1);
+		GenericCone noseCone = new GenericCone(Color.WHITE, Color.WHITE, 0.05F, Color.WHITE, 0.6F,
+				Color.WHITE, 0.35F, 10.0F, 0.1F, 0.0F, 0.0F,  coneTransform1);
+		GenericCone engineCone = new GenericCone(Color.GRAY, Color.GRAY, 0.05F, Color.GRAY, 0.85F,
+				Color.WHITE, 0.1F, 10.0F, 0.1F, 0.0F, 0.0F,  coneTransform2);
+		
+		OmniDirectionalLight light1 = new OmniDirectionalLight(new Point(-7F, 10F, 15F), 1.0F, Color.WHITE);
+		
+		world.addGenericObject(rocketBody);
+		world.addGenericObject(noseCone);
+		world.addGenericObject(engineCone);
+		world.addGenericObject(plane);
+		world.addLightObject(light1);
 	}
 	
 	/**

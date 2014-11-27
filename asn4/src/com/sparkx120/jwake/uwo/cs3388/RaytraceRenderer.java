@@ -21,7 +21,6 @@ public class RaytraceRenderer extends Renderer{
 	private BufferedImage buffer;
 	private BufferedImage backgroundImage;
 	private Graphics2D overlay;
-	private boolean visualDebug = true;
 	private float frameComputeTime; 
 	
 	public RaytraceRenderer(Window3D window, World w, CamObject3D camera, Color background){
@@ -191,7 +190,7 @@ public class RaytraceRenderer extends Renderer{
 			}
 			
 			//Compute Reflected Light
-			float iDotn = Math3D.dotProduct(intersect, normal);
+			float iDotn = Math3D.dotProduct(ray.getD(), normal);
 			if(reflectionFactor > 0 && recursions < this.recursionFactor && iDotn < 0){
 				recursions ++;
 				Point e = intersect;
@@ -239,7 +238,7 @@ public class RaytraceRenderer extends Renderer{
 	}
 	
 	public void renderToScreen(){
-		if(visualDebug){
+		if(this.getVisualDebug()){
 			overlay.setColor(Color.WHITE);
 			int x = 5;
 			int y = 5;

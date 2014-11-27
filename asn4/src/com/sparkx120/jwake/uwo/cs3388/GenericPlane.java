@@ -4,10 +4,14 @@ import java.awt.Color;
 
 /**
  * The Generic Plane at z=0 transformed with a Matrix 
+ * If restriction is enabled then the plane will be computed with transforms
+ * and everything not within a radius of 1 of the circular non transformed plane
+ * will be ignored
+ * 
  * @author James Wake
  */
 public class GenericPlane extends GenericObject{
-	
+	private boolean restricted;
 	/**
 	 * Default Constructor
 	 * @param base_color - The Base color of the object
@@ -25,6 +29,28 @@ public class GenericPlane extends GenericObject{
 			float specularFactor, float specularFalloff, float reflectionFactor, float refractionFactor, float refractionIndex, Matrix3D transform) {
 		super(base_color, ambiant_c, ambiantFactor, diffuse_c, diffuseFactor,
 				specular_c, specularFactor, specularFalloff, reflectionFactor, refractionFactor, refractionIndex, transform);
+		restricted = false;
+	}
+	
+	/**
+	 * Restricted Plane Constructor
+	 * @param base_color - The Base color of the object
+	 * @param ambiant_c - The Ambiant Color of the object
+	 * @param ambiantFactor - The Ambiant Color factor of the Object
+	 * @param diffuse_c - The Diffuse Color of the Object
+	 * @param diffuseFactor - The Diffuse Factor of the Object
+	 * @param specular_c - The Specular Color of the Object
+	 * @param specularFactor - The Specuar Factor of the Object
+	 * @param specularFalloff - The Specular Falloff Factor
+	 * @param transform - The Transformation Matrix for this Object
+	 * @param restricted - If the plane should be restricted in a Radial Fashion
+	 */
+	public GenericPlane(Color base_color, Color ambiant_c, float ambiantFactor,
+			Color diffuse_c, float diffuseFactor, Color specular_c,
+			float specularFactor, float specularFalloff, float reflectionFactor, float refractionFactor, float refractionIndex, Matrix3D transform, boolean restricted) {
+		super(base_color, ambiant_c, ambiantFactor, diffuse_c, diffuseFactor,
+				specular_c, specularFactor, specularFalloff, reflectionFactor, refractionFactor, refractionIndex, transform);
+		this.restricted = restricted;
 	}
 	
 	/**
@@ -47,7 +73,14 @@ public class GenericPlane extends GenericObject{
 		if(d.getZ() != 0){
 			float t = -(e.getZ()/d.getZ());
 			if(t>0)
-				ray.addIntersectAt(t, this);
+				if(!restricted)
+					ray.addIntersectAt(t, this);
+				else{
+					float x = e.getX() + d.getX()*t;
+					float y = e.getY() + d.getY()*t;
+					if((float) (Math.sqrt(x*x + y*y)) <= 1)
+						ray.addIntersectAt(t, this);
+				}
 		}
 	}
 

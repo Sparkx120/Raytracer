@@ -12,9 +12,11 @@ import java.util.ArrayList;
 public abstract class Renderer {
 	
 	private RendererType type;
+	private boolean visualDebug;
 	
 	public Renderer(RendererType type){
 		this.type = type;
+		this.visualDebug = false;
 	}
 	
 	/**
@@ -32,6 +34,14 @@ public abstract class Renderer {
 	public abstract Color renderRayPixel(int x, int y);
 	
 	public abstract void renderToScreen();
+	
+	public void setVisualDebug(boolean debug){
+		this.visualDebug = debug;
+	}
+	
+	public boolean getVisualDebug(){
+		return this.visualDebug;
+	}
 	
 	/**
 	 * Returns the Renderer's Type

@@ -224,6 +224,7 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 			case 'c': camera.rotateCameraV(1); break;
 			case '1': camera.rotateCameraN(-1); break;
 			case '3': camera.rotateCameraN(1); break;
+			case 'v': renderer.setVisualDebug(!renderer.getVisualDebug());
 		}
 		camera.renderFrame(renderer);
 	}
