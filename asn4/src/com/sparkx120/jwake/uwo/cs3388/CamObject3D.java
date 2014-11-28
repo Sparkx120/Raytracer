@@ -257,7 +257,7 @@ public class CamObject3D extends Object3D{
 	private void rayTracePixels(Renderer renderer){
 		for(int r=0; r<this.height; r++){
 			for(int c=0; c<this.width; c++){
-				renderer.renderRayPixel(c, r);
+				renderer.renderRayPixel(c, r, false);
 			}
 		}
 		renderer.renderToScreen();

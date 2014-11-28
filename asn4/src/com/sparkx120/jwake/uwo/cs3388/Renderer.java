@@ -31,7 +31,7 @@ public abstract class Renderer {
 	 * @param y - The Y coordinate of the trace
 	 * @param data - The ray data from reflections etc.
 	 */
-	public abstract Color renderRayPixel(int x, int y);
+	public abstract Color renderRayPixel(int x, int y, boolean debug);
 	
 	public abstract void renderToScreen();
 	

@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 public class RaytraceRenderer extends Renderer{
 	
-	private int superSampling = 2;
+	private int superSampling = 1;
 	private boolean supersample = false;
 	private int recursionFactor = 5;
 	private Window3D window;
@@ -51,7 +51,7 @@ public class RaytraceRenderer extends Renderer{
 	}
 
 	@Override
-	public Color renderRayPixel(int x, int y) {
+	public Color renderRayPixel(int x, int y, boolean debug) {
 		if(supersample){
 			ArrayList<Color> toAverage = new ArrayList<Color>();
 			x = x*superSampling;
@@ -59,7 +59,7 @@ public class RaytraceRenderer extends Renderer{
 			for(int sx=0; sx<superSampling; sx++){
 				for(int sy=0; sy<superSampling; sy++){
 					Ray ray = new Ray(x-sx, y-sy, camera, superSampling);
-					toAverage.add(rayTrace(ray, 0, x, y, null));
+					toAverage.add(rayTrace(ray, 0, x, y, null, debug));
 				}
 			}
 			Iterator<Color> it = toAverage.iterator();
@@ -82,13 +82,17 @@ public class RaytraceRenderer extends Renderer{
 		}
 		else{
 			Ray ray = new Ray(x, y, camera, 1);
-			Color pix = rayTrace(ray, 0, x, y, null);
+			Color pix = rayTrace(ray, 0, x, y, null, debug);
 			this.buffer.setRGB(x, y, pix.getRGB());
 			return pix;
 		}
 	}
 	
-	private Color rayTrace(Ray ray, int recursions, int x, int y, GenericObject incidentObject){
+	private Color rayTrace(Ray ray, int recursions, int x, int y, GenericObject incidentObject, boolean debug){
+		if(debug){
+			System.out.println("Raytracing for x: " + x + " y: " + y);
+			System.out.println("Recusion Level: " + recursions);
+		}
 		float timeA = System.currentTimeMillis();
 		ArrayList<GenericObject> genObjs = world.getRayRenderableObjects();
 		Iterator<GenericObject> it = genObjs.iterator();
@@ -139,57 +143,109 @@ public class RaytraceRenderer extends Renderer{
 			
 			Iterator<LightObject> lights = world.getLightObjects().iterator();
 			float numberOfLights = world.getLightObjects().size();
+			float lightIntersects = 0;
+			ArrayList<Float> diffuseSpecularIntensitiesR = new ArrayList<Float>();
+			ArrayList<Float> diffuseSpecularIntensitiesG = new ArrayList<Float>();
+			ArrayList<Float> diffuseSpecularIntensitiesB = new ArrayList<Float>();
+			
+			if(debug){
+				System.out.println("\nObj: " + obj + "\nintersect: " + intersect + "\nnorm: " + normal);
+			}
 			
 			while(lights.hasNext()){
 				//Get Light Object and Define Factors
 				LightObject light = lights.next();
 				Point source = light.getSource();
 				Iterator<GenericObject> it2 = genObjs.iterator();
+				
+				//Compute Vectors and Shadow Ray
+				Vector s = new Vector(intersect, light.getSource());
+				Vector v = new Vector(intersect,ray.getE());
+				Vector n = normal;
+				if(debug){
+					System.out.println("s: " + s + "\nv: " + v + "\nn:" + n);
+				}
 				Ray shadow = new Ray(intersect, source);
 				while(it2.hasNext()){
 					GenericObject sobj = it2.next();
 					if(sobj != obj)
 						sobj.rayIntersect(shadow);
 				}
-				if(!shadow.didIntersect() || Math3D.dotProduct(shadow.getLowestTValIntersect(), shadow.getD()) > 0){
-					float diffuseFactor = obj.getDiffuseFactor();
-					float specularFactor  = obj.getSpecularFactor();
-					
-					//Compute Vectors and Shadow Ray
-					Vector s = new Vector(intersect, light.getSource());
-					Vector v = new Vector(intersect,ray.getE());
-					Vector n = normal;
-					float ns = Math3D.dotProduct(n, s);
-					float magN = Math3D.magnitudeOfVector(n);
-					float coeff = 2*((ns)/(magN*magN));
-					Vector r = Math3D.vectorAdd(Math3D.scalarMultiplyVector(s, -1F), Math3D.scalarMultiplyVector(n, coeff));
-					float f = obj.getSpecularFalloff();
-					
-					//Compute Diffuse Intensity and Specular Intensity
-					float nDots = ns/(Math3D.magnitudeOfVector(s)*Math3D.magnitudeOfVector(n));
-					float diffuseIntensity = diffuseFactor * Math.max(nDots, 0);
-					float specularIntensity = 0F;
-					double vDotr = Math3D.dotProduct(v, r)/(Math3D.magnitudeOfVector(v)*Math3D.magnitudeOfVector(r));
-					if(vDotr > 0)
-						specularIntensity = specularFactor * (float)Math.max(Math.pow(vDotr,f), 0);
-					
-					//Compute Light Source Intensity and Falloff
-					//TODO Add Square Distance Falloff
-					float magS = Math.abs(Math3D.magnitudeOfVector(s));
-					float d = magS;
-					float Ip = light.getIntensity()/numberOfLights; ///d*d
-					
-					//Combine Diffuse and Specular Light Intensities
-					diffuseSpecularIntensityR += Math.min(Ip*(diffuseIntensity*diffuseColorR + specularIntensity*specularColorR), 1F);
-					diffuseSpecularIntensityG += Math.min(Ip*(diffuseIntensity*diffuseColorG + specularIntensity*specularColorG), 1F);
-					diffuseSpecularIntensityB += Math.min(Ip*(diffuseIntensity*diffuseColorB + specularIntensity*specularColorB), 1F);
+				if(shadow.didIntersect()){
+//					if(obj instanceof GenericCylinder)
+//					System.out.println(shadow.getLowestTValObject());
+				}
+				float tRay = shadow.rayDetect(source);
+				float shadowDotNormal = Math3D.dotProduct(shadow.getD(), n);
+				if(((!shadow.didIntersect()) || shadow.getLowestTVal() > tRay)  && shadowDotNormal > 0){ //   || (Math3D.dotProduct(shadow.getLowestTValIntersect(), shadow.getD()) < 0) // || Math3D.dotProduct(shadow.getLowestTValIntersect(), shadow.getD()) > 0A
+					obj.rayIntersect(shadow);
+					//if((shadow.getLowestTValObject() == obj && shadow.getLowestTValIntersect() == intersect) || shadow.getLowestTValObject() != obj){
+						float diffuseFactor = obj.getDiffuseFactor();
+						float specularFactor  = obj.getSpecularFactor();
+						lightIntersects ++;
+						
+						float ns = Math3D.dotProduct(n, s);
+						float magN = Math3D.magnitudeOfVector(n);
+						float coeff = 2*((ns)/(magN*magN));
+						Vector r = Math3D.vectorAdd(Math3D.scalarMultiplyVector(s, -1F), Math3D.scalarMultiplyVector(n, coeff));
+						float f = obj.getSpecularFalloff();
+						
+						
+						//Compute Diffuse Intensity and Specular Intensity
+						float diffuseIntensity = 0F;
+						float nDots = ns/(Math3D.magnitudeOfVector(s)*Math3D.magnitudeOfVector(n));
+						diffuseIntensity = diffuseFactor * Math.max(nDots, 0);
+						float specularIntensity = 0F;
+						double vDotr = Math3D.dotProduct(v, r)/(Math3D.magnitudeOfVector(v)*Math3D.magnitudeOfVector(r));
+						if(vDotr > 0)
+							specularIntensity = specularFactor * (float)Math.max(Math.pow(vDotr,f), 0);
+						
+						//Compute Light Source Intensity and Falloff
+						//TODO Add Square Distance Falloff
+						float magS = Math.abs(Math3D.magnitudeOfVector(s));
+						float d = magS;
+						float Ip = light.getIntensity(); ///numberOfLights
+						
+						//Combine Diffuse and Specular Light Intensities
+						diffuseSpecularIntensityR = Math.min(Ip*(diffuseIntensity*diffuseColorR + specularIntensity*specularColorR), 1F);
+						diffuseSpecularIntensityG = Math.min(Ip*(diffuseIntensity*diffuseColorG + specularIntensity*specularColorG), 1F);
+						diffuseSpecularIntensityB = Math.min(Ip*(diffuseIntensity*diffuseColorB + specularIntensity*specularColorB), 1F);
+						diffuseSpecularIntensitiesR.add(diffuseSpecularIntensityR);
+						diffuseSpecularIntensitiesG.add(diffuseSpecularIntensityG);
+						diffuseSpecularIntensitiesB.add(diffuseSpecularIntensityB);
+						
+						if(debug){
+							System.out.println("light: " + light + "\ntRay: " + tRay);
+							System.out.println("ns: " + ns + "\nmagN: " + magN + "\ncoeff: " + coeff + "\nr: " + r + "\nf: " + f);
+							System.out.println("nDots: " + nDots + "\nvDotr: " + vDotr + "\ndiffIn: " + diffuseIntensity + "\nspecIn: " + specularIntensity);
+							System.out.println("magS: " + magS + "\nd: " + d + "\nIp:" + Ip);
+							System.out.println("diffuseSpecularR: " + diffuseSpecularIntensityR + "\ndiffuseSpecularG: " + diffuseSpecularIntensityG + "\ndiffuseSpecularB: " + diffuseSpecularIntensityB);
+						}
+					//}
 				}
 				else{
 					//DO NOthing
 				}
 			}
+			//Compute Average DiffuseSpecular
+			Iterator<Float> diffSpecR = diffuseSpecularIntensitiesR.iterator();
+			Iterator<Float> diffSpecG = diffuseSpecularIntensitiesG.iterator();
+			Iterator<Float> diffSpecB = diffuseSpecularIntensitiesB.iterator();
+			while(diffSpecR.hasNext()){
+				diffuseSpecularIntensityR += diffSpecR.next();
+				diffuseSpecularIntensityG += diffSpecG.next();
+				diffuseSpecularIntensityB += diffSpecB.next();
+			}
+//			if(lightIntersects > 0){
+//				diffuseSpecularIntensityR /= lightIntersects;
+//				diffuseSpecularIntensityG /= lightIntersects;
+//				diffuseSpecularIntensityB /= lightIntersects;
+////				System.out.println(lightIntersects);
+//			}
+			if(debug)
+				System.out.println("lightIntersects: " + lightIntersects);
 			
-			//Compute Reflected Light
+			//Compute Recursive Light
 			float iDotn = Math3D.dotProduct(ray.getD(), normal);
 			if(reflectionFactor > 0 && recursions < this.recursionFactor && iDotn < 0){
 				recursions ++;
@@ -199,11 +255,18 @@ public class RaytraceRenderer extends Renderer{
 				d = Math3D.normalizeVector(d);
 //				d = Math3D.scalarMultiplyVector(d, -1F);
 				//System.out.println(Math3D.dotProduct(intersect, normal));
+				if(debug){
+					System.out.println("recursive true\niDotn: " + iDotn + "\ne: " + e + "\ncoeff" + coeff + "\nd: " + d + "\n\n");
+				}
 				Ray incident = new Ray(e, d);
-				Color reflection = rayTrace(incident, recursions, x, y, obj);
+				Color reflection = rayTrace(incident, recursions, x, y, obj, debug);
 				reflectionIntensityR = reflectionFactor*reflection.getRed()/255F;
 				reflectionIntensityG = reflectionFactor*reflection.getGreen()/255F;
 				reflectionIntensityB = reflectionFactor*reflection.getBlue()/255F;
+			}
+			else{
+				if(debug)
+					System.out.println("recursive false, iDotn:" + iDotn);
 			}
 			
 			//Compute Refracted Light
@@ -217,9 +280,14 @@ public class RaytraceRenderer extends Renderer{
 			
 			float timeB = System.currentTimeMillis();
 			frameComputeTime += timeB-timeA;
+			if(debug)
+				System.out.println("Finished Ray Trace Recusion Level: " + recursions + "\n\n\n");
 			return output;
 		}
 		else{
+			if(debug){
+				System.out.println("No Intersection");
+			}
 			if(backgroundImage != null){
 				Color pix;
 				if(backgroundImage.getWidth() <= x && backgroundImage.getHeight() <= y){
@@ -231,8 +299,12 @@ public class RaytraceRenderer extends Renderer{
 					else
 						pix = Color.BLACK;
 				}
+				if(debug)
+					System.out.println("Finished Ray Trace Using Background Image Pixel\n\n\n");
 				return pix;
 			}
+			if(debug)
+				System.out.println("Finished Ray Trace using Background Color for Pixel\n\n\n");
 			return backgroundC;
 		}
 	}

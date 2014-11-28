@@ -1,6 +1,7 @@
 package com.sparkx120.jwake.uwo.cs3388;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * A ray from a ray tracer. This contains all Objects that this ray has hit.
@@ -98,6 +99,53 @@ public class Ray {
 			}
 		
 		intersectedObjects.add(new ObjectIntersection<GenericObject>(t, obj, intersect));
+	}
+	
+	/**
+	 * Adds a detected intersection At a TVal with an Obj and Sub Objects
+	 * @param t - The TVal
+	 * @param obj - The Object intersected
+	 * @param sub - Sub Objects of the main Object (not used yet)
+	 */
+	public void addIntersectAt(float t, GenericObject obj, ArrayList<GenericObject> sub){
+		int i = -1;
+		Iterator<GenericObject> it = sub.iterator();
+		boolean bestIntersection = true;
+		while(it.hasNext()){
+			GenericObject gen = it.next();
+			if((i = intersectedObjects.indexOf(gen)) != -1){
+				ObjectIntersection<GenericObject> intersect = intersectedObjects.get(i);
+				if(intersect.getTVal() < lowestTVal){
+					bestIntersection = false;
+					break;
+				}
+			}
+		}
+		if(bestIntersection){
+			addIntersectAt(t, obj);
+		}
+		
+	}
+	
+	/**
+	 * Computes the TVal of a point along the ray
+	 * @param p - The Point
+	 * @return - The TVal
+	 */
+	public float rayDetect(Point p){
+		float t = 0F;
+		if(d.getX() != 0){
+			t = (p.getX() - e.getX())/d.getX();
+		}
+		else
+			if(d.getY() != 0){
+				t = (p.getY() - e.getY())/d.getY();
+			}
+			else
+				if(d.getZ() != 0){
+					t = (p.getZ() - e.getZ())/d.getZ();
+				}
+		return t;
 	}
 	
 	/**

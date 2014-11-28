@@ -124,7 +124,7 @@ public class WireframeRenderer extends Renderer{
 	}
 
 	@Override
-	public Color renderRayPixel(int x, int y) {
+	public Color renderRayPixel(int x, int y, boolean debug) {
 		//Unimplemented as this is not a Ray Tracer Type
 		return null;
 	}

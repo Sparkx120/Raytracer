@@ -76,8 +76,8 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		//Set Up listeners
-		this.mouseControl = true;
-		this.addMouseListener(this);
+		this.mouseControl = false;
+		this.drawPane.addMouseListener(this);
 		this.addKeyListener(this);
 		this.addMouseMotionListener(this);
 		
@@ -241,14 +241,19 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1){
-			if(mouseControl){
-				setCursorVisible();
-				mouseControl = false;
+			if(renderer.getType() == RendererType.OBJECT_DATA){
+				if(mouseControl){
+					setCursorVisible();
+					mouseControl = false;
+				}
+				else{
+					setCursorInvisible();
+					setMousePosition(new java.awt.Point((int)this.getLocationOnScreen().getX() + width/2, (int)this.getLocationOnScreen().getY() + height/2));
+					mouseControl = true;
+				}
 			}
-			else{
-				setCursorInvisible();
-				setMousePosition(new java.awt.Point((int)this.getLocationOnScreen().getX() + width/2, (int)this.getLocationOnScreen().getY() + height/2));
-				mouseControl = true;
+			if(renderer.getType() == RendererType.CAMERA_PIPE){
+				renderer.renderRayPixel(e.getX(), e.getY(), true);
 			}
 		}
 	}

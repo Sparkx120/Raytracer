@@ -6,6 +6,8 @@ public class GenericCylinder extends GenericObject{
 	
 	private GenericPlane topPlane;
 	private GenericPlane bottomPlane;
+	private boolean enableTop;
+	private boolean enableBottom;
 
 	public GenericCylinder(Color base_color, Color ambiant_c,
 			float ambiantFactor, Color diffuse_c, float diffuseFactor,
@@ -39,6 +41,8 @@ public class GenericCylinder extends GenericObject{
 		this.bottomPlane = new GenericPlane(this.getBase_color(), this.getAmbiant_c(), this.getAmbiantFactor(), this.getDiffuse_c(), this.getDiffuseFactor(),
 				this.getSpecular_c(), this.getSpecularFactor(), this.getSpecularFalloff(), this.getReflectionFactor(),
 				this.getRefractionFactor(), this.getRefractionIndex(), bottomTransform, true);
+		this.enableTop = true;
+		this.enableBottom = true;
 	}
 
 	@Override
@@ -75,8 +79,10 @@ public class GenericCylinder extends GenericObject{
 				ray.addIntersectAt(t2, this);
 		}
 		
-		topPlane.rayIntersect(ray);
-		bottomPlane.rayIntersect(ray);
+		if(enableTop)
+			topPlane.rayIntersect(ray);
+		if(enableBottom)
+			bottomPlane.rayIntersect(ray);
 	}
 
 	@Override
@@ -90,5 +96,14 @@ public class GenericCylinder extends GenericObject{
 		norm = Math3D.normalizeVector(norm);
 		return norm;
 	}
+	
+	public void enableTopPlane(boolean top){
+		this.enableTop = top;
+	}
+	
+	public void enableBottomPlane(boolean bottom){
+		this.enableBottom = bottom;
+	}
+
 
 }

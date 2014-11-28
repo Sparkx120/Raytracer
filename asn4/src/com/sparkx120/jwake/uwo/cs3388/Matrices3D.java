@@ -130,7 +130,7 @@ public class Matrices3D {
 	 * @param z - Input Magnitude of Z
 	 * @return Output Matrix
 	 */
-	public static Matrix3D affineTransformX(float x, float y, float z){		
+	public static Matrix3D affineTransformTranslation(float x, float y, float z){		
 		float[][] data = new float[4][4];
 		
 		//Setup Matrix
@@ -152,7 +152,7 @@ public class Matrices3D {
 	 * @param z - Input Magnitude of Z
 	 * @return Output Matrix
 	 */
-	public static Matrix3D affineScaleX(float x, float y, float z){		
+	public static Matrix3D affineTransformScale(float x, float y, float z){		
 		float[][] data = new float[4][4];
 		
 		//Setup Matrix
