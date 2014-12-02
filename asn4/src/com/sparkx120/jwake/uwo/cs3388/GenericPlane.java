@@ -26,9 +26,9 @@ public class GenericPlane extends GenericObject{
 	 */
 	public GenericPlane(Color base_color, Color ambiant_c, float ambiantFactor,
 			Color diffuse_c, float diffuseFactor, Color specular_c,
-			float specularFactor, float specularFalloff, float reflectionFactor, float refractionFactor, float refractionIndex, Matrix3D transform) {
+			float specularFactor, float specularFalloff, float reflectionFactor, float refractionIndex, Matrix3D transform) {
 		super(base_color, ambiant_c, ambiantFactor, diffuse_c, diffuseFactor,
-				specular_c, specularFactor, specularFalloff, reflectionFactor, refractionFactor, refractionIndex, transform);
+				specular_c, specularFactor, specularFalloff, reflectionFactor, refractionIndex, transform);
 		restricted = false;
 	}
 	
@@ -47,9 +47,9 @@ public class GenericPlane extends GenericObject{
 	 */
 	public GenericPlane(Color base_color, Color ambiant_c, float ambiantFactor,
 			Color diffuse_c, float diffuseFactor, Color specular_c,
-			float specularFactor, float specularFalloff, float reflectionFactor, float refractionFactor, float refractionIndex, Matrix3D transform, boolean restricted) {
+			float specularFactor, float specularFalloff, float reflectionFactor, float refractionIndex, Matrix3D transform, boolean restricted) {
 		super(base_color, ambiant_c, ambiantFactor, diffuse_c, diffuseFactor,
-				specular_c, specularFactor, specularFalloff, reflectionFactor, refractionFactor, refractionIndex, transform);
+				specular_c, specularFactor, specularFalloff, reflectionFactor, refractionIndex, transform);
 		this.restricted = restricted;
 	}
 	

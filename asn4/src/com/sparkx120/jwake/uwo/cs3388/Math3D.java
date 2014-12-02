@@ -24,7 +24,7 @@ public class Math3D{
 	}
 	
 	/**
-	 * Subtracts two points A + B
+	 * Subtracts two points A - B
 	 * @param a - Point A
 	 * @param b - Point B
 	 * @return The Result

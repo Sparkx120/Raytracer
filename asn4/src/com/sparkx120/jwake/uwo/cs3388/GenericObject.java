@@ -35,7 +35,7 @@ public abstract class GenericObject {
 	 * @param specularFalloff - The Specular Falloff Factor
 	 * @param transform - The Transformation Matrix for this Object
 	 */
-	public GenericObject(Color base_color, Color ambiant_c, float ambiantFactor, Color diffuse_c, float diffuseFactor, Color specular_c, float specularFactor, float specularFalloff, float reflectionFactor, float refractionFactor, float refractionIndex, Matrix3D transform){
+	public GenericObject(Color base_color, Color ambiant_c, float ambiantFactor, Color diffuse_c, float diffuseFactor, Color specular_c, float specularFactor, float specularFalloff, float reflectionFactor, float refractionIndex, Matrix3D transform){
 		this.base_color = base_color;
 		this.ambiant_c = ambiant_c;
 		this.diffuse_c = diffuse_c;
@@ -45,7 +45,7 @@ public abstract class GenericObject {
 		this.specularFactor = specularFactor;
 		this.specularFalloff = specularFalloff;
 		this.reflectionFactor = reflectionFactor;
-		this.refractionFactor = refractionFactor;
+//		this.refractionFactor = refractionFactor;
 		this.refractionIndex = refractionIndex;
 		
 		setTransform(transform);

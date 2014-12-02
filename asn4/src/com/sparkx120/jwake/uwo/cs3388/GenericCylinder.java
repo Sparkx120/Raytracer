@@ -12,11 +12,11 @@ public class GenericCylinder extends GenericObject{
 	public GenericCylinder(Color base_color, Color ambiant_c,
 			float ambiantFactor, Color diffuse_c, float diffuseFactor,
 			Color specular_c, float specularFactor, float specularFalloff,
-			float reflectionFactor, float refractionFactor,
+			float reflectionFactor,
 			float refractionIndex, Matrix3D transform) {
 		super(base_color, ambiant_c, ambiantFactor, diffuse_c, diffuseFactor,
 				specular_c, specularFactor, specularFalloff, reflectionFactor,
-				refractionFactor, refractionIndex, transform);
+				refractionIndex, transform);
 		
 		Matrix3D topTransform = new Matrix3D(new float[][] {
 				{1F,0,0,0},
@@ -36,11 +36,11 @@ public class GenericCylinder extends GenericObject{
 		
 		this.topPlane = new GenericPlane(this.getBase_color(), this.getAmbiant_c(), this.getAmbiantFactor(), this.getDiffuse_c(), this.getDiffuseFactor(),
 				this.getSpecular_c(), this.getSpecularFactor(), this.getSpecularFalloff(), this.getReflectionFactor(),
-				this.getRefractionFactor(), this.getRefractionIndex(), topTransform, true);
+				this.getRefractionIndex(), topTransform, true);
 		
 		this.bottomPlane = new GenericPlane(this.getBase_color(), this.getAmbiant_c(), this.getAmbiantFactor(), this.getDiffuse_c(), this.getDiffuseFactor(),
 				this.getSpecular_c(), this.getSpecularFactor(), this.getSpecularFalloff(), this.getReflectionFactor(),
-				this.getRefractionFactor(), this.getRefractionIndex(), bottomTransform, true);
+				this.getRefractionIndex(), bottomTransform, true);
 		this.enableTop = true;
 		this.enableBottom = true;
 	}

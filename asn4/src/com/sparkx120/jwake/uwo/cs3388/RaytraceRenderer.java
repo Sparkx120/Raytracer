@@ -107,7 +107,7 @@ public class RaytraceRenderer extends Renderer{
 			Vector normal = obj.getNormalAt(intersect);
 			
 			float reflectionFactor = obj.getReflectionFactor();
-			float refractionFactor = obj.getRefractionFactor();
+//			float refractionFactor = obj.getRefractionFactor();
 			float refractionIndex = obj.getRefractionIndex();
 			
 			//Color Channels
@@ -228,6 +228,9 @@ public class RaytraceRenderer extends Renderer{
 				}
 			}
 			//Compute Average DiffuseSpecular
+			diffuseSpecularIntensityR = 0F;
+			diffuseSpecularIntensityG = 0F;
+			diffuseSpecularIntensityB = 0F;
 			Iterator<Float> diffSpecR = diffuseSpecularIntensitiesR.iterator();
 			Iterator<Float> diffSpecG = diffuseSpecularIntensitiesG.iterator();
 			Iterator<Float> diffSpecB = diffuseSpecularIntensitiesB.iterator();
@@ -236,6 +239,10 @@ public class RaytraceRenderer extends Renderer{
 				diffuseSpecularIntensityG += diffSpecG.next();
 				diffuseSpecularIntensityB += diffSpecB.next();
 			}
+			//Normalize very bright to 1
+//			diffuseSpecularIntensityR = Math.min(diffuseSpecularIntensityR, 1F);
+//			diffuseSpecularIntensityG = Math.min(diffuseSpecularIntensityG, 1F);
+//			diffuseSpecularIntensityB = Math.min(diffuseSpecularIntensityB, 1F);
 //			if(lightIntersects > 0){
 //				diffuseSpecularIntensityR /= lightIntersects;
 //				diffuseSpecularIntensityG /= lightIntersects;
@@ -245,24 +252,74 @@ public class RaytraceRenderer extends Renderer{
 			if(debug)
 				System.out.println("lightIntersects: " + lightIntersects);
 			
-			//Compute Recursive Light
-			float iDotn = Math3D.dotProduct(ray.getD(), normal);
-			if(reflectionFactor > 0 && recursions < this.recursionFactor && iDotn < 0){
+			//Compute Recursive Light reflections and refraction
+			float iDotn = Math3D.dotProduct(Math3D.normalizeVector(ray.getD()), Math3D.normalizeVector(normal));
+			if((reflectionFactor > 0 || refractionIndex > 0) && recursions < this.recursionFactor && iDotn < 0){
 				recursions ++;
+				boolean criticalAngle = false;
 				Point e = intersect;
+				
+				//Reflection Vector
 				float coeff = -2*(iDotn);
-				Vector d = Math3D.scalarMultiplyVector(normal, coeff);
-				d = Math3D.normalizeVector(d);
-//				d = Math3D.scalarMultiplyVector(d, -1F);
-				//System.out.println(Math3D.dotProduct(intersect, normal));
+				Vector reflectionD = Math3D.scalarMultiplyVector(normal, coeff);
+				reflectionD = Math3D.normalizeVector(reflectionD);
+				
+				//Refraction Vector (assunming transitions with air)
+				//Based on math from http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
+				//Based on Derivation from http://www.starkeffects.com/snells-law-vector.shtml
+				float nTheta = Math3D.dotProduct(Math3D.normalizeVector(Math3D.scalarMultiplyVector(ray.getD(), 1F)), Math3D.normalizeVector(normal));
+				float cosNTheta = nTheta;//(float) Math.cos(nTheta);
+				//float sint2 = refractionIndex*refractionIndex*(1-(cosNTheta*cosNTheta));
+				Color refraction = Color.WHITE;
 				if(debug){
-					System.out.println("recursive true\niDotn: " + iDotn + "\ne: " + e + "\ncoeff" + coeff + "\nd: " + d + "\n\n");
+					System.out.println("recursive true\niDotn: " + iDotn + "\ne: " + e + "\ncoeff" + coeff + "\nreflectionD: " + reflectionD + "\n\n");
+					System.out.println("\nrefractionIndex: " + refractionIndex + "\nnTheta: " + nTheta);
 				}
-				Ray incident = new Ray(e, d);
-				Color reflection = rayTrace(incident, recursions, x, y, obj, debug);
+				if(refractionIndex > 0.0F){
+					Vector nCrossD = Math3D.crossProdVectors(normal, ray.getD());
+					Vector i = Math3D.crossProdVectors(normal, Math3D.crossProdVectors(Math3D.scalarMultiplyVector(normal, -1F), ray.getD()));
+					i = Math3D.scalarMultiplyVector(i, refractionIndex);
+					float nDotn = Math3D.dotProduct(nCrossD, nCrossD);
+					coeff = (float) Math.sqrt(1-refractionIndex*refractionIndex*nDotn);
+					Vector j = Math3D.scalarMultiplyVector(normal, coeff);
+					Vector refractionD = Math3D.normalizeVector(Math3D.vectorSub(i, j));
+					
+//					i.setH(1F);
+//					coeff = (float) (refractionIndex*cosNTheta - Math.sqrt(1-sint2));
+//					Vector d = Math3D.scalarMultiplyVector(normal, coeff);
+//					Vector refractionD = Math3D.vectorAdd(i, d);
+//					refractionD = Math3D.normalizeVector(refractionD);
+					Point ePlus = Math3D.addPoints(e, Math3D.scalarMultiplyPoint(refractionD, 0.0001F)); // Make sure that initial intersect does not count in ray
+					Ray refracted = new Ray(ePlus, refractionD);
+					
+					refraction = rayTrace(refracted, recursions, x, y, null, debug); //Detect object
+				}
+//				else
+//					if(refractionIndex > 0 && sint2 > 1)
+//						criticalAngle = true;
+						
+				
+				
+				
+				
+				
+				
+				Ray incident = new Ray(e, reflectionD);
+				
+				Color reflection = rayTrace(incident, recursions, x, y, obj, debug); //uses incident object detection aka this obj
+				float refractionFactor = 0F;
+				if(!criticalAngle && refractionIndex > 0)
+					refractionFactor = 0.8F;
 				reflectionIntensityR = reflectionFactor*reflection.getRed()/255F;
 				reflectionIntensityG = reflectionFactor*reflection.getGreen()/255F;
 				reflectionIntensityB = reflectionFactor*reflection.getBlue()/255F;
+				
+				refractionIntensityR = refractionFactor*refraction.getRed()/255F;
+				refractionIntensityG = refractionFactor*refraction.getGreen()/255F;
+				refractionIntensityB = refractionFactor*refraction.getBlue()/255F;
+//				System.out.println(refractionIntensityR + " " + refractionIntensityG + " " + refractionIntensityB);
+				
+				
 			}
 			else{
 				if(debug)
