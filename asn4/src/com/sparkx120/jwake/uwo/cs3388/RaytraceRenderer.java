@@ -3,8 +3,11 @@ package com.sparkx120.jwake.uwo.cs3388;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import javax.imageio.ImageIO;
 
 public class RaytraceRenderer extends Renderer{
 	
@@ -269,11 +272,12 @@ public class RaytraceRenderer extends Renderer{
 				//Based on Derivation from http://www.starkeffects.com/snells-law-vector.shtml
 				float nTheta = Math3D.dotProduct(Math3D.normalizeVector(Math3D.scalarMultiplyVector(ray.getD(), 1F)), Math3D.normalizeVector(normal));
 				float cosNTheta = nTheta;//(float) Math.cos(nTheta);
+				
 				//float sint2 = refractionIndex*refractionIndex*(1-(cosNTheta*cosNTheta));
 				Color refraction = Color.WHITE;
 				if(debug){
 					System.out.println("recursive true\niDotn: " + iDotn + "\ne: " + e + "\ncoeff" + coeff + "\nreflectionD: " + reflectionD + "\n\n");
-					System.out.println("\nrefractionIndex: " + refractionIndex + "\nnTheta: " + nTheta);
+					System.out.println("\nrefractionIndex: " + refractionIndex + "\nnTheta: " + nTheta + "\ntheta: " + Math.acos(nTheta));
 				}
 				if(refractionIndex > 0.0F){
 					Vector nCrossD = Math3D.crossProdVectors(normal, ray.getD());
@@ -289,27 +293,27 @@ public class RaytraceRenderer extends Renderer{
 //					Vector d = Math3D.scalarMultiplyVector(normal, coeff);
 //					Vector refractionD = Math3D.vectorAdd(i, d);
 //					refractionD = Math3D.normalizeVector(refractionD);
-					Point ePlus = Math3D.addPoints(e, Math3D.scalarMultiplyPoint(refractionD, 0.0001F)); // Make sure that initial intersect does not count in ray
-					Ray refracted = new Ray(ePlus, refractionD);
+					Point ePlus = Math3D.addPoints(e, Math3D.scalarMultiplyPoint(refractionD, 0.01F)); // Make sure that initial intersect does not count in ray
+					Ray refracted = new Ray(e, refractionD);
 					
-					refraction = rayTrace(refracted, recursions, x, y, null, debug); //Detect object
+					//Cheat Code
+					obj.rayIntersect(refracted);
+					if(refracted.getIntersectedObjects().size() > 1)
+						refracted = new Ray(refracted.getIntersectedObjects().get(0).getIntersect(), ray.getD());
+					
+					refraction = rayTrace(refracted, recursions, x, y, obj, debug); //Detect object
+					
 				}
 //				else
 //					if(refractionIndex > 0 && sint2 > 1)
 //						criticalAngle = true;
 						
-				
-				
-				
-				
-				
-				
 				Ray incident = new Ray(e, reflectionD);
 				
 				Color reflection = rayTrace(incident, recursions, x, y, obj, debug); //uses incident object detection aka this obj
 				float refractionFactor = 0F;
 				if(!criticalAngle && refractionIndex > 0)
-					refractionFactor = 0.8F;
+					refractionFactor = -cosNTheta;
 				reflectionIntensityR = reflectionFactor*reflection.getRed()/255F;
 				reflectionIntensityG = reflectionFactor*reflection.getGreen()/255F;
 				reflectionIntensityB = reflectionFactor*reflection.getBlue()/255F;
@@ -376,9 +380,14 @@ public class RaytraceRenderer extends Renderer{
 		}
 		window.updateRender(this.buffer);
 		
-		this.buffer = new BufferedImage(camera.getWidth(), camera.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-		overlay = this.buffer.createGraphics();
 		frameComputeTime = 0;
+	}
+	
+	public void renderToFile(String file){
+		try{
+			File outputfile = new File(file + "png");
+		    ImageIO.write(this.buffer, "png", outputfile);
+		}catch(Exception e){e.printStackTrace();}
 	}
 	
 	private String debugInfo(){

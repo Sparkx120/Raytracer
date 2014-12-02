@@ -35,6 +35,8 @@ public abstract class Renderer {
 	
 	public abstract void renderToScreen();
 	
+	public abstract void renderToFile(String file);
+	
 	public void setVisualDebug(boolean debug){
 		this.visualDebug = debug;
 	}

@@ -24,7 +24,7 @@ public class RaytracerOne{
 		
 		//Configure the Camera
 		width = 1280;
-		height = 720;
+		height = 1024;
 		configCam();
 		
 		//Add Camera to the World
@@ -114,7 +114,7 @@ public class RaytracerOne{
 		GenericSphere sphere2 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
 		Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F,  sphereTransform2);
 		GenericSphere sphere3 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
-		Color.WHITE, 0.1F, 10.0F, 0.0F, 1.0F,  sphereTransform3);
+		Color.WHITE, 0.1F, 10.0F, 0.0F, 1.6F,  sphereTransform3);
 		GenericSphere sphere4 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
 		Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F,  sphereTransform4);
 		GenericSphere sphere5 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
@@ -133,7 +133,7 @@ public class RaytracerOne{
 		OmniDirectionalLight light5 = new OmniDirectionalLight(new Point(0F, 0F, 2.9F), 2.0F, Color.WHITE);
 		
 		world.addGenericObject(sphere1);
-		world.addGenericObject(sphere2);
+//		world.addGenericObject(sphere2);
 		world.addGenericObject(sphere3);
 		world.addGenericObject(sphere4);
 		world.addGenericObject(sphere5);

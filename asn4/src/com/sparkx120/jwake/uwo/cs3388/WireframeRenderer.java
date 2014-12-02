@@ -129,6 +129,10 @@ public class WireframeRenderer extends Renderer{
 		return null;
 	}
 	
+	public void renderToFile(String file){
+		//NOT IMPLEMENTED
+	}
+	
 	public void renderToScreen(){
 		//Rerender Frame to the the Pane
 		window.updateRender(buffer);
