@@ -2,6 +2,16 @@ package com.sparkx120.jwake.uwo.cs3388;
 
 import java.awt.Color;
 
+import com.sparkx120.jwake.graphics3d.base.CamObject3D;
+import com.sparkx120.jwake.graphics3d.base.Point;
+import com.sparkx120.jwake.graphics3d.base.Vertex;
+import com.sparkx120.jwake.graphics3d.base.World;
+import com.sparkx120.jwake.graphics3d.gui.Window3D;
+import com.sparkx120.jwake.graphics3d.objects.PolyObject3D;
+import com.sparkx120.jwake.graphics3d.renderers.Renderer;
+import com.sparkx120.jwake.graphics3d.renderers.WireframeRenderer;
+import com.sparkx120.jwake.io.FileIO;
+
 /**
  * Driver class for the Wireframe Viewer part of this Assignment
  * @author James Wake

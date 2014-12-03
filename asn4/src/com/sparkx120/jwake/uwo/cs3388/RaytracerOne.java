@@ -2,6 +2,22 @@ package com.sparkx120.jwake.uwo.cs3388;
 
 import java.awt.Color;
 
+import com.sparkx120.jwake.graphics3d.base.CamObject3D;
+import com.sparkx120.jwake.graphics3d.base.Point;
+import com.sparkx120.jwake.graphics3d.base.World;
+import com.sparkx120.jwake.graphics3d.gui.Window3D;
+import com.sparkx120.jwake.graphics3d.lights.OmniDirectionalLight;
+import com.sparkx120.jwake.graphics3d.objects.GenericCone;
+import com.sparkx120.jwake.graphics3d.objects.GenericCylinder;
+import com.sparkx120.jwake.graphics3d.objects.GenericObjectType;
+import com.sparkx120.jwake.graphics3d.objects.GenericPlane;
+import com.sparkx120.jwake.graphics3d.objects.GenericSphere;
+import com.sparkx120.jwake.graphics3d.renderers.RaytraceRenderer;
+import com.sparkx120.jwake.graphics3d.renderers.Renderer;
+import com.sparkx120.jwake.io.FileIO;
+import com.sparkx120.jwake.math.Matrices3D;
+import com.sparkx120.jwake.math.Matrix3D;
+
 public class RaytracerOne{
 	
 	private static CamObject3D camera;
