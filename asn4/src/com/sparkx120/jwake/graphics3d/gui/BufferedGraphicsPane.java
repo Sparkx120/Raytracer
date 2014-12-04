@@ -12,7 +12,7 @@ import javax.swing.JPanel;
  * @version 1.0
  *
  */
-public class Pane3D extends JPanel{
+public class BufferedGraphicsPane extends JPanel{
 
 	/**
 	 * Generated Serial UID
@@ -35,7 +35,7 @@ public class Pane3D extends JPanel{
 	 * @param width - The width to set the Pane3D
 	 * @param height - The height to set the Pane3D
 	 */
-	public Pane3D(int width, int height){
+	public BufferedGraphicsPane(int width, int height){
 		super();
 		this.width = width;
 		this.height = height;

@@ -1,5 +1,6 @@
 package com.sparkx120.jwake.io;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import com.sparkx120.jwake.graphics3d.objects.PolyObject3D;
 
@@ -115,6 +118,19 @@ public class FileIO {
 		}catch(IOException e){System.out.println(e);}
 		 catch (ClassNotFoundException e) {System.out.println(e);};
 		return null;
+	}
+	
+	/**
+	 * Read an image from file into a BufferedImage
+	 * @param fname - the Filename of the Image
+	 * @return The BufferedImage
+	 */
+	public static BufferedImage readImageFromFile(String fname){
+		BufferedImage img = null;
+		try {
+		    img = ImageIO.read(new File(fname));
+		} catch (IOException e) {e.printStackTrace();}
+		return img;
 	}
 	
 }

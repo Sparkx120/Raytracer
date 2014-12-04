@@ -12,6 +12,8 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -42,7 +44,7 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	/**
 	 * The Pane3D and Camera and Renderer
 	 */
-	private Pane3D drawPane;
+	private BufferedGraphicsPane drawPane;
 	private CamObject3D camera;
 	private Renderer renderer;
 	
@@ -70,7 +72,7 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		this.camera = camera;
 		
 		//Configure the Draw Pane3D
-		this.drawPane = new Pane3D(width, height);
+		this.drawPane = new BufferedGraphicsPane(width, height);
 		this.add(drawPane);
 		Insets insets = this.getInsets();
 		this.setSize(new Dimension(insets.left + insets.right + width,
@@ -85,11 +87,21 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		this.drawPane.addMouseListener(this);
 		this.addKeyListener(this);
 		this.addMouseMotionListener(this);
+		this.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                //drawPane.setSize(e.getComponent().getWidth(), e.getComponent().getHeight());
+                camera.setWidth(e.getComponent().getWidth());
+                camera.setHeight(e.getComponent().getHeight());
+//                if(renderer != null)
+//                	renderer.renderWorld();
+                //System.out.println("componentResized");
+            }
+        });
 		
 		//Initialize the Window
 		//this.pack();
 		this.setVisible(true);
-		this.setResizable(false);
+		this.setResizable(true);
 	}
 	
 	/**
@@ -99,6 +111,10 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	public void updateRender(Image buffer){
 		this.drawPane.updateBuffer(buffer);
 		this.drawPane.repaint();
+	}
+	
+	public void renderToScreen(){
+		renderer.renderWorld();
 	}
 	
 	public void setMouseEnabled(boolean mouseEnabled){
@@ -229,10 +245,11 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 			case 'c': camera.rotateCameraV(1); break;
 			case '1': camera.rotateCameraN(-1); break;
 			case '3': camera.rotateCameraN(1); break;
-			case 'v': renderer.setVisualDebug(!renderer.getVisualDebug());
-			case 'p': renderer.renderToFile("output");
+			case 'v': renderer.setVisualDebug(!renderer.getVisualDebug()); break;
+			case 'p': renderer.renderToFile("output"); break;
 		}
-		camera.renderFrame(renderer);
+		renderer.renderWorld();
+//		camera.renderFrame(renderer);
 	}
 
 	@Override
@@ -259,7 +276,7 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 				}
 			}
 			if(renderer.getType() == RendererType.CAMERA_PIPE){
-				renderer.renderRayPixel(e.getX(), e.getY(), true);
+				renderer.renderRayPixel(e.getX(), e.getY(), true, false);
 			}
 		}
 	}

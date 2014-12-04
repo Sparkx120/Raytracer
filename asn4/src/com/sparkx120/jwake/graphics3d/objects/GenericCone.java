@@ -6,6 +6,7 @@ import com.sparkx120.jwake.graphics3d.base.Point;
 import com.sparkx120.jwake.graphics3d.base.Ray;
 import com.sparkx120.jwake.graphics3d.base.Vector;
 import com.sparkx120.jwake.math.Math3D;
+import com.sparkx120.jwake.math.Matrices3D;
 import com.sparkx120.jwake.math.Matrix3D;
 
 public class GenericCone extends GenericObject{
@@ -24,7 +25,7 @@ public class GenericCone extends GenericObject{
 				{0,0,1F,-1F},
 				{0,0,0,1}
 		});
-		
+		bottomTransform = bottomTransform.multiplyMatrixWithMatrix(Matrices3D.affineTransformRy(180F));
 		bottomTransform = this.getTransform().multiplyMatrixWithMatrix(bottomTransform);
 		this.bottomPlane = new GenericPlane(this.getBase_color(), this.getAmbiant_c(), this.getAmbiantFactor(), this.getDiffuse_c(), this.getDiffuseFactor(),
 				this.getSpecular_c(), this.getSpecularFactor(), this.getSpecularFalloff(), this.getReflectionFactor(),
@@ -80,6 +81,16 @@ public class GenericCone extends GenericObject{
 		norm = this.getTransform().multiplyMatrixWithVector(norm);
 		norm = Math3D.normalizeVector(norm);
 		return norm;
+	}
+	
+	public void setBottomPlaneColor(Color color){
+		this.bottomPlane.setBase_color(color);
+		this.bottomPlane.setAmbiant_c(color);
+		this.bottomPlane.setDiffuse_c(color);
+	}
+	
+	public GenericPlane getBottomPlane(){
+		return bottomPlane;
 	}
 
 }

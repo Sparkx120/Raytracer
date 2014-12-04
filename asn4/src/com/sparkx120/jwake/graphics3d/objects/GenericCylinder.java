@@ -110,6 +110,18 @@ public class GenericCylinder extends GenericObject{
 	public void enableBottomPlane(boolean bottom){
 		this.enableBottom = bottom;
 	}
+	
+	public void setBottomPlaneColor(Color color){
+		this.bottomPlane.setBase_color(color);
+		this.bottomPlane.setAmbiant_c(color);
+		this.bottomPlane.setDiffuse_c(color);
+	}
+	
+	public void setTopPlaneColor(Color color){
+		this.topPlane.setBase_color(color);
+		this.topPlane.setAmbiant_c(color);
+		this.topPlane.setDiffuse_c(color);
+	}
 
 
 }

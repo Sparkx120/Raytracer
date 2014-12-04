@@ -65,9 +65,52 @@ public class RaytraceRenderer extends Renderer{
 	public void renderObjects(ArrayList<PolyObject3D> objs) {
 		//Unimplemented as this is not an OBJECT_DATA renderer
 	}
+	
+	public void renderWorld(){
+		int[] black = new int[camera.getWidth()*camera.getHeight()];
+		for(int i = 0; i<black.length; i++){
+			black[i] = Color.BLACK.getRGB();
+		}
+		this.buffer = new BufferedImage(camera.getWidth(), camera.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		buffer.setRGB(0, 0, camera.getWidth(), camera.getHeight(), black, 0, 0);
+		quickRender(64);
+		quickRender(128);
+		quickRender(256);
+		fullRender();
+	}
+	
+	private void quickRender(int quickFactor){
+		for(int r=0; r<quickFactor; r++){
+			for(int c=0; c<quickFactor; c++){
+				int x = c*(camera.getWidth()/quickFactor);
+				int y = r*(camera.getHeight()/quickFactor);
+				int xStep = camera.getWidth()/quickFactor;
+				int yStep = camera.getHeight()/quickFactor;
+				
+				Color pix = this.renderRayPixel(x, y, false, false);
+
+				for(int i=x; i<x+xStep; i++){
+					for(int j=y; j<y+yStep; j++){
+						buffer.setRGB(i, j, pix.getRGB());
+					}
+				}
+			}
+			this.renderToScreen();
+		}
+	}
+	
+	private void fullRender(){
+		for(int r=0; r<camera.getHeight(); r++){
+			for(int c=0; c<camera.getWidth(); c++){
+				Color pix = this.renderRayPixel(c, r, false, false);
+				buffer.setRGB(c, r, pix.getRGB());
+			}
+			this.renderToScreen();
+		}
+	}
 
 	@Override
-	public Color renderRayPixel(int x, int y, boolean debug) {
+	public Color renderRayPixel(int x, int y, boolean debug, boolean selfBuffer) {
 		if(supersample){
 			ArrayList<Color> toAverage = new ArrayList<Color>();
 			x = x*superSampling;
@@ -181,7 +224,7 @@ public class RaytraceRenderer extends Renderer{
 					source = l.getSource(ray.getLowestTValIntersect());
 				}
 				Iterator<GenericObject> it2 = genObjs.iterator();
-				
+//				System.out.println((light instanceof WorldLight) + " " + source);
 				//Compute Vectors and Shadow Ray
 				Vector s = new Vector(intersect, source);
 				Vector v = new Vector(intersect,ray.getE());
@@ -375,15 +418,18 @@ public class RaytraceRenderer extends Renderer{
 			}
 			if(backgroundImage != null){
 				Color pix;
-				if(backgroundImage.getWidth() <= x && backgroundImage.getHeight() <= y){
-					pix = new Color(backgroundImage.getRGB(x, y));
+				int xPix = 0;
+				int yPix = 0;
+				
+				if(x < backgroundImage.getWidth() && y < backgroundImage.getHeight()){
+					xPix = x;
+					yPix = y;
+					pix = new Color(backgroundImage.getRGB(xPix, yPix));
 				}
 				else{
-					if(backgroundC != null)
-						pix = backgroundC;
-					else
-						pix = Color.BLACK;
+					pix = Color.BLACK;
 				}
+				
 				if(debug)
 					System.out.println("Finished Ray Trace Using Background Image Pixel\n\n\n");
 				return pix;

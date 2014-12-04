@@ -129,7 +129,7 @@ public class WireframeRenderer extends Renderer{
 	}
 
 	@Override
-	public Color renderRayPixel(int x, int y, boolean debug) {
+	public Color renderRayPixel(int x, int y, boolean debug, boolean selfBuffer) {
 		//Unimplemented as this is not a Ray Tracer Type
 		return null;
 	}
@@ -141,5 +141,11 @@ public class WireframeRenderer extends Renderer{
 	public void renderToScreen(){
 		//Rerender Frame to the the Pane
 		window.updateRender(buffer);
+	}
+
+	@Override
+	public void renderWorld() {
+		// TODO Auto-generated method stub
+		
 	}
 }

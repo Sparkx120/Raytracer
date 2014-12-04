@@ -264,7 +264,7 @@ public class CamObject3D extends Object3D{
 	private void rayTracePixels(Renderer renderer){
 		for(int r=0; r<this.height; r++){
 			for(int c=0; c<this.width; c++){
-				renderer.renderRayPixel(c, r, false);
+				renderer.renderRayPixel(c, r, false, false);
 			}
 		}
 		renderer.renderToScreen();
@@ -521,6 +521,7 @@ public class CamObject3D extends Object3D{
 
 	public void setWidth(int width) {
 		this.width = width;
+		computeAndSetMatrixPipe();
 	}
 
 	public int getHeight() {
@@ -529,6 +530,7 @@ public class CamObject3D extends Object3D{
 
 	public void setHeight(int height) {
 		this.height = height;
+		computeAndSetMatrixPipe();
 	}
 
 	public Matrix3D getMatrixPipe() {

@@ -18,8 +18,8 @@ public class WorldLight extends LightObject{
 	public Point getSource(Point worldPoint){
 		Point out = new Point();
 		out.setX(worldPoint.getX() + (direction.getX()*falloff/this.getIntensity()));
-		out.setX(worldPoint.getY() + (direction.getY()*falloff/this.getIntensity()));
-		out.setX(worldPoint.getZ() + (direction.getZ()*falloff/this.getIntensity()));
+		out.setY(worldPoint.getY() + (direction.getY()*falloff/this.getIntensity()));
+		out.setZ(worldPoint.getZ() + (direction.getZ()*falloff/this.getIntensity()));
 		return out;
 	}
 	

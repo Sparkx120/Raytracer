@@ -4,9 +4,11 @@ import java.awt.Color;
 
 import com.sparkx120.jwake.graphics3d.base.CamObject3D;
 import com.sparkx120.jwake.graphics3d.base.Point;
+import com.sparkx120.jwake.graphics3d.base.Vector;
 import com.sparkx120.jwake.graphics3d.base.World;
 import com.sparkx120.jwake.graphics3d.gui.Window3D;
 import com.sparkx120.jwake.graphics3d.lights.OmniDirectionalLight;
+import com.sparkx120.jwake.graphics3d.lights.WorldLight;
 import com.sparkx120.jwake.graphics3d.objects.GenericCone;
 import com.sparkx120.jwake.graphics3d.objects.GenericCylinder;
 import com.sparkx120.jwake.graphics3d.objects.GenericObjectType;
@@ -30,8 +32,8 @@ public class RaytracerOne{
 		world = new World();
 		
 		if(args.length == 0){
-//			configureWorld();
-			configureWorldTest();
+			configureWorld();
+//			configureWorldTest();
 		}
 		else{
 			readWorldFile(args[0]);
@@ -51,21 +53,23 @@ public class RaytracerOne{
 		viewer3D.setTitle("Raytracer Viewer");
 		//viewer3D.setMouseEnabled(false);
 		
-		Renderer raytracer = new RaytraceRenderer(viewer3D, world, camera, Color.BLACK);
+		RaytraceRenderer raytracer = new RaytraceRenderer(viewer3D, world, camera, FileIO.readImageFromFile("Top_of_Atmosphere.jpg"));
 		viewer3D.setRenderer(raytracer);
 		
 		camera.rotateCameraN(90);
-		camera.renderFrame(raytracer);		
+		viewer3D.renderToScreen();
+//		viewer3D.renderToScreen();
+//		camera.renderFrame(raytracer);		
 	}
 	
 	/**
 	 * Configure the camera using the global height and width and a hard coded position
 	 */
 	private static void configCam(){
-		Point cameraPoint = new Point(10F, 0F, 1F);
-//		Point cameraPoint = new Point(20F, 0F, 10F);
-		Point gazePoint = new Point(-27F, 0F, 0F);
-//		Point gazePoint = new Point(-10F, 0F, 10F);
+//		Point cameraPoint = new Point(10F, 0F, 1F);
+		Point cameraPoint = new Point(20F, 0F, 10F);
+//		Point gazePoint = new Point(-27F, 0F, 0F);
+		Point gazePoint = new Point(-10F, 0F, 10F);
 		camera = new CamObject3D(cameraPoint, gazePoint, width, height, 45F, world);
 	}
 	
@@ -145,7 +149,7 @@ public class RaytracerOne{
 		OmniDirectionalLight light1 = new OmniDirectionalLight(new Point(5F, 5F, 2F), 1.0F, Color.WHITE);
 		OmniDirectionalLight light2 = new OmniDirectionalLight(new Point(-5F, -5F, 2F), 1.0F, Color.WHITE);
 		OmniDirectionalLight light3 = new OmniDirectionalLight(new Point(0F, 0F, 20F), 1.0F, Color.WHITE);
-		OmniDirectionalLight light4 = new OmniDirectionalLight(new Point(0F, 0F, 6F), 2.0F, Color.RED);
+		OmniDirectionalLight light4 = new OmniDirectionalLight(new Point(0F, 0F, 6F), 2.0F, Color.WHITE);
 		OmniDirectionalLight light5 = new OmniDirectionalLight(new Point(0F, 0F, 2.9F), 2.0F, Color.WHITE);
 		
 		world.addGenericObject(sphere1);
@@ -199,7 +203,7 @@ public class RaytracerOne{
 		planeTransform3 = Matrices3D.affineTransformScale(1F, 1F, 2F).multiplyMatrixWithMatrix(planeTransform3);
 		planeTransform4 = Matrices3D.affineTransformScale(1F, 1F, 2F).multiplyMatrixWithMatrix(planeTransform4);
 		
-		Matrix3D rocketTransform = Matrices3D.affineTransformTranslation(-10F, 0, 0).multiplyMatrixWithMatrix(Matrices3D.affineTransformRz(45F));
+		Matrix3D rocketTransform = Matrices3D.affineTransformTranslation(-10F, 3, 0).multiplyMatrixWithMatrix(Matrices3D.affineTransformRz(45F)).multiplyMatrixWithMatrix(Matrices3D.affineTransformRx(0F)).multiplyMatrixWithMatrix(Matrices3D.affineTransformRy(-45F));
 		
 		cylinderTransform1 = rocketTransform.multiplyMatrixWithMatrix(cylinderTransform1);
 		coneTransform1 = rocketTransform.multiplyMatrixWithMatrix(coneTransform1);
@@ -209,12 +213,12 @@ public class RaytracerOne{
 		planeTransform3 = rocketTransform.multiplyMatrixWithMatrix(planeTransform3);
 		planeTransform4 = rocketTransform.multiplyMatrixWithMatrix(planeTransform4);
 		
-		Matrix3D planeTransform = new Matrix3D(new float[][] {
-				{1,0,0,0},
-				{0,1,0,0},
-				{0,0,1,0},
-				{0,0,0,1}
-		});
+//		Matrix3D planeTransform = new Matrix3D(new float[][] {
+//				{1,0,0,0},
+//				{0,1,0,0},
+//				{0,0,1,0},
+//				{0,0,0,1}
+//		});
 		
 		GenericCylinder rocketBody = new GenericCylinder(Color.WHITE, Color.WHITE, 0.05F, Color.WHITE, 0.6F,
 				Color.WHITE, 0.35F, 10.0F, 0.1F, 0.0F,  cylinderTransform1);
@@ -222,22 +226,30 @@ public class RaytracerOne{
 		GenericSphere noseCone = new GenericSphere(Color.WHITE, Color.WHITE, 0.05F, Color.WHITE, 0.6F,
 				Color.WHITE, 0.35F, 10.0F, 0.1F, 0.0F,  sphereTransform1);
 		GenericCone engineCone = new GenericCone(Color.GRAY, Color.GRAY, 0.05F, Color.GRAY, 0.85F,
-				Color.WHITE, 0.1F, 10.0F, 0.1F, 0.0F,  coneTransform1);
-		GenericPlane finA = new GenericPlane(Color.GRAY, Color.GRAY, 0.05F, Color.GRAY, 0.85F,
+				Color.WHITE, 0.1F, 10.0F, 0.0F, 0.0F,  coneTransform1);
+//		engineCone.setBottomPlaneColor(Color.RED);
+		engineCone.getBottomPlane().setAmbiant_c(Color.RED);
+		engineCone.getBottomPlane().setAmbiantFactor(1.0F);
+		engineCone.getBottomPlane().setDiffuseFactor(0.0F);
+		engineCone.getBottomPlane().setSpecularFactor(0.0F);
+		engineCone.getBottomPlane().setReflectionFactor(0.0F);
+		engineCone.getBottomPlane().setRefractionIndex(0.0F);
+		GenericPlane finA = new GenericPlane(Color.GRAY, Color.RED, 0.05F, Color.RED, 0.85F,
 				Color.WHITE, 0.1F, 10.0F, 0.1F, 0.0F,  planeTransform1, true);
-		GenericPlane finB = new GenericPlane(Color.GRAY, Color.GRAY, 0.05F, Color.GRAY, 0.85F,
+		GenericPlane finB = new GenericPlane(Color.GRAY, Color.RED, 0.05F, Color.RED, 0.85F,
 				Color.WHITE, 0.1F, 10.0F, 0.1F, 0.0F,  planeTransform2, true);
-		GenericPlane finC = new GenericPlane(Color.GRAY, Color.GRAY, 0.05F, Color.GRAY, 0.85F,
+		GenericPlane finC = new GenericPlane(Color.GRAY, Color.RED, 0.05F, Color.RED, 0.85F,
 				Color.WHITE, 0.1F, 10.0F, 0.1F, 0.0F,  planeTransform3, true);
-		GenericPlane finD = new GenericPlane(Color.GRAY, Color.GRAY, 0.05F, Color.GRAY, 0.85F,
+		GenericPlane finD = new GenericPlane(Color.GRAY, Color.RED, 0.05F, Color.RED, 0.85F,
 				Color.WHITE, 0.1F, 10.0F, 0.1F, 0.0F,  planeTransform4, true);
 		
-		GenericPlane plane = new GenericPlane(Color.BLACK, Color.BLACK, 0.6F, Color.GRAY, 0.4F,
-				 Color.WHITE, 0.0F, 1.0F, 0.0F, 0.0F,  planeTransform);
+//		GenericPlane plane = new GenericPlane(Color.BLACK, Color.BLACK, 0.6F, Color.GRAY, 0.4F,
+//				 Color.WHITE, 0.0F, 1.0F, 0.0F, 0.0F,  planeTransform);
 		
-		OmniDirectionalLight light1 = new OmniDirectionalLight(new Point(-7F, 30F, 20F), 2.0F, Color.WHITE);
-		OmniDirectionalLight light2 = new OmniDirectionalLight(new Point(-14F, -30F, 20F), 2.0F, Color.WHITE);
-		OmniDirectionalLight light3 = new OmniDirectionalLight(new Point(-10F, 0F, 30F), 2.0F, Color.WHITE);
+		OmniDirectionalLight light1 = new OmniDirectionalLight(new Point(-5F, 5F, 20F), 1.0F, Color.WHITE);
+		WorldLight light2 = new WorldLight(new Vector(0F, 1F, 20F), 1.0F, Color.WHITE);
+		WorldLight light3 = new WorldLight(new Vector(0F, 1F, -20F), 0.5F, Color.WHITE);
+//		OmniDirectionalLight light3 = new OmniDirectionalLight(new Point(-10F, 0F, 30F), 2.0F, Color.WHITE);
 		
 		world.addGenericObject(rocketBody);
 		world.addGenericObject(noseCone);
@@ -246,10 +258,10 @@ public class RaytracerOne{
 		world.addGenericObject(finB);
 		world.addGenericObject(finC);
 		world.addGenericObject(finD);
-		world.addGenericObject(plane);
+		//world.addGenericObject(plane);
 		world.addLightObject(light1);
 		world.addLightObject(light2);
-//		world.addLightObject(light3);
+		world.addLightObject(light3);
 	}
 	
 	/**

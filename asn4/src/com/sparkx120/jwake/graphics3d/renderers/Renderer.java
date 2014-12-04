@@ -3,6 +3,7 @@ package com.sparkx120.jwake.graphics3d.renderers;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import com.sparkx120.jwake.graphics3d.base.CamObject3D;
 import com.sparkx120.jwake.graphics3d.objects.PolyObject3D;
 
 /**
@@ -33,7 +34,9 @@ public abstract class Renderer {
 	 * @param y - The Y coordinate of the trace
 	 * @param data - The ray data from reflections etc.
 	 */
-	public abstract Color renderRayPixel(int x, int y, boolean debug);
+	public abstract Color renderRayPixel(int x, int y, boolean debug, boolean selfBuffer);
+	
+	public abstract void renderWorld();
 	
 	public abstract void renderToScreen();
 	
