@@ -599,6 +599,8 @@ public class RaytraceRenderer extends Renderer{
 	
 	private String debugInfo(){
 		String out = "";
+		out += "James Wake's Ray Tracer v2\n";
+		out += "CS3388 Assignment 4\n";
 		out += "Cam: x" + camera.gete().getX() + " y: " + camera.gete().getY() + " z: " + camera.gete().getZ() + "\n";
 		out += "u: x:" + camera.getu().getX() + " y: " + camera.getu().getY() + " z:" + camera.getu().getX() + "\n";
 		out += "v: x:" + camera.getv().getX() + " y: " + camera.getv().getY() + " z:" + camera.getv().getX() + "\n";
