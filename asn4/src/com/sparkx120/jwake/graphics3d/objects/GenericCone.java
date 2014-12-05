@@ -1,6 +1,7 @@
 package com.sparkx120.jwake.graphics3d.objects;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import com.sparkx120.jwake.graphics3d.base.Point;
 import com.sparkx120.jwake.graphics3d.base.Ray;
@@ -19,6 +20,28 @@ public class GenericCone extends GenericObject{
 		super(base_color, ambiant_c, ambiantFactor, diffuse_c, diffuseFactor,
 				specular_c, specularFactor, specularFalloff, reflectionFactor,
 				refractionIndex, transform);
+		
+		setUpConeVars();
+	}
+	
+	public GenericCone(Color base_color, float ambiantFactor, float diffuseFactor,
+			float specularFactor, Matrix3D transform) {
+		super(base_color, ambiantFactor, diffuseFactor, specularFactor, transform);
+		
+		setUpConeVars();
+	}
+	
+	public GenericCone(Color base_color, float ambiantFactor, float diffuseFactor,
+			float specularFactor, BufferedImage UVMap, Matrix3D transform) {
+		super(base_color, ambiantFactor, diffuseFactor, specularFactor, UVMap, transform);
+		
+		setUpConeVars();
+	}
+	
+	/**
+	 * Sets up Cone Specific Variables
+	 */
+	private void setUpConeVars(){
 		Matrix3D bottomTransform = new Matrix3D(new float[][] {
 				{1F,0,0,0},
 				{0,1F,0,0},
@@ -91,6 +114,12 @@ public class GenericCone extends GenericObject{
 	
 	public GenericPlane getBottomPlane(){
 		return bottomPlane;
+	}
+
+	@Override
+	public Color getUVMapAt(Point p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

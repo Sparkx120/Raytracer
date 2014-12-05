@@ -45,11 +45,12 @@ public class BufferedGraphicsPane extends JPanel{
 	 * Graphics override for drawing the buffered graphics
 	 */
 	@Override
-	public void paint(Graphics graphics) {
-		super.paint(graphics);
-        Graphics2D g = (Graphics2D) graphics;
-        
-        g.drawImage(buffer, 0, 0, width, height, null);
+	public void paintComponent(Graphics graphics) {
+		super.paintComponent(graphics);
+//		super.paint(graphics);
+//        Graphics2D g = (Graphics2D) graphics;
+//        g.clearRect(0, 0, width, height);
+        graphics.drawImage(buffer, 0, 0, width, height, null);
     }
 	
 	/**
@@ -59,4 +60,9 @@ public class BufferedGraphicsPane extends JPanel{
 	public void updateBuffer(Image newBuf){
 		this.buffer = newBuf;
 	}
+	
+//	public void repaint(){
+////		super.repaint();
+//		this.paint(this.getGraphics());
+//	}
 }

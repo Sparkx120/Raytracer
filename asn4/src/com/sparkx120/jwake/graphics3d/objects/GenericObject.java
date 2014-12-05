@@ -1,6 +1,7 @@
 package com.sparkx120.jwake.graphics3d.objects;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.Scanner;
 
 import com.sparkx120.jwake.graphics3d.base.Point;
@@ -27,6 +28,7 @@ public abstract class GenericObject {
 	private float refractionIndex;
 	private Matrix3D transform;
 	private Matrix3D transformInverse;
+	private BufferedImage UVMap;
 
 	/**
 	 * Default Constructor
@@ -50,8 +52,40 @@ public abstract class GenericObject {
 		this.specularFactor = specularFactor;
 		this.specularFalloff = specularFalloff;
 		this.reflectionFactor = reflectionFactor;
-//		this.refractionFactor = refractionFactor;
 		this.refractionIndex = refractionIndex;
+		this.UVMap = null;
+		
+		setTransform(transform);
+	}
+	
+	public GenericObject(Color base_color, float ambiantFactor, float diffuseFactor,float specularFactor, Matrix3D transform){
+		this.base_color = base_color;
+		this.ambiant_c = base_color;
+		this.diffuse_c = base_color;
+		this.specular_c = Color.WHITE;
+		this.ambiantFactor = ambiantFactor;
+		this.diffuseFactor = diffuseFactor;
+		this.specularFactor = specularFactor;
+		this.specularFalloff = 5.0F;
+		this.reflectionFactor = 0.0F;
+		this.refractionIndex = 0.0F;
+		this.UVMap = null;
+		
+		setTransform(transform);
+	}
+	
+	public GenericObject(Color base_color, float ambiantFactor, float diffuseFactor,float specularFactor, BufferedImage UVMap, Matrix3D transform){
+		this.base_color = base_color;
+		this.ambiant_c = base_color;
+		this.diffuse_c = base_color;
+		this.specular_c = Color.WHITE;
+		this.ambiantFactor = ambiantFactor;
+		this.diffuseFactor = diffuseFactor;
+		this.specularFactor = specularFactor;
+		this.specularFalloff = 5.0F;
+		this.reflectionFactor = 0.0F;
+		this.refractionIndex = 0.0F;
+		this.UVMap = UVMap;
 		
 		setTransform(transform);
 	}
@@ -96,6 +130,14 @@ public abstract class GenericObject {
 	 * @return - The Normal Vector
 	 */
 	public abstract Vector getNormalAt(Point p);
+	
+	/**
+	 * Returns the Color of the Pixel at point p of the UVMap
+	 * returns null if no UVMap
+	 * @param p - The Point
+	 * @return - The Pixel Color
+	 */
+	public abstract Color getUVMapAt(Point p);
 	
 	/**
 	 * Decode a String into an Object
@@ -244,5 +286,19 @@ public abstract class GenericObject {
 	 */
 	public void setRefractionIndex(float refractionIndex) {
 		this.refractionIndex = refractionIndex;
+	}
+
+	/**
+	 * @return the uVMap
+	 */
+	public BufferedImage getUVMap() {
+		return UVMap;
+	}
+
+	/**
+	 * @param uVMap the uVMap to set
+	 */
+	public void setUVMap(BufferedImage uVMap) {
+		UVMap = uVMap;
 	}
 }

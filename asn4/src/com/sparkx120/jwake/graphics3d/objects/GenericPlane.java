@@ -37,6 +37,8 @@ public class GenericPlane extends GenericObject{
 		restricted = false;
 	}
 	
+	
+	
 	/**
 	 * Restricted Plane Constructor
 	 * @param base_color - The Base color of the object
@@ -94,6 +96,14 @@ public class GenericPlane extends GenericObject{
 		Vector norm = new Vector(0F, 0F, 1F);
 		norm = this.getTransform().multiplyMatrixWithVector(norm);
 		return norm;
+	}
+
+
+
+	@Override
+	public Color getUVMapAt(Point p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

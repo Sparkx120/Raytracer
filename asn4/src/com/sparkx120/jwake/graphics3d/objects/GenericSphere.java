@@ -1,8 +1,7 @@
 package com.sparkx120.jwake.graphics3d.objects;
 
 import java.awt.Color;
-import java.util.Scanner;
-
+import java.awt.image.BufferedImage;
 import com.sparkx120.jwake.graphics3d.base.Point;
 import com.sparkx120.jwake.graphics3d.base.Ray;
 import com.sparkx120.jwake.graphics3d.base.Vector;
@@ -34,6 +33,18 @@ public class GenericSphere extends GenericObject{
 			Matrix3D transform) {
 		super(base_color, ambiant_c, ambiantFactor, diffuse_c, diffuseFactor,
 				specular_c, specularFactor, specularFalloff, reflectionFactor, refractionIndex, transform);
+	}
+	
+	public GenericSphere(Color base_color, float ambiantFactor, float diffuseFactor,
+			float specularFactor, Matrix3D transform) {
+		super(base_color, ambiantFactor, diffuseFactor, specularFactor, transform);
+		
+	}
+	
+	public GenericSphere(Color base_color, float ambiantFactor, float diffuseFactor,
+			float specularFactor, BufferedImage UVMap, Matrix3D transform) {
+		super(base_color, ambiantFactor, diffuseFactor, specularFactor, UVMap, transform);
+		
 	}
 	
 	/**
@@ -90,5 +101,11 @@ public class GenericSphere extends GenericObject{
 		norm = Math3D.normalizeVector(norm);
 		norm = this.getTransform().multiplyMatrixWithVector(norm);
 		return norm;
+	}
+
+	@Override
+	public Color getUVMapAt(Point p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

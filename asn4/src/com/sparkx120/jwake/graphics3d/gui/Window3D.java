@@ -50,6 +50,8 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	
 	private boolean mouseControl;
 	
+	private boolean needsRerender;
+	
 	/**
 	 * Generated Serial UID
 	 */
@@ -98,10 +100,34 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
             }
         });
 		
+		Thread rerenderer = new Thread(new RerenderUpdate());
+		rerenderer.start();
+		
 		//Initialize the Window
 		//this.pack();
 		this.setVisible(true);
 		this.setResizable(true);
+	}
+	
+	private class RerenderUpdate implements Runnable{
+
+		@Override
+		public void run() {
+			while(true){
+				if(needsRerender){
+					renderer.renderWorld();
+					needsRerender = false;
+				}
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
 	}
 	
 	/**
@@ -111,6 +137,7 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	public void updateRender(Image buffer){
 		this.drawPane.updateBuffer(buffer);
 		this.drawPane.repaint();
+//		this.drawPane.repaint();
 	}
 	
 	public void renderToScreen(){
@@ -233,22 +260,23 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyChar()){
-			case 'd': camera.translateCameraV(-0.5F); break;
-			case 'a': camera.translateCameraV(0.5F); break;
-			case 'w': camera.translateCameraN(-0.2F); break;
-			case 's': camera.translateCameraN(0.2F); break;
-			case 'r': camera.translateCameraU(0.1F); break;
-			case 'f': camera.translateCameraU(-0.1F); break;
-			case 'q': camera.rotateCameraU(-1); break;
-			case 'e': camera.rotateCameraU(1); break;
-			case 'z': camera.rotateCameraV(-1); break;
-			case 'c': camera.rotateCameraV(1); break;
-			case '1': camera.rotateCameraN(-1); break;
-			case '3': camera.rotateCameraN(1); break;
-			case 'v': renderer.setVisualDebug(!renderer.getVisualDebug()); break;
+			case 'd': camera.translateCameraV(-0.5F); this.needsRerender = true;break;
+			case 'a': camera.translateCameraV(0.5F); this.needsRerender = true;break;
+			case 'w': camera.translateCameraN(-0.2F); this.needsRerender = true;break;
+			case 's': camera.translateCameraN(0.2F); this.needsRerender = true;break;
+			case 'r': camera.translateCameraU(0.1F); this.needsRerender = true;break;
+			case 'f': camera.translateCameraU(-0.1F); this.needsRerender = true;break;
+			case 'q': camera.rotateCameraU(-1); this.needsRerender = true;break;
+			case 'e': camera.rotateCameraU(1); this.needsRerender = true;break;
+			case 'z': camera.rotateCameraV(-1); this.needsRerender = true;break;
+			case 'c': camera.rotateCameraV(1); this.needsRerender = true;break;
+			case '1': camera.rotateCameraN(-1); this.needsRerender = true;break;
+			case '3': camera.rotateCameraN(1); this.needsRerender = true;break;
+			case 'v': renderer.setVisualDebug(!renderer.getVisualDebug()); this.needsRerender = true;break;
+			case 't': renderer.setThreading(!renderer.isThreading()); this.needsRerender = true;;break;
 			case 'p': renderer.renderToFile("output"); break;
 		}
-		renderer.renderWorld();
+		
 //		camera.renderFrame(renderer);
 	}
 
@@ -331,5 +359,13 @@ public class Window3D extends JFrame implements MouseListener, MouseMotionListen
 		else{
 			//Do Nothing
 		}
+	}
+	
+	public Renderer getRenderer(){
+		return renderer;
+	}
+	
+	public void setRerenderUpdateTrue(){
+		this.needsRerender = true;
 	}
 }

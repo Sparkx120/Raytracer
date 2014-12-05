@@ -1,7 +1,10 @@
 package com.sparkx120.jwake.uwo.cs3388;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
+import com.sparkx120.jwake.graphics2d.mandlebrot.Mandlebrot;
 import com.sparkx120.jwake.graphics3d.base.CamObject3D;
 import com.sparkx120.jwake.graphics3d.base.Point;
 import com.sparkx120.jwake.graphics3d.base.Vector;
@@ -20,41 +23,48 @@ import com.sparkx120.jwake.io.FileIO;
 import com.sparkx120.jwake.math.Matrices3D;
 import com.sparkx120.jwake.math.Matrix3D;
 
-public class RaytracerOne{
+public class RaytracerOne implements KeyListener{
 	
 	private static CamObject3D camera;
 	private static int width;
 	private static int height;
 	private static World world;
-	private static Window3D window;
+	private static Window3D viewer3D;
+	private static GenericSphere lens;
 	
 	public static void main(String[] args){
 		world = new World();
 		
 		if(args.length == 0){
 			configureWorld();
+			width = 1920;
+			height = 1040;
 //			configureWorldTest();
 		}
 		else{
+			if(args.length == 2){
+				width = Integer.parseInt(args[0]);
+				height = Integer.parseInt(args[1]);
+			}
 			readWorldFile(args[0]);
 		}
 		
 		
 		//Configure the Camera
-		width = 1280;
-		height = 1024;
 		configCam();
 		
 		//Add Camera to the World
 		world.addCameraObject(camera);
 		
 		//Set up a Window3D Viewer
-		Window3D viewer3D = new Window3D(camera, width, height);
+		viewer3D = new Window3D(camera, width, height);
 		viewer3D.setTitle("Raytracer Viewer");
+		viewer3D.addKeyListener(new RaytracerOne());
 		//viewer3D.setMouseEnabled(false);
 		
 		RaytraceRenderer raytracer = new RaytraceRenderer(viewer3D, world, camera, FileIO.readImageFromFile("Top_of_Atmosphere.jpg"));
 		viewer3D.setRenderer(raytracer);
+		raytracer.setVisualDebug(true);
 		
 		camera.rotateCameraN(90);
 		viewer3D.renderToScreen();
@@ -189,6 +199,13 @@ public class RaytracerOne{
 				{0,0,1,2},
 				{0,0,0,1}
 				});
+		
+		Matrix3D lensTransform = new Matrix3D(new float[][] {
+				{1,0,0,11F},
+				{0,1,0,-0.8F},
+				{0,0,1,10.1F},
+				{0,0,0,1}
+				});
 
 		Matrix3D planeTransform1 = Matrices3D.affineTransformRx(90F);
 		Matrix3D planeTransform2 = Matrices3D.affineTransformRx(90F);
@@ -221,14 +238,17 @@ public class RaytracerOne{
 //		});
 		
 		GenericCylinder rocketBody = new GenericCylinder(Color.WHITE, Color.WHITE, 0.05F, Color.WHITE, 0.6F,
-				Color.WHITE, 0.35F, 10.0F, 0.1F, 0.0F,  cylinderTransform1);
+				Color.WHITE, 0.35F, 10.0F, 0.0F, 0.0F,  cylinderTransform1);
 		rocketBody.enableTopPlane(false);
+		rocketBody.setUVMap(FileIO.readImageFromFile("Flag.png"));
 		GenericSphere noseCone = new GenericSphere(Color.WHITE, Color.WHITE, 0.05F, Color.WHITE, 0.6F,
 				Color.WHITE, 0.35F, 10.0F, 0.1F, 0.0F,  sphereTransform1);
 		GenericCone engineCone = new GenericCone(Color.GRAY, Color.GRAY, 0.05F, Color.GRAY, 0.85F,
 				Color.WHITE, 0.1F, 10.0F, 0.0F, 0.0F,  coneTransform1);
 //		engineCone.setBottomPlaneColor(Color.RED);
 		engineCone.getBottomPlane().setAmbiant_c(Color.RED);
+		
+		//NEED TO FIX THIS LATER
 		engineCone.getBottomPlane().setAmbiantFactor(1.0F);
 		engineCone.getBottomPlane().setDiffuseFactor(0.0F);
 		engineCone.getBottomPlane().setSpecularFactor(0.0F);
@@ -242,6 +262,9 @@ public class RaytracerOne{
 				Color.WHITE, 0.1F, 10.0F, 0.1F, 0.0F,  planeTransform3, true);
 		GenericPlane finD = new GenericPlane(Color.GRAY, Color.RED, 0.05F, Color.RED, 0.85F,
 				Color.WHITE, 0.1F, 10.0F, 0.1F, 0.0F,  planeTransform4, true);
+		
+		lens = new GenericSphere(Color.WHITE, Color.WHITE, 0.1F, Color.WHITE, 0.1F,
+				Color.WHITE, 0.2F, 15.0F, 0.1F, 1.6F,  lensTransform);
 		
 //		GenericPlane plane = new GenericPlane(Color.BLACK, Color.BLACK, 0.6F, Color.GRAY, 0.4F,
 //				 Color.WHITE, 0.0F, 1.0F, 0.0F, 0.0F,  planeTransform);
@@ -258,6 +281,7 @@ public class RaytracerOne{
 		world.addGenericObject(finB);
 		world.addGenericObject(finC);
 		world.addGenericObject(finD);
+		world.addGenericObject(lens);
 		//world.addGenericObject(plane);
 		world.addLightObject(light1);
 		world.addLightObject(light2);
@@ -317,5 +341,39 @@ public class RaytracerOne{
 			return lightDef;
 		}
 		return -1;
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		if(e.getKeyChar() == 'l'){
+			if(world.getRayRenderableObjects().indexOf(lens) > -1){
+				world.getRayRenderableObjects().remove(lens);
+			}
+			else{
+				world.addGenericObject(lens);
+			}
+			viewer3D.setRerenderUpdateTrue();
+		}
+		
+		if(e.getKeyChar() == 'm'){
+			Mandlebrot m = new Mandlebrot(500, viewer3D.getWidth(), viewer3D.getHeight());
+			m.launchMandlebrotFrame();
+			m.generateMandlebrotToFrame();
+//			viewer3D.updateRender(m.generateMandlebrot());
+		}
+		
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

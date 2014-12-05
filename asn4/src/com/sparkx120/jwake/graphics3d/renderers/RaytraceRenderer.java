@@ -1,6 +1,7 @@
 package com.sparkx120.jwake.graphics3d.renderers;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,7 +38,7 @@ public class RaytraceRenderer extends Renderer{
 	private BufferedImage buffer;
 	private BufferedImage backgroundImage;
 	private Graphics2D overlay;
-	private float frameComputeTime; 
+	private float frameComputeTime;
 	
 	public RaytraceRenderer(Window3D window, World w, CamObject3D camera, Color background){
 		super(RendererType.CAMERA_PIPE);
@@ -73,10 +74,18 @@ public class RaytraceRenderer extends Renderer{
 		}
 		this.buffer = new BufferedImage(camera.getWidth(), camera.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 		buffer.setRGB(0, 0, camera.getWidth(), camera.getHeight(), black, 0, 0);
-		quickRender(64);
-		quickRender(128);
-		quickRender(256);
-		fullRender();
+//		quickRender(64);
+//		quickRender(128);
+//		quickRender(256);
+//		fullRender();
+//		float timeA = System.currentTimeMillis();
+		if(this.threading)
+			quarterFullRenderThreaded();
+		else
+			quarterFullRender();
+//		float timeB = System.currentTimeMillis();
+//		frameComputeTime = (timeB-timeA)*1000;
+		this.renderToScreen();
 	}
 	
 	private void quickRender(int quickFactor){
@@ -97,6 +106,104 @@ public class RaytraceRenderer extends Renderer{
 			}
 			this.renderToScreen();
 		}
+	}
+	
+	private void quarterFullRender(){
+		for(int r=0; r<(camera.getHeight()/2)-0; r++){
+			for(int c=0; c<(camera.getWidth()/2)-0; c++){
+				Color pix = this.renderRayPixel(c*2, r*2, false, false);
+				buffer.setRGB(c*2, r*2, pix.getRGB());
+			}
+			this.renderToScreen();
+		}
+		for(int r=1; r<(camera.getHeight()/2)-1; r++){
+			for(int c=0; c<(camera.getWidth()/2)-0; c++){
+				Color pix = this.renderRayPixel(c*2, r*2+1, false, false);
+				buffer.setRGB(c*2, r*2+1, pix.getRGB());
+			}
+			this.renderToScreen();
+		}
+		for(int r=1; r<(camera.getHeight()/2)-1; r++){
+			for(int c=1; c<(camera.getWidth()/2)-1; c++){
+				Color pix = this.renderRayPixel(c*2+1, r*2+1, false, false);
+				buffer.setRGB(c*2+1, r*2+1, pix.getRGB());
+			}
+			this.renderToScreen();
+		}
+		for(int r=0; r<(camera.getHeight()/2)-0; r++){
+			for(int c=1; c<(camera.getWidth()/2)-1; c++){
+				Color pix = this.renderRayPixel(c*2+1, r*2, false, false);
+				buffer.setRGB(c*2+1, r*2, pix.getRGB());
+			}
+			this.renderToScreen();
+		}
+	}
+	
+	private void quarterFullRenderThreaded(){
+		Thread pixelA = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				for(int r=0; r<(camera.getHeight()/2)-0; r++){
+					for(int c=0; c<(camera.getWidth()/2)-0; c++){
+						Color pix = renderRayPixel(c*2, r*2, false, false);
+						buffer.setRGB(c*2, r*2, pix.getRGB());
+					}
+					renderToScreen();
+				}
+				
+			}
+			
+		});
+		Thread pixelB = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				for(int r=1; r<(camera.getHeight()/2)-1; r++){
+					for(int c=0; c<(camera.getWidth()/2)-0; c++){
+						Color pix = renderRayPixel(c*2, r*2+1, false, false);
+						buffer.setRGB(c*2, r*2+1, pix.getRGB());
+					}
+					renderToScreen();
+				}
+				
+			}
+			
+		});
+		Thread pixelC = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				for(int r=1; r<(camera.getHeight()/2)-1; r++){
+					for(int c=1; c<(camera.getWidth()/2)-1; c++){
+						Color pix = renderRayPixel(c*2+1, r*2+1, false, false);
+						buffer.setRGB(c*2+1, r*2+1, pix.getRGB());
+					}
+					renderToScreen();
+				}
+				
+			}
+			
+		});
+		Thread pixelD = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				for(int r=0; r<(camera.getHeight()/2)-0; r++){
+					for(int c=1; c<(camera.getWidth()/2)-1; c++){
+						Color pix = renderRayPixel(c*2+1, r*2, false, false);
+						buffer.setRGB(c*2+1, r*2, pix.getRGB());
+					}
+					renderToScreen();
+				}
+				
+			}
+			
+		});
+		pixelA.start();
+		pixelB.start();
+		pixelC.start();
+		pixelD.start();
 	}
 	
 	private void fullRender(){
@@ -166,7 +273,6 @@ public class RaytraceRenderer extends Renderer{
 			Vector normal = obj.getNormalAt(intersect);
 			
 			float reflectionFactor = obj.getReflectionFactor();
-//			float refractionFactor = obj.getRefractionFactor();
 			float refractionIndex = obj.getRefractionIndex();
 			
 			//Color Channels
@@ -184,6 +290,8 @@ public class RaytraceRenderer extends Renderer{
 			
 			
 			//ITERATE LIGHT SOURCES and Compute Color Intensities
+			
+			//Ambient
 			float ambiantIntensityR = obj.getAmbiantFactor()*ambiantColorR;
 			float ambiantIntensityG = obj.getAmbiantFactor()*ambiantColorG;
 			float ambiantIntensityB = obj.getAmbiantFactor()*ambiantColorB;
@@ -388,21 +496,36 @@ public class RaytraceRenderer extends Renderer{
 				refractionIntensityR = refractionFactor*refraction.getRed()/255F;
 				refractionIntensityG = refractionFactor*refraction.getGreen()/255F;
 				refractionIntensityB = refractionFactor*refraction.getBlue()/255F;
-//				System.out.println(refractionIntensityR + " " + refractionIntensityG + " " + refractionIntensityB);
-				
-				
 			}
 			else{
 				if(debug)
 					System.out.println("recursive false, iDotn:" + iDotn);
 			}
 			
-			//Compute Refracted Light
+			float lightIntensityR = 0F;
+			float lightIntensityG = 0F;
+			float lightIntensityB = 0F;
+			
+			//UVMaps and Output
+			Color UVPix = obj.getUVMapAt(intersect);
+			if(UVPix != null){
+				float pixR = UVPix.getRed()/255F;
+				float pixG = UVPix.getGreen()/255F;
+				float pixB = UVPix.getBlue()/255F;
+				pixR *= ambiantIntensityR + diffuseSpecularIntensityR;
+				pixG *= ambiantIntensityG + diffuseSpecularIntensityG;
+				pixB *= ambiantIntensityB + diffuseSpecularIntensityB;
+				lightIntensityR = Math.min((pixR + reflectionIntensityR + refractionIntensityR), 1F);
+				lightIntensityG = Math.min((pixG + reflectionIntensityG + refractionIntensityG), 1F);
+				lightIntensityB = Math.min((pixB + reflectionIntensityB + refractionIntensityB), 1F);
+			}
+			else{
+				lightIntensityR = Math.min((ambiantIntensityR + diffuseSpecularIntensityR + reflectionIntensityR + refractionIntensityR), 1F);
+				lightIntensityG = Math.min((ambiantIntensityG + diffuseSpecularIntensityG + reflectionIntensityG + refractionIntensityG), 1F);
+				lightIntensityB = Math.min((ambiantIntensityB + diffuseSpecularIntensityB + reflectionIntensityB + refractionIntensityB), 1F);
+			}
 			
 			
-			float lightIntensityR = Math.min((ambiantIntensityR + diffuseSpecularIntensityR + reflectionIntensityR + refractionIntensityR), 1F);
-			float lightIntensityG = Math.min((ambiantIntensityG + diffuseSpecularIntensityG + reflectionIntensityG + refractionIntensityG), 1F);
-			float lightIntensityB = Math.min((ambiantIntensityB + diffuseSpecularIntensityB + reflectionIntensityB + refractionIntensityB), 1F);
 //			System.out.println(lightIntensityR + " " + lightIntensityG + " " + lightIntensityB);
 			Color output = new Color(lightIntensityR, lightIntensityG, lightIntensityB);
 			
@@ -455,6 +578,7 @@ public class RaytraceRenderer extends Renderer{
 	
 	public void renderToScreen(){
 		if(this.getVisualDebug()){
+			overlay = (Graphics2D) buffer.getGraphics();
 			overlay.setColor(Color.WHITE);
 			int x = 5;
 			int y = 5;
@@ -462,8 +586,6 @@ public class RaytraceRenderer extends Renderer{
 	            overlay.drawString(line, x, y += overlay.getFontMetrics().getHeight());
 		}
 		window.updateRender(this.buffer);
-		
-		frameComputeTime = 0;
 	}
 	
 	public void renderToFile(String file){
@@ -479,7 +601,11 @@ public class RaytraceRenderer extends Renderer{
 		out += "u: x:" + camera.getu().getX() + " y: " + camera.getu().getY() + " z:" + camera.getu().getX() + "\n";
 		out += "v: x:" + camera.getv().getX() + " y: " + camera.getv().getY() + " z:" + camera.getv().getX() + "\n";
 		out += "n: x:" + camera.getn().getX() + " y: " + camera.getn().getY() + " z:" + camera.getn().getX() + "\n";
-		out += "frameTime: " + frameComputeTime;
+		out += "frameTime: " + frameComputeTime + "\n";
+		if(threading)
+			out += "Threading On";
+		else
+			out += "Threading Off";
 		return out;
 	}
 

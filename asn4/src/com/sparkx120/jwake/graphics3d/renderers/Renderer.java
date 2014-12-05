@@ -16,10 +16,12 @@ public abstract class Renderer {
 	
 	private RendererType type;
 	private boolean visualDebug;
+	protected boolean threading;
 	
 	public Renderer(RendererType type){
 		this.type = type;
 		this.visualDebug = false;
+		this.threading = false;
 	}
 	
 	/**
@@ -56,5 +58,19 @@ public abstract class Renderer {
 	 */
 	public RendererType getType(){
 		return type;
+	}
+
+	/**
+	 * @return the threading
+	 */
+	public boolean isThreading() {
+		return threading;
+	}
+
+	/**
+	 * @param threading the threading to set
+	 */
+	public void setThreading(boolean threading) {
+		this.threading = threading;
 	}
 }
