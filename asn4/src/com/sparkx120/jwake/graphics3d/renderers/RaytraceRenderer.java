@@ -592,7 +592,7 @@ public class RaytraceRenderer extends Renderer{
 	
 	public void renderToFile(String file){
 		try{
-			File outputfile = new File(file + "png");
+			File outputfile = new File(file + ".png");
 		    ImageIO.write(this.buffer, "png", outputfile);
 		}catch(Exception e){e.printStackTrace();}
 	}
