@@ -1,15 +1,12 @@
 package com.sparkx120.jwake.graphics3d.renderers;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import javax.imageio.ImageIO;
-
 import com.sparkx120.jwake.graphics3d.base.CamObject3D;
 import com.sparkx120.jwake.graphics3d.base.Point;
 import com.sparkx120.jwake.graphics3d.base.Ray;
@@ -88,6 +85,7 @@ public class RaytraceRenderer extends Renderer{
 		this.renderToScreen();
 	}
 	
+	@SuppressWarnings("unused")
 	private void quickRender(int quickFactor){
 		for(int r=0; r<quickFactor; r++){
 			for(int c=0; c<quickFactor; c++){
@@ -206,6 +204,7 @@ public class RaytraceRenderer extends Renderer{
 		pixelD.start();
 	}
 	
+	@SuppressWarnings("unused")
 	private void fullRender(){
 		for(int r=0; r<camera.getHeight(); r++){
 			for(int c=0; c<camera.getWidth(); c++){
@@ -309,7 +308,7 @@ public class RaytraceRenderer extends Renderer{
 			float refractionIntensityB = 0F;
 			
 			Iterator<LightObject> lights = world.getLightObjects().iterator();
-			float numberOfLights = world.getLightObjects().size();
+//			float numberOfLights = world.getLightObjects().size();
 			float lightIntersects = 0;
 			ArrayList<Float> diffuseSpecularIntensitiesR = new ArrayList<Float>();
 			ArrayList<Float> diffuseSpecularIntensitiesG = new ArrayList<Float>();
@@ -468,7 +467,7 @@ public class RaytraceRenderer extends Renderer{
 //					Vector d = Math3D.scalarMultiplyVector(normal, coeff);
 //					Vector refractionD = Math3D.vectorAdd(i, d);
 //					refractionD = Math3D.normalizeVector(refractionD);
-					Point ePlus = Math3D.addPoints(e, Math3D.scalarMultiplyPoint(refractionD, 0.01F)); // Make sure that initial intersect does not count in ray
+//					Point ePlus = Math3D.addPoints(e, Math3D.scalarMultiplyPoint(refractionD, 0.01F)); // Make sure that initial intersect does not count in ray
 					Ray refracted = new Ray(e, refractionD);
 					
 					//Cheat Code
@@ -564,14 +563,17 @@ public class RaytraceRenderer extends Renderer{
 	}
 	
 	//Put Modules Here figure out how I want to do that exactly
+	@SuppressWarnings("unused")
 	private Color reflect(){
 		return null;
 	}
 	
+	@SuppressWarnings("unused")
 	private Color refract(){
 		return null;
 	}
 	
+	@SuppressWarnings("unused")
 	private Color diffuseSpecular(){
 		return null;
 	}

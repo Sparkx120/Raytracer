@@ -18,7 +18,6 @@ import com.sparkx120.jwake.graphics3d.objects.GenericObjectType;
 import com.sparkx120.jwake.graphics3d.objects.GenericPlane;
 import com.sparkx120.jwake.graphics3d.objects.GenericSphere;
 import com.sparkx120.jwake.graphics3d.renderers.RaytraceRenderer;
-import com.sparkx120.jwake.graphics3d.renderers.Renderer;
 import com.sparkx120.jwake.io.FileIO;
 import com.sparkx120.jwake.math.Matrices3D;
 import com.sparkx120.jwake.math.Matrix3D;
@@ -86,6 +85,7 @@ public class RaytracerOne implements KeyListener{
 	/**
 	 * Configure the Default Test World
 	 */
+	@SuppressWarnings("unused")
 	private static void configureWorldTest(){
 		Matrix3D sphereTransform1 = new Matrix3D(new float[][] {
 				{1F,0,0,0},
@@ -93,12 +93,12 @@ public class RaytracerOne implements KeyListener{
 				{0,0,1F,4F},
 				{0,0,0,1}
 		});
-		Matrix3D sphereTransform2 = new Matrix3D(new float[][] {
-				{1,0,0,-2},
-				{0,1,0,0},
-				{0,0,1,1},
-				{0,0,0,1}
-				});
+//		Matrix3D sphereTransform2 = new Matrix3D(new float[][] {
+//				{1,0,0,-2},
+//				{0,1,0,0},
+//				{0,0,1,1},
+//				{0,0,0,1}
+//				});
 		Matrix3D sphereTransform3 = new Matrix3D(new float[][] {
 				{1,0,0,4},
 				{0,1,0,0},
@@ -141,8 +141,8 @@ public class RaytracerOne implements KeyListener{
 		
 		GenericSphere sphere1 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
 		Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F,  sphereTransform1);
-		GenericSphere sphere2 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
-		Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F,  sphereTransform2);
+//		GenericSphere sphere2 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
+//		Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F,  sphereTransform2);
 		GenericSphere sphere3 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
 		Color.WHITE, 0.1F, 10.0F, 0.0F, 1.6F,  sphereTransform3);
 		GenericSphere sphere4 = new GenericSphere(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
@@ -156,9 +156,9 @@ public class RaytracerOne implements KeyListener{
 		GenericCone cone = new GenericCone(Color.BLUE, Color.BLUE, 0.1F, Color.BLUE, 0.2F,
 				Color.WHITE, 1.0F, 10.0F, 0.75F, 0.0F,  coneTransform);
 		
-		OmniDirectionalLight light1 = new OmniDirectionalLight(new Point(5F, 5F, 2F), 1.0F, Color.WHITE);
-		OmniDirectionalLight light2 = new OmniDirectionalLight(new Point(-5F, -5F, 2F), 1.0F, Color.WHITE);
-		OmniDirectionalLight light3 = new OmniDirectionalLight(new Point(0F, 0F, 20F), 1.0F, Color.WHITE);
+//		OmniDirectionalLight light1 = new OmniDirectionalLight(new Point(5F, 5F, 2F), 1.0F, Color.WHITE);
+//		OmniDirectionalLight light2 = new OmniDirectionalLight(new Point(-5F, -5F, 2F), 1.0F, Color.WHITE);
+//		OmniDirectionalLight light3 = new OmniDirectionalLight(new Point(0F, 0F, 20F), 1.0F, Color.WHITE);
 		OmniDirectionalLight light4 = new OmniDirectionalLight(new Point(0F, 0F, 6F), 2.0F, Color.WHITE);
 		OmniDirectionalLight light5 = new OmniDirectionalLight(new Point(0F, 0F, 2.9F), 2.0F, Color.WHITE);
 		

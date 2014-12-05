@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import com.sparkx120.jwake.graphics3d.gui.BufferedGraphicsPane;
-import com.sparkx120.jwake.graphics3d.gui.Window3D;
 
 public class Mandlebrot {
 	private int iterationsMax;
@@ -17,6 +16,7 @@ public class Mandlebrot {
 	private BufferedGraphicsPane buffered;
 	private boolean rePaint = false;
 	
+	@SuppressWarnings("unused")
 	public static void main(String[] args){
 		int iterationsMax = 1000;
 		if(args.length == 1){

@@ -2,8 +2,6 @@ package com.sparkx120.jwake.graphics3d.renderers;
 
 import java.awt.Color;
 import java.util.ArrayList;
-
-import com.sparkx120.jwake.graphics3d.base.CamObject3D;
 import com.sparkx120.jwake.graphics3d.objects.PolyObject3D;
 
 /**

@@ -3,8 +3,6 @@ package com.sparkx120.jwake.graphics3d.lights;
 import java.awt.Color;
 import java.util.Scanner;
 
-import com.sparkx120.jwake.graphics3d.base.Point;
-
 /**
  * A Light Emission Source
  * @author James Wake
@@ -34,6 +32,7 @@ public abstract class LightObject {
 	 * Decode a String into an Object
 	 * @param sphere
 	 */
+	@SuppressWarnings("unused")
 	private void decodeString(String obj){
 		Scanner scan = new Scanner(obj);
 		float x = scan.nextFloat();

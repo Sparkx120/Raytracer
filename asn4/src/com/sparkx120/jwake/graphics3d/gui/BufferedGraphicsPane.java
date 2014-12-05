@@ -1,7 +1,6 @@
 package com.sparkx120.jwake.graphics3d.gui;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 
 import javax.swing.JPanel;

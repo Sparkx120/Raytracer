@@ -354,6 +354,7 @@ public class Matrix3D {
 	 * Tests for Matrix Inversion
 	 * @param args - NONE
 	 */
+	@SuppressWarnings("unused")
 	public static void main(String[] args){
 		Matrix3D I = Matrices3D.I;
 		Matrix3D test = Matrices3D.testMatrixA;
