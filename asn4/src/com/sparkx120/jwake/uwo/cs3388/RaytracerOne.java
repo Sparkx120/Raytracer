@@ -44,8 +44,12 @@ public class RaytracerOne implements KeyListener{
 			if(args.length == 2){
 				width = Integer.parseInt(args[0]);
 				height = Integer.parseInt(args[1]);
+				configureWorld();
 			}
-			readWorldFile(args[0]);
+			else{
+				System.out.println("Either use with no Args for default or\nUse Width Height as integers");
+			}
+//			readWorldFile(args[0]);
 		}
 		
 		
@@ -292,6 +296,7 @@ public class RaytracerOne implements KeyListener{
 	 * Reads a World Definition File
 	 * @param fname - The File
 	 */
+	@SuppressWarnings("unused")
 	private static void readWorldFile(String fname){
 		String file = FileIO.readStringFromFile(fname);
 		int index = getNextDefIndex(file);
